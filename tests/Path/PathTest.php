@@ -24,4 +24,19 @@ class PathTest extends TestCase
 	{
 		$this->assertEquals("{$this->root}/src", Path::getCoreDir());
 	}
+
+	public function test_it_returns_core_apps_path_properly()
+	{
+		$this->assertEquals("{$this->root}/apps", Path::getAppsDir());
+	}
+
+	public function test_it_returns_core_vendor_path_properly()
+	{
+		$this->assertEquals("{$this->root}/vendor", Path::getVendorDir());
+	}
+
+	public function test_it_returns_core_storage_path_properly()
+	{
+		$this->assertEquals("{$this->root}/storage", Path::getStorageDir());
+	}
 }

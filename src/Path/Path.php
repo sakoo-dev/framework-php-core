@@ -16,6 +16,21 @@ class Path
 		return static::getRootDir() . '/src';
 	}
 
+	public static function getAppsDir(): string
+	{
+		return static::getRootDir() . '/apps';
+	}
+
+	public static function getVendorDir(): string
+	{
+		return static::getRootDir() . '/vendor';
+	}
+
+	public static function getStorageDir(): string
+	{
+		return static::getRootDir() . '/storage';
+	}
+
 	public static function getProjectPHPFiles(): Finder
 	{
 		return Finder::create()
