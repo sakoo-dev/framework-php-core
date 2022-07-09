@@ -13,7 +13,7 @@ class Path
 
 	public static function getCoreDir(): string
 	{
-		return static::getRootDir() . '/src';
+		return realpath(__DIR__ . '/../');
 	}
 
 	public static function getAppsDir(): string
