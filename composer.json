@@ -1,6 +1,6 @@
 {
-    "name": "sakoo/core",
-    "description": "The Core Components of the Sakoo Framework",
+    "name": "sakoo/framework-core",
+    "description": "The Core Components of the Sakoo PHP Web Framework",
     "type": "library",
     "license": "MIT",
     "keywords": ["framework", "sakoo"],
