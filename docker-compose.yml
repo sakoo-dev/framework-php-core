@@ -1,0 +1,40 @@
+services:
+
+  mysql:
+    image: mysql:latest
+    restart: unless-stopped
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: 'sakoo_test'
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      - localnetwork
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+
+  sakoo.app:
+    build:
+      context: .
+      dockerfile: docker/sakoo.app/Dockerfile
+    image: sakoo.app:1.0.0
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www/html/
+    depends_on:
+      - mysql
+    networks:
+      - localnetwork
+
+volumes:
+  mysqldata:
+    driver: local
+
+networks:
+  localnetwork:
+    driver: bridge
