@@ -1,8 +1,8 @@
 <?php
 
-namespace Sakoo\Framework\Core\Collection;
+namespace Sakoo\Framework\Core\Set;
 
-trait CollectionAccess
+trait SetAccess
 {
 	public function first(): mixed
 	{
