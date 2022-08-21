@@ -4,20 +4,23 @@ namespace Sakoo\Framework\Core\Container;
 
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
-use ReflectionType;
-use Sakoo\Framework\Core\Collection\Collection;
+use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotInstantiableException;
+use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
+use Sakoo\Framework\Core\Container\Parameter\ParameterSet;
+use Sakoo\Framework\Core\Set\Set;
 
 class Container implements ContainerInterface
 {
-	private Collection $singletons;
-	private Collection $instances;
-	private Collection $bindings;
+	private Set $singletons;
+	private Set $instances;
+	private Set $bindings;
 
 	public function __construct()
 	{
-		$this->singletons = arr([]);
-		$this->instances = arr([]);
-		$this->bindings = arr([]);
+		$this->singletons = set();
+		$this->instances = set();
+		$this->bindings = set();
 	}
 
 	public function get(string $id)
@@ -41,7 +44,7 @@ class Container implements ContainerInterface
 		$this->singletons->{$interface} = $factory;
 	}
 
-	public function resolve(string $interface): object|null
+	public function resolve(string $interface): object
 	{
 		if ($this->singletons->exists($interface)) {
 			return $this->resolveFromSingletons($interface);
@@ -54,25 +57,16 @@ class Container implements ContainerInterface
 		return $this->new($interface);
 	}
 
-	public function new(string $interface): object|null
+	public function new(string $interface): object
 	{
-		if (!class_exists($interface)) {
-			return null;
-		}
+		throwUnless(class_exists($interface), new ContainerClassNotFoundException());
 
 		$reflector = new ReflectionClass($interface);
 
-		if (!$reflector->isInstantiable()) {
-			return null;
-		}
+		throwUnless($reflector->isInstantiable(), new ContainerClassNotInstantiableException());
 
 		$constructor = $reflector->getConstructor();
-
-		if (is_null($constructor)) {
-			return $reflector->newInstance();
-		}
-
-		$params = $this->resolveParameters($constructor->getParameters());
+		$params = ParameterSet::resolveFromConstructor($this, $constructor);
 		return $reflector->newInstanceArgs($params);
 	}
 
@@ -96,36 +90,5 @@ class Container implements ContainerInterface
 		}
 
 		return $this->new($factory);
-	}
-
-	private function resolveParameters(array $parameters): array
-	{
-		$dependencies = [];
-		foreach ($parameters as $parameter) {
-			$dependency = $parameter->getType();
-			if ($this->canResolveType($dependency)) {
-				$dependencies[] = $this->resolve("$dependency");
-			} else {
-				$dependencies[] = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : $this->generateParameterDefaultValue($dependency);
-			}
-		}
-		return $dependencies;
-	}
-
-	private function generateParameterDefaultValue(?ReflectionType $type): mixed
-	{
-		$default = null;
-		if (!is_null($type)) {
-			if (str_starts_with("$type", '?')) {
-				$type = substr("$type", 1, strlen("$type") - 1);
-			}
-			settype($default, $type);
-		}
-		return $default;
-	}
-
-	private function canResolveType(?ReflectionType $type): bool
-	{
-		return !is_null($type) && !$type->isBuiltin();
 	}
 }

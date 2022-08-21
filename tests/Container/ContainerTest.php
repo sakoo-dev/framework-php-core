@@ -3,7 +3,8 @@
 namespace Sakoo\Framework\Core\Tests\Container;
 
 use Sakoo\Framework\Core\Container\Container;
-use Sakoo\Framework\Core\Container\ContainerNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
 use Sakoo\Framework\Core\Testing\TestCase;
 
 class ContainerTest extends TestCase
@@ -18,8 +19,8 @@ class ContainerTest extends TestCase
 
 	public function objects()
 	{
-		yield 'closure' => [fn () => new \stdClass()];
-		yield 'class' => [\stdClass::class];
+		yield 'closure' => [fn () => new TestClass()];
+		yield 'class' => [TestClass::class];
 	}
 
 	/** @dataProvider objects */
@@ -28,10 +29,8 @@ class ContainerTest extends TestCase
 		$this->container->bind('class', $object);
 		$resolved = $this->container->resolve('class');
 
-		$this->assertInstanceOf(\stdClass::class, $resolved);
+		$this->assertInstanceOf(TestClass::class, $resolved);
 		$this->assertNotSame($resolved, $this->container->resolve('class'));
-
-		$this->assertNull($this->container->resolve('something'));
 	}
 
 	/** @dataProvider objects */
@@ -40,69 +39,58 @@ class ContainerTest extends TestCase
 		$this->container->singleton('class', $object);
 		$resolved = $this->container->resolve('class');
 
-		$this->assertInstanceOf(\stdClass::class, $resolved);
+		$this->assertInstanceOf(TestClass::class, $resolved);
 		$this->assertSame($resolved, $this->container->resolve('class'));
-
-		$this->assertNull($this->container->resolve('something'));
 	}
 
 	public function test_it_instantiate_class_properly()
 	{
-		$this->assertInstanceOf(\stdClass::class, $this->container->new(\stdClass::class));
+		$object = $this->container->new(TestClass::class);
+		$this->assertInstanceOf(TestClass::class, $object);
+	}
 
-		$this->assertNull($this->container->new('something'));
-		$this->assertNull($this->container->new(10));
+	public function test_it_throws_exception_when_class_not_found_on_new()
+	{
+		$this->expectException(ContainerClassNotFoundException::class);
+		$this->container->new('something');
+	}
+
+	public function test_it_throws_exception_when_class_not_found_on_resolve()
+	{
+		$this->expectException(ContainerClassNotFoundException::class);
+		$this->container->resolve('something');
 	}
 
 	public function test_it_resolves_abstractions()
 	{
-		$this->container->bind(TestInterface::class, SomeClass::class);
-		$resolved = $this->container->resolve(TestClass::class);
+		$this->container->bind(TestInterface::class, TestClass::class);
+		$resolved = $this->container->resolve(AutowireTestClass::class);
 
-		$this->assertInstanceOf(SomeClass::class, $resolved->first);
+		$this->assertInstanceOf(TestClass::class, $resolved->first);
 		$this->assertNull($resolved->second);
-		$this->assertEquals('', $resolved->third);
-		$this->assertEquals(0, $resolved->fourth);
-		$this->assertEquals('Default Value', $resolved->fifth);
+		$this->assertSame('', $resolved->third);
+		$this->assertSame('', $resolved->fourth);
+		$this->assertSame(0, $resolved->fifth);
+		$this->assertSame('Default Value', $resolved->sixth);
 	}
 
 	public function test_psr_11_the_has_function_works_properly()
 	{
 		$this->assertFalse($this->container->has('binded'));
-		$this->container->bind('binded', \stdClass::class);
+		$this->container->bind('binded', TestClass::class);
 		$this->assertTrue($this->container->has('binded'));
 
 		$this->assertFalse($this->container->has('singletoned'));
-		$this->container->singleton('singletoned', \stdClass::class);
+		$this->container->singleton('singletoned', TestClass::class);
 		$this->assertTrue($this->container->has('singletoned'));
 	}
 
 	public function test_prs_11_the_get_function_works_properly()
 	{
+		$this->container->bind('something', TestClass::class);
+		$this->assertInstanceOf(TestClass::class, $this->container->get('something'));
+
 		$this->expectException(ContainerNotFoundException::class);
-		$this->container->get('something');
-
-		$this->container->bind('something', \stdClass::class);
-		$this->assertInstanceOf(\stdClass::class, $this->container->get('something'));
+		$this->container->get('another');
 	}
-}
-
-class TestClass
-{
-	public function __construct(
-		public TestInterface $first,
-		public $second,
-		public string $third,
-		public int $fourth,
-		public $fifth = 'Default Value',
-	) {
-	}
-}
-
-class SomeClass implements TestInterface
-{
-}
-
-interface TestInterface
-{
 }
