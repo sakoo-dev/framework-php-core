@@ -11,7 +11,7 @@ abstract class TestCase extends PHPUnitTestCase
 {
 	use AssistantTester;
 
-	protected static ?Kernel $kernel = null;
+	protected static ?Kernel $kernel;
 
 	public static function setUpBeforeClass(): void
 	{
