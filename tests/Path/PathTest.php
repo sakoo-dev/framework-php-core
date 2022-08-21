@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Path;
+namespace Sakoo\Framework\Core\Tests\Path;
 
 use Sakoo\Framework\Core\Path\Path;
 use Sakoo\Framework\Core\Testing\TestCase;
+use Symfony\Component\Finder\Finder;
 
 class PathTest extends TestCase
 {
@@ -38,5 +39,13 @@ class PathTest extends TestCase
 	public function test_it_returns_core_storage_path_properly()
 	{
 		$this->assertEquals("{$this->root}/storage", Path::getStorageDir());
+	}
+
+	public function test_it_returns_all_php_files_properly()
+	{
+		$finder = Path::getProjectPHPFiles();
+
+		$this->assertInstanceOf(Finder::class, $finder);
+		$this->assertGreaterThan(20, $finder->count());
 	}
 }
