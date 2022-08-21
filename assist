@@ -8,5 +8,5 @@ require_once __DIR__ . '/vendor/autoload.php';
 Kernel::run(Environment::Console);
 
 /** @var Assistant $assistant */
-$assitant = resolve(Assistant::class);
-$assitant->console->run();
+$assistant = resolve(Assistant::class);
+$assistant->console->run();

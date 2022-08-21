@@ -20,6 +20,7 @@ test:
 	@./sakoo test
 
 test-coverage:
+	@rm -rf ./storage/tests/coverage/
 	@./sakoo test --coverage-html=storage/tests/coverage/
 	@open ./storage/tests/coverage/index.html
 

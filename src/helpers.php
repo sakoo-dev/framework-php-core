@@ -1,13 +1,13 @@
 <?php
 
-use Sakoo\Framework\Core\Collection\Collection;
 use Sakoo\Framework\Core\Container\Container;
 use Sakoo\Framework\Core\Kernel\Kernel;
+use Sakoo\Framework\Core\Set\Set;
 
-if (!function_exists('arr')) {
-	function arr(array $array): Collection
+if (!function_exists('set')) {
+	function set(array $value = []): Set
 	{
-		return Collection::make($array);
+		return Set::make($value);
 	}
 }
 
@@ -47,8 +47,8 @@ if (!function_exists('resolve')) {
 	}
 }
 
-if (!function_exists('getNew')) {
-	function getNew($interface): object
+if (!function_exists('makeInstance')) {
+	function makeInstance($interface): object
 	{
 		return container()->new($interface);
 	}
@@ -57,15 +57,9 @@ if (!function_exists('getNew')) {
 if (!function_exists('throwIf')) {
 	function throwIf($condition, $exception)
 	{
-		if (!$condition) {
-			return;
-		}
-
-		if (is_object($exception)) {
+		if ($condition) {
 			throw $exception;
 		}
-
-		throw resolve($exception);
 	}
 }
 
