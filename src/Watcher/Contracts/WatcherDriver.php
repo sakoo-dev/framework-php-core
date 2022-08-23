@@ -6,7 +6,7 @@ use Sakoo\Framework\Core\Set\Iteratable;
 
 interface WatcherDriver
 {
-	public function watch(string $file, callable $callback): void;
+	public function watch(string $file, FileSystemAction $callback): void;
 
 	public function wait(): Iteratable;
 

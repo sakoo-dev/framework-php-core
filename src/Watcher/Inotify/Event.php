@@ -3,7 +3,7 @@
 namespace Sakoo\Framework\Core\Watcher\Inotify;
 
 use Sakoo\Framework\Core\Watcher\Contracts\Event as EventInterface;
-use Sakoo\Framework\Core\Watcher\Contracts\Handler;
+use Sakoo\Framework\Core\Watcher\Contracts\File;
 use Sakoo\Framework\Core\Watcher\EventTypes;
 
 class Event implements EventInterface
@@ -13,17 +13,17 @@ class Event implements EventInterface
 	private $cookie;
 	private string $name;
 
-	public function __construct(private Handler $handler, array $event)
+	public function __construct(private File $file, array $event)
 	{
 		$this->wd = $event['wd'];
 		$this->mask = $event['mask'];
 		$this->cookie = $event['cookie'];
-		$this->name = $handler->getFile();
+		$this->name = $file->getPath();
 	}
 
-	public function getHandler(): Handler
+	public function getFile(): File
 	{
-		return $this->handler;
+		return $this->file;
 	}
 
 	public function getHandlerId(): int

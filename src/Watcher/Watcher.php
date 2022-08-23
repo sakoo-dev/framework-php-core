@@ -9,13 +9,11 @@ use Symfony\Component\Finder\Finder;
 
 class Watcher
 {
-	public function __construct(
-		private WatcherDriver $driver,
-		private FileSystemAction $action,
-	) {
+	public function __construct(private WatcherDriver $driver)
+	{
 	}
 
-	public function watch(Finder $finder, callable $callback): self
+	public function watch(Finder $finder, FileSystemAction $callback): self
 	{
 		$files = $finder->files();
 
@@ -41,10 +39,12 @@ class Watcher
 
 	private function eventCall(Event $event): void
 	{
+		$callback = $event->getFile()->getCallback();
+
 		match ($event->getType()) {
-			EventTypes::MODIFY => $this->action->fileModified($event, $this->driver),
-			EventTypes::MOVE => $this->action->fileMoved($event, $this->driver),
-			EventTypes::DELETE => $this->action->fileDeleted($event, $this->driver),
+			EventTypes::MODIFY => $callback->fileModified($event),
+			EventTypes::MOVE => $callback->fileMoved($event),
+			EventTypes::DELETE => $this->driver->blind($event->getHandlerId()) && $callback->fileDeleted($event),
 		};
 	}
 }

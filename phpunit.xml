@@ -8,12 +8,12 @@
       <directory suffix=".php">src</directory>
     </include>
     <exclude>
-      <file>src/Testing/TestCase.php</file>
-      <file>src/Kernel/Kernel.php</file>
+      <directory>src/Testing</directory>
+      <directory>src/Kernel</directory>
 
+      <directory>src/Watcher</directory>
+      <directory>src/Console/WatcherActions</directory>
       <file>src/Console/Commands/WatchCommand.php</file>
-      <file>src/Console/WatcherActions/PhpBundle.php</file>
-      <file>src/Watcher/Inotify/Inotify.php</file>
     </exclude>
   </coverage>
   <testsuites>

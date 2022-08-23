@@ -6,7 +6,7 @@ use Sakoo\Framework\Core\Watcher\EventTypes;
 
 interface Event
 {
-	public function getHandler(): Handler;
+	public function getFile(): File;
 
 	public function getHandlerId(): int;
 

@@ -4,13 +4,13 @@ namespace Sakoo\Framework\Core\Watcher\Contracts;
 
 use Sakoo\Framework\Core\Utilities\Locker;
 
-interface Handler
+interface File
 {
 	public function getId(): int;
 
-	public function getCallback(): callable;
+	public function getCallback(): FileSystemAction;
 
-	public function getFile(): string;
+	public function getPath(): string;
 
 	public function getLocker(): Locker;
 }
