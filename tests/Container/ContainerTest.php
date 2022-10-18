@@ -5,7 +5,7 @@ namespace Sakoo\Framework\Core\Tests\Container;
 use Sakoo\Framework\Core\Container\Container;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotFoundException;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
-use Sakoo\Framework\Core\Testing\TestCase;
+use Sakoo\Framework\Core\Tests\TestCase;
 
 class ContainerTest extends TestCase
 {

@@ -3,7 +3,7 @@
 namespace Sakoo\Framework\Core\Tests\Console\Commands;
 
 use Sakoo\Framework\Core\Constants;
-use Sakoo\Framework\Core\Testing\TestCase;
+use Sakoo\Framework\Core\Tests\TestCase;
 
 class ZenCommandTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace Sakoo\Framework\Core\Tests\Utilities;
 
-use Sakoo\Framework\Core\Testing\TestCase;
+use Sakoo\Framework\Core\Tests\TestCase;
 use Sakoo\Framework\Core\Utilities\Locker;
 
 class LockerTest extends TestCase
