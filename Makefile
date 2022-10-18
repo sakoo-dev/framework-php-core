@@ -1,6 +1,5 @@
 init:
 	@chmod +x ./bin/sakoo
-	@ln -s ./bin/sakoo sakoo
 	@./sakoo up -d --build
 	@./sakoo composer install
 
