@@ -3,7 +3,7 @@
 namespace Sakoo\Framework\Core\Tests\Path;
 
 use Sakoo\Framework\Core\Path\Path;
-use Sakoo\Framework\Core\Testing\TestCase;
+use Sakoo\Framework\Core\Tests\TestCase;
 use Symfony\Component\Finder\Finder;
 
 class PathTest extends TestCase
@@ -13,7 +13,7 @@ class PathTest extends TestCase
 	public function setUp(): void
 	{
 		parent::setUp();
-		$this->root = realpath(__DIR__ . '/../..');
+		$this->root = realpath(__DIR__ . '/../../');
 	}
 
 	public function test_it_returns_root_dir_path_properly()
@@ -39,6 +39,11 @@ class PathTest extends TestCase
 	public function test_it_returns_core_storage_path_properly()
 	{
 		$this->assertEquals("{$this->root}/storage", Path::getStorageDir());
+	}
+
+	public function test_it_returns_core_logs_path_properly()
+	{
+		$this->assertEquals("{$this->root}/storage/logs", Path::getLogsDir());
 	}
 
 	public function test_it_returns_all_php_files_properly()

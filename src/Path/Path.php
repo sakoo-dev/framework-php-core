@@ -31,6 +31,11 @@ class Path
 		return static::getRootDir() . '/storage';
 	}
 
+	public static function getLogsDir(): string
+	{
+		return static::getStorageDir() . '/logs';
+	}
+
 	public static function getProjectPHPFiles(): Finder
 	{
 		return Finder::create()
