@@ -1,4 +1,4 @@
-FROM php:8.1.7-fpm-alpine
+FROM php:8.1.12-fpm-alpine
 LABEL MAINTAINER="Pouya Asgharnejad Tehran | https://sakoo.dev"
 
 RUN apk update \
