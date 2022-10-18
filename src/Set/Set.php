@@ -43,14 +43,25 @@ class Set implements Iteratable
 
 	public function each($callback): void
 	{
-		foreach ($this->items as $key => $value) {
-			$callback($value, $key);
-		}
+		array_walk($this->items, $callback);
 	}
 
 	public function map($callback): static
 	{
 		return static::make(array_map($callback, $this->items));
+	}
+
+	public function pluck($key): static
+	{
+		$nestedKeys = explode('.', $key);
+
+		$result = $this->items;
+
+		foreach ($nestedKeys as $column) {
+			$result = array_column($result, $column);
+		}
+
+		return set($result);
 	}
 
 	public function add($key, $value = null): static

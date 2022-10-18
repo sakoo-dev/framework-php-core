@@ -3,7 +3,7 @@
 namespace Sakoo\Framework\Core\Tests\Set;
 
 use Sakoo\Framework\Core\Set\Set;
-use Sakoo\Framework\Core\Testing\TestCase;
+use Sakoo\Framework\Core\Tests\TestCase;
 
 class SetAccessTest extends TestCase
 {

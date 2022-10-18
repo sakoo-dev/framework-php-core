@@ -3,7 +3,7 @@
 namespace Sakoo\Framework\Core\Tests\Set;
 
 use Sakoo\Framework\Core\Set\Set;
-use Sakoo\Framework\Core\Testing\TestCase;
+use Sakoo\Framework\Core\Tests\TestCase;
 
 class SetTest extends TestCase
 {
@@ -95,6 +95,28 @@ class SetTest extends TestCase
 	{
 		$nums = set([1, 2, 3, 4])->map(fn ($item) => $item * 10)->get();
 		$this->assertEquals([10, 20, 30, 40], $nums);
+	}
+
+	public function test_it_can_pluck_multidimential_sets()
+	{
+		$phones = set([
+			[
+				'Brand' => 'Apple',
+				'Model' => [
+					'Name' => 'iPhone',
+				],
+			],
+			[
+				'Brand' => 'Samsung',
+				'Model' => [
+					'Name' => 'Galaxy',
+				],
+			],
+		]);
+
+		$this->assertEquals(['Apple', 'Samsung'], $phones->pluck('Brand')->toArray());
+		$this->assertEquals(['iPhone', 'Galaxy'], $phones->pluck('Model.Name')->toArray());
+		$this->assertEquals([], $phones->pluck('Something')->toArray());
 	}
 
 	public function test_it_can_push_item()
