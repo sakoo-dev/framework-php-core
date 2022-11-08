@@ -69,3 +69,10 @@ if (!function_exists('throwUnless')) {
 		throwIf(!$condition, $exception);
 	}
 }
+
+if (!function_exists('logger')) {
+	function logger(): LoggerInterface
+	{
+		return resolve(LoggerInterface::class);
+	}
+}
