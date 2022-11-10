@@ -11,6 +11,7 @@
       <directory>src/Testing</directory>
       <directory>src/Kernel</directory>
       <directory>src/Handler</directory>
+      <directory>src/ServiceLoader</directory>
 
       <directory>src/Watcher</directory>
       <directory>src/Console/WatcherActions</directory>
