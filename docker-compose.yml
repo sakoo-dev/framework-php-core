@@ -4,12 +4,13 @@ services:
     image: mysql:latest
     restart: unless-stopped
     ports:
-      - '3306:3306'
+      - '${MYSQL_PORT}:3306'
     volumes:
       - mysqldata:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: 'sakoo_test'
-      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_USER: ${MYSQL_USER:-'sakoo'}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-''}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-'sakoo_test'}
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     networks:
       - localnetwork
