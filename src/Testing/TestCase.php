@@ -3,19 +3,29 @@
 namespace Sakoo\Framework\Core\Testing;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use Sakoo\Framework\Core\Kernel\Environment;
-use Sakoo\Framework\Core\Kernel\Kernel;
+use Sakoo\Framework\Core\DateTime\DateTime;
 use Sakoo\Framework\Core\Testing\Traits\AssistantTester;
 
-abstract class TestCase extends PHPUnitTestCase
+abstract class TestCase extends PHPUnitTestCase implements NeedsKernel
 {
 	use AssistantTester;
 
-	protected static ?Kernel $kernel;
+	private static bool $initialized = false;
 
 	public static function setUpBeforeClass(): void
 	{
 		parent::setUpBeforeClass();
-		static::$kernel ??= Kernel::run(Environment::Test);
+
+		if (!static::$initialized) {
+			static::runKernel();
+			static::$initialized = true;
+
+			logger()->info('Sakoo is prepared for Launching!');
+		}
+	}
+
+	protected function tearDown(): void
+	{
+		DateTime::setTestNow();
 	}
 }

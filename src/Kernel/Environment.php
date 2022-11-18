@@ -2,9 +2,8 @@
 
 namespace Sakoo\Framework\Core\Kernel;
 
-enum Environment
+enum Environment: string
 {
-	case Test;
-	case Console;
-	case HTTP;
+	case Debug = 'Debug';
+	case Production = 'Production';
 }

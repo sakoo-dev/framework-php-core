@@ -1,6 +1,8 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use Sakoo\Framework\Core\Container\Container;
+use Sakoo\Framework\Core\Exception\Exception;
 use Sakoo\Framework\Core\Kernel\Kernel;
 use Sakoo\Framework\Core\Set\Set;
 
@@ -14,29 +16,14 @@ if (!function_exists('set')) {
 if (!function_exists('kernel')) {
 	function kernel(): Kernel
 	{
-		global $kernel;
-		return $kernel;
+		return Kernel::getInstance();
 	}
 }
 
 if (!function_exists('container')) {
 	function container(): Container
 	{
-		return kernel()->container;
-	}
-}
-
-if (!function_exists('bind')) {
-	function bind($interface, $object): void
-	{
-		container()->bind($interface, $object);
-	}
-}
-
-if (!function_exists('singleton')) {
-	function singleton($interface, $object): void
-	{
-		container()->singleton($interface, $object);
+		return kernel()->getContainer();
 	}
 }
 
@@ -55,7 +42,7 @@ if (!function_exists('makeInstance')) {
 }
 
 if (!function_exists('throwIf')) {
-	function throwIf($condition, $exception)
+	function throwIf(bool $condition, Exception $exception): void
 	{
 		if ($condition) {
 			throw $exception;
@@ -64,7 +51,7 @@ if (!function_exists('throwIf')) {
 }
 
 if (!function_exists('throwUnless')) {
-	function throwUnless($condition, $exception)
+	function throwUnless(bool $condition, Exception $exception): void
 	{
 		throwIf(!$condition, $exception);
 	}
