@@ -12,6 +12,7 @@
       <directory>src/Kernel</directory>
       <directory>src/Handler</directory>
       <directory>src/ServiceLoader</directory>
+      <file>src/helpers.php</file>
 
       <directory>src/Watcher</directory>
       <directory>src/Console/WatcherActions</directory>
