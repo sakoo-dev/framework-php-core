@@ -7,7 +7,7 @@ use Sakoo\Framework\Core\FileSystem\File;
 
 class Env
 {
-	public static function get(string $key, ?string $default = null): ?string
+	public static function get(string $key, mixed $default = null): mixed
 	{
 		return getenv($key) ?: $default;
 	}

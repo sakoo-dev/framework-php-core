@@ -22,8 +22,8 @@ trait RunKernel
 		Kernel::prepare(Mode::Test, Environment::Debug)
 			->setErrorHandler(new ErrorHandler())
 			->setExceptionHandler(new ExceptionHandler())
-			->setServerTimezone($timeZone)
 			->setServiceLoaders($loaders)
+			->setServerTimezone($timeZone)
 			->run();
 	}
 }

@@ -15,14 +15,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 Env::load(Path::getRootDir() . '/.env');
 
+$environment = Env::get('APP_DEBUG', true) ? Environment::Debug : Environment::Production;
 $loaders = require_once Path::getCoreDir() . '/ServiceLoader/Loaders.php';
 $timeZone = Env::get('SERVER_TIME_ZONE', 'Asia/Tehran');
 
-Kernel::prepare(Mode::Console, Environment::Debug)
+Kernel::prepare(Mode::Console, $environment)
 	->setErrorHandler(new ErrorHandler())
 	->setExceptionHandler(new ExceptionHandler())
-	->setServerTimezone($timeZone)
 	->setServiceLoaders($loaders)
+	->setServerTimezone($timeZone)
 	->run();
 
 /** @var Assistant $assistant */
