@@ -16,11 +16,6 @@ class Path
 		return realpath(__DIR__ . '/../');
 	}
 
-	public static function getAppsDir(): string
-	{
-		return static::getRootDir() . '/apps';
-	}
-
 	public static function getVendorDir(): string
 	{
 		return static::getRootDir() . '/vendor';
