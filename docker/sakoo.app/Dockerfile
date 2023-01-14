@@ -1,11 +1,11 @@
-FROM php:8.1.12-fpm-alpine
+FROM php:8.1.14-fpm-alpine
 LABEL MAINTAINER="Pouya Asgharnejad Tehran | https://sakoo.dev"
 
 RUN apk update \
 && apk upgrade \
-&& apk add git curl zip unzip nodejs npm $PHPIZE_DEPS
+&& apk add --update git curl zip unzip nodejs npm linux-headers $PHPIZE_DEPS
 
-RUN pecl install inotify && docker-php-ext-enable inotify \
+RUN pecl install inotify-3.0.0 && docker-php-ext-enable inotify \
 && pecl install xdebug && docker-php-ext-enable xdebug \
 && docker-php-ext-install pdo_mysql mysqli
 

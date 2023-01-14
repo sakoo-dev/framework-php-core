@@ -73,7 +73,7 @@ if [ $# -gt 0 ]; then
   elif [ "$1" == "shell" ]; then
     check_service_is_up
     shift 1
-    docker-compose exec "$APP_SERVICE" bash "$@"
+    docker-compose exec "$APP_SERVICE" /bin/sh "$@"
   else
     docker-compose "$@"
   fi
