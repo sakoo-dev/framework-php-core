@@ -2,8 +2,6 @@
 
 namespace Sakoo\Framework\Core\Set;
 
-use ArrayIterator;
-
 class Set implements Iteratable
 {
 	use SetAccess;
@@ -107,8 +105,8 @@ class Set implements Iteratable
 		return $this->items;
 	}
 
-	public function getIterator(): ArrayIterator
+	public function getIterator(): \ArrayIterator
 	{
-		return new ArrayIterator($this->items);
+		return new \ArrayIterator($this->items);
 	}
 }

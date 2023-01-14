@@ -2,9 +2,7 @@
 
 namespace Sakoo\Framework\Core\Set;
 
-use IteratorAggregate;
-
-interface Iteratable extends IteratorAggregate
+interface Iteratable extends \IteratorAggregate
 {
 	public function exists($name): bool;
 

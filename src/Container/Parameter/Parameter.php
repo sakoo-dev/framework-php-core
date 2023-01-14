@@ -2,8 +2,6 @@
 
 namespace Sakoo\Framework\Core\Container\Parameter;
 
-use ReflectionParameter;
-use ReflectionType;
 use Sakoo\Framework\Core\Container\Container;
 
 class Parameter
@@ -12,7 +10,7 @@ class Parameter
 	{
 	}
 
-	public static function resolve(Container $container, ReflectionParameter $parameter): mixed
+	public static function resolve(Container $container, \ReflectionParameter $parameter): mixed
 	{
 		$dependency = $parameter->getType();
 
@@ -27,7 +25,7 @@ class Parameter
 		return static::generateDefaultValue($dependency);
 	}
 
-	private static function generateDefaultValue(?ReflectionType $type): mixed
+	private static function generateDefaultValue(?\ReflectionType $type): mixed
 	{
 		$default = null;
 
@@ -44,7 +42,7 @@ class Parameter
 		return $default;
 	}
 
-	private static function canResolveType(?ReflectionType $type): bool
+	private static function canResolveType(?\ReflectionType $type): bool
 	{
 		return !is_null($type) && !$type->isBuiltin();
 	}

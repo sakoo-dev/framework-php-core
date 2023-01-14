@@ -3,7 +3,6 @@
 namespace Sakoo\Framework\Core\Container;
 
 use Psr\Container\ContainerInterface;
-use ReflectionClass;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotFoundException;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotInstantiableException;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
@@ -61,7 +60,7 @@ class Container implements ContainerInterface
 	{
 		throwUnless(class_exists($interface), new ContainerClassNotFoundException());
 
-		$reflector = new ReflectionClass($interface);
+		$reflector = new \ReflectionClass($interface);
 
 		throwUnless($reflector->isInstantiable(), new ContainerClassNotInstantiableException());
 

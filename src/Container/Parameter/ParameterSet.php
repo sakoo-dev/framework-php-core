@@ -2,7 +2,6 @@
 
 namespace Sakoo\Framework\Core\Container\Parameter;
 
-use ReflectionMethod;
 use Sakoo\Framework\Core\Container\Container;
 
 class ParameterSet
@@ -11,7 +10,7 @@ class ParameterSet
 	{
 	}
 
-	public static function resolveFromConstructor(Container $container, ?ReflectionMethod $constructor): array
+	public static function resolveFromConstructor(Container $container, ?\ReflectionMethod $constructor): array
 	{
 		if (is_null($constructor)) {
 			return [];
