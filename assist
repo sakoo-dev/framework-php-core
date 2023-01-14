@@ -27,5 +27,5 @@ Kernel::prepare(Mode::Console, $environment)
 	->run();
 
 /** @var Assistant $assistant */
-$assistant = resolve(Assistant::class);
+$assistant = require_once Path::getCoreDir() . '/Console/Bootstrap.php';
 $assistant->console->run();

@@ -3,7 +3,7 @@
 namespace Sakoo\Framework\Core\Testing\Traits;
 
 use Sakoo\Framework\Core\Console\Assistant;
-use Sakoo\Framework\Core\Console\Commands\ZenCommand;
+use Sakoo\Framework\Core\Path\Path;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 trait AssistantTester
@@ -19,10 +19,6 @@ trait AssistantTester
 
 	protected function getAssistantApp(): Assistant
 	{
-		/** @var Assistant $assitant */
-		$assistant = resolve(Assistant::class);
-		$assistant->console->setDefaultCommand(ZenCommand::getDefaultName());
-
-		return $assistant;
+		return require Path::getCoreDir() . '/Console/Bootstrap.php';
 	}
 }
