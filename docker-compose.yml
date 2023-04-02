@@ -1,19 +1,19 @@
 services:
 
   mysql:
-    image: mysql:latest
+    image: mysql:8.0.32
     restart: unless-stopped
     ports:
       - '${MYSQL_PORT}:3306'
     volumes:
       - mysqldata:/var/lib/mysql
     environment:
-      MYSQL_USER: ${MYSQL_USER:-'sakoo'}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-''}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-'sakoo_test'}
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     networks:
-      - localnetwork
+      - sakoo
     healthcheck:
       test: ["CMD", "mysqladmin", "ping"]
 
@@ -30,12 +30,12 @@ services:
     depends_on:
       - mysql
     networks:
-      - localnetwork
+      - sakoo
 
 volumes:
   mysqldata:
     driver: local
 
 networks:
-  localnetwork:
+  sakoo:
     driver: bridge
