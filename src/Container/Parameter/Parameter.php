@@ -6,26 +6,26 @@ use Sakoo\Framework\Core\Container\Container;
 
 class Parameter
 {
-	private function __construct()
+	public function __construct(private Container $container)
 	{
 	}
 
-	public static function resolve(Container $container, \ReflectionParameter $parameter): mixed
+	public function resolve(\ReflectionParameter $parameter): mixed
 	{
 		$dependency = $parameter->getType();
 
-		if (static::canResolveType($dependency)) {
-			return $container->resolve("$dependency");
+		if ($this->canResolveType($dependency)) {
+			return $this->container->resolve("$dependency");
 		}
 
 		if ($parameter->isDefaultValueAvailable()) {
 			return $parameter->getDefaultValue();
 		}
 
-		return static::generateDefaultValue($dependency);
+		return $this->generateDefaultValue($dependency);
 	}
 
-	private static function generateDefaultValue(?\ReflectionType $type): mixed
+	private function generateDefaultValue(?\ReflectionType $type): mixed
 	{
 		$default = null;
 
@@ -42,7 +42,7 @@ class Parameter
 		return $default;
 	}
 
-	private static function canResolveType(?\ReflectionType $type): bool
+	private function canResolveType(?\ReflectionType $type): bool
 	{
 		return !is_null($type) && !$type->isBuiltin();
 	}

@@ -6,21 +6,17 @@ use Sakoo\Framework\Core\Container\Container;
 
 class ParameterSet
 {
-	private function __construct()
+	public function __construct(private Container $container)
 	{
 	}
 
-	public static function resolveFromConstructor(Container $container, ?\ReflectionMethod $constructor): array
+	public function resolve(array $parameters): array
 	{
-		if (is_null($constructor)) {
-			return [];
-		}
-
-		$parameters = $constructor->getParameters();
-
 		$dependencies = [];
+		$parameterEntity = new Parameter($this->container);
+
 		foreach ($parameters as $parameter) {
-			$dependencies[] = Parameter::resolve($container, $parameter);
+			$dependencies[] = $parameterEntity->resolve($parameter);
 		}
 
 		return $dependencies;

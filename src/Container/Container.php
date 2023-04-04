@@ -56,16 +56,22 @@ class Container implements ContainerInterface
 		return $this->new($interface);
 	}
 
-	public function new(string $interface): object
+	public function new(string $class): object
 	{
-		throwUnless(class_exists($interface), new ContainerClassNotFoundException());
+		throwUnless(class_exists($class), new ContainerClassNotFoundException());
 
-		$reflector = new \ReflectionClass($interface);
+		$reflector = new \ReflectionClass($class);
 
 		throwUnless($reflector->isInstantiable(), new ContainerClassNotInstantiableException());
 
 		$constructor = $reflector->getConstructor();
-		$params = ParameterSet::resolveFromConstructor($this, $constructor);
+		$params = [];
+
+		if (!is_null($constructor)) {
+			$parameterSet = new ParameterSet($this);
+			$params = $parameterSet->resolve($constructor->getParameters());
+		}
+
 		return $reflector->newInstanceArgs($params);
 	}
 
