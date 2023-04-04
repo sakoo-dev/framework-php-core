@@ -2,7 +2,7 @@
 
 namespace Sakoo\Framework\Core\Logger;
 
-use Sakoo\Framework\Core\DateTime\DateTime;
+use Sakoo\Framework\Core\Clock\Clock;
 
 class LogFormatter
 {
@@ -16,6 +16,7 @@ class LogFormatter
 
 	public function __toString()
 	{
-		return DateTime::getNow('Y-m-d H:i:s') . " - $this->mode $this->env - " . strtoupper($this->level) . " - $this->message";
+		$clock = new Clock();
+		return $clock->now()->format('Y-m-d H:i:s') . " - $this->mode $this->env - " . strtoupper($this->level) . " - $this->message";
 	}
 }

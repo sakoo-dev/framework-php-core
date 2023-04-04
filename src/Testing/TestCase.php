@@ -3,7 +3,7 @@
 namespace Sakoo\Framework\Core\Testing;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use Sakoo\Framework\Core\DateTime\DateTime;
+use Sakoo\Framework\Core\Clock\Clock;
 use Sakoo\Framework\Core\Testing\Traits\AssistantTester;
 
 abstract class TestCase extends PHPUnitTestCase implements NeedsKernel
@@ -26,6 +26,6 @@ abstract class TestCase extends PHPUnitTestCase implements NeedsKernel
 
 	protected function tearDown(): void
 	{
-		DateTime::setTestNow();
+		Clock::setTestNow();
 	}
 }

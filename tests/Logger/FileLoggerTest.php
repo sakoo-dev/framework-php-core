@@ -2,7 +2,7 @@
 
 namespace Sakoo\Framework\Core\Tests\Logger;
 
-use Sakoo\Framework\Core\DateTime\DateTime;
+use Sakoo\Framework\Core\Clock\Clock;
 use Sakoo\Framework\Core\FileSystem\Disk;
 use Sakoo\Framework\Core\FileSystem\File;
 use Sakoo\Framework\Core\Path\Path;
@@ -41,7 +41,7 @@ class FileLoggerTest extends TestCase
 	/** @dataProvider getLogLevels */
 	public function test_it_can_log_to_file($level)
 	{
-		DateTime::setTestNow('2022-01-01 00:00:00');
+		Clock::setTestNow('2022-01-01 00:00:00');
 
 		$message = rand(0, 9999);
 		logger()->{$level}($message);
@@ -50,7 +50,8 @@ class FileLoggerTest extends TestCase
 
 	private function getFormattedLog(string $level, string $message): string
 	{
-		return DateTime::getNow('Y-m-d H:i:s') . ' - Test Debug - ' . strtoupper($level) . ' - ' . $message . PHP_EOL;
+		$clock = new Clock();
+		return $clock->now()->format('Y-m-d H:i:s') . ' - Test Debug - ' . strtoupper($level) . ' - ' . $message . PHP_EOL;
 	}
 
 	private function resetFileSystemTestEnv(): void

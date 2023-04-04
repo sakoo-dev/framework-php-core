@@ -28,6 +28,7 @@
         "symfony/finder": "^6.0",
         "psr/container": "^2.0",
         "psr/log": "^3.0",
+        "psr/clock": "^1.0",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
@@ -38,5 +39,10 @@
     "scripts": {
         "stylecheck": "./vendor/bin/php-cs-fixer fix --dry-run",
         "test": "./vendor/bin/phpunit"
+    },
+    "provide": {
+        "psr/container-implementation": "2.0",
+        "psr/log-implementation": "3.0",
+        "psr/clock-implementation": "1.0"
     }
 }
