@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Env;
 
 use Sakoo\Framework\Core\Env\Env;
@@ -8,14 +10,14 @@ use Sakoo\Framework\Core\FileSystem\File;
 use Sakoo\Framework\Core\Path\Path;
 use Sakoo\Framework\Core\Tests\TestCase;
 
-class EnvTest extends TestCase
+final class EnvTest extends TestCase
 {
 	private string $dotEnvPath;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->dotEnvPath = Path::getStorageDir() . '/tests/env/.env';
+		$this->dotEnvPath = Path::getTempTestDir() . '/env/.env';
 	}
 
 	protected function tearDown(): void

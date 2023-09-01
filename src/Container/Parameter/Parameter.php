@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Container\Parameter;
 
 use Sakoo\Framework\Core\Container\Container;
@@ -37,7 +39,7 @@ class Parameter
 			$type = substr("$type", 1, strlen("$type") - 1);
 		}
 
-		settype($default, $type);
+		settype($default, "$type");
 
 		return $default;
 	}

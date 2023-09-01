@@ -7,3 +7,4 @@ storage/
 .phpunit.result.cache
 .DS_Store
 .env
+*.ignore

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Watcher;
 
 use Sakoo\Framework\Core\Watcher\Contracts\Event;

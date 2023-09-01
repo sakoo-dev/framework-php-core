@@ -1,4 +1,4 @@
-FROM php:8.1.17-fpm-alpine
+FROM php:8.1.20-fpm-alpine
 LABEL MAINTAINER="Pouya Asgharnejad Tehran | https://sakoo.dev"
 
 RUN apk add --no-cache git curl zip unzip nodejs npm linux-headers $PHPIZE_DEPS
@@ -20,9 +20,11 @@ RUN sed -i 's/^pm\.max_children.*/pm.max_children = 10/g' /usr/local/etc/php-fpm
 && sed -i 's/^pm\.max_spare_servers.*/pm.max_spare_servers = 4/g' /usr/local/etc/php-fpm.d/www.conf \
 && sed -i 's/^listen\.allowed_clients.*/listen.allowed_clients = 127.0.0.1/g' /usr/local/etc/php-fpm.d/www.conf
 
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+RUN chown -R www-data:www-data /var/www/html/
 
 WORKDIR /var/www/html/
+
+USER www-data:www-data
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pgrep php-fpm || exit 1
 

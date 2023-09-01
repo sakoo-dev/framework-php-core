@@ -38,10 +38,18 @@ jobs:
     - name: Code style check
       run: composer stylecheck
 
-    - name: Build docker image
+    - name: Build docker image dev
       run: |
         docker build . -f ./docker/sakoo.app/Dockerfile -t sakoo.app -q
 
-    - name: Run automated tests
+    - name: Build docker image prod
       run: |
-        docker run -v /home/runner/work/framework-php-core/framework-php-core:/var/www/html/ sakoo.app composer test
+        docker build . -f ./docker/sakoo.app/Dockerfile.prod -t sakoo-prod.app -q
+
+    - name: Run automated tests dev
+      run: |
+        docker run -v $PWD:/var/www/html/ sakoo.app composer test-nolog
+
+    - name: Run automated tests prod
+      run: |
+        docker run sakoo-prod.app composer test-nolog

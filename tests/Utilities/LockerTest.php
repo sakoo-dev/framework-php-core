@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Utilities;
 
 use Sakoo\Framework\Core\Tests\TestCase;
 use Sakoo\Framework\Core\Utilities\Locker;
 
-class LockerTest extends TestCase
+final class LockerTest extends TestCase
 {
 	public function test_locker_works_properly()
 	{

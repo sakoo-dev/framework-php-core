@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Set;
 
 use Sakoo\Framework\Core\Set\Set;
 use Sakoo\Framework\Core\Tests\TestCase;
 
-class SetTest extends TestCase
+final class SetTest extends TestCase
 {
 	private Set $set;
 

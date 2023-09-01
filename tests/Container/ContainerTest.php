@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Container;
 
 use Sakoo\Framework\Core\Container\Container;
-use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\ClassNotFoundException;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\TypeMismatchException;
 use Sakoo\Framework\Core\Tests\TestCase;
 
-class ContainerTest extends TestCase
+final class ContainerTest extends TestCase
 {
 	private Container $container;
 
@@ -49,18 +52,6 @@ class ContainerTest extends TestCase
 		$this->assertInstanceOf(TestClass::class, $object);
 	}
 
-	public function test_it_throws_exception_when_class_not_found_on_new()
-	{
-		$this->expectException(ContainerClassNotFoundException::class);
-		$this->container->new('something');
-	}
-
-	public function test_it_throws_exception_when_class_not_found_on_resolve()
-	{
-		$this->expectException(ContainerClassNotFoundException::class);
-		$this->container->resolve('something');
-	}
-
 	public function test_it_resolves_abstractions()
 	{
 		$this->container->bind(TestInterface::class, TestClass::class);
@@ -92,5 +83,29 @@ class ContainerTest extends TestCase
 
 		$this->expectException(ContainerNotFoundException::class);
 		$this->container->get('another');
+	}
+
+	public function test_it_throws_exception_when_class_not_found_on_new()
+	{
+		$this->expectException(ClassNotFoundException::class);
+		$this->container->new('something');
+	}
+
+	public function test_it_throws_exception_when_class_not_found_on_resolve()
+	{
+		$this->expectException(ClassNotFoundException::class);
+		$this->container->resolve('something');
+	}
+
+	public function test_container_cannot_bind_mismatch_type()
+	{
+		$this->expectException(TypeMismatchException::class);
+		$this->container->singleton(TestInterface::class, new \stdClass());
+	}
+
+	public function test_container_cannot_singleton_mismatch_type()
+	{
+		$this->expectException(TypeMismatchException::class);
+		$this->container->bind(TestInterface::class, new \stdClass());
 	}
 }

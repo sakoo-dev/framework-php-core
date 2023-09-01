@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 use Psr\Log\LoggerInterface;
-use Sakoo\Framework\Core\Container\Container;
+use Sakoo\Framework\Core\Container\ContainerInterface;
 use Sakoo\Framework\Core\Exception\Exception;
 use Sakoo\Framework\Core\Kernel\Kernel;
+use Sakoo\Framework\Core\Set\Iteratable;
 use Sakoo\Framework\Core\Set\Set;
+use Sakoo\Framework\Core\Str\Str;
+use Sakoo\Framework\Core\Str\Stringable;
 
 if (!function_exists('set')) {
-	function set(array $value = []): Set
+	function set(array $value = []): Iteratable
 	{
 		return Set::make($value);
 	}
@@ -21,7 +26,7 @@ if (!function_exists('kernel')) {
 }
 
 if (!function_exists('container')) {
-	function container(): Container
+	function container(): ContainerInterface
 	{
 		return kernel()->getContainer();
 	}
@@ -61,5 +66,19 @@ if (!function_exists('logger')) {
 	function logger(): LoggerInterface
 	{
 		return resolve(LoggerInterface::class);
+	}
+}
+
+if (!function_exists('str')) {
+	function str(string $value): Stringable
+	{
+		return new Str($value);
+	}
+}
+
+if (!function_exists('__')) {
+	function __(string $value): string
+	{
+		return $value;
 	}
 }

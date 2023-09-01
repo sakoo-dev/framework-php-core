@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests;
 
 use Sakoo\Framework\Core\Env\Env;
@@ -17,7 +19,7 @@ trait RunKernel
 		Env::load(Path::getRootDir() . '/.env');
 
 		$loaders = require_once Path::getCoreDir() . '/ServiceLoader/Loaders.php';
-		$timeZone = Env::get('SERVER_TIME_ZONE', 'Asia/Tehran');
+		$timeZone = Env::get('SERVER_TIME_ZONE', 'UTC');
 
 		Kernel::prepare(Mode::Test, Environment::Debug)
 			->setErrorHandler(new ErrorHandler())

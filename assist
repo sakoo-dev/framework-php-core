@@ -17,7 +17,7 @@ Env::load(Path::getRootDir() . '/.env');
 
 $environment = Env::get('APP_DEBUG', true) ? Environment::Debug : Environment::Production;
 $loaders = require_once Path::getCoreDir() . '/ServiceLoader/Loaders.php';
-$timeZone = Env::get('SERVER_TIME_ZONE', 'Asia/Tehran');
+$timeZone = Env::get('SERVER_TIME_ZONE', 'UTC');
 
 Kernel::prepare(Mode::Console, $environment)
 	->setErrorHandler(new ErrorHandler())

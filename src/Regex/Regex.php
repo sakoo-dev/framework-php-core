@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Regex;
 
-class Regex
+use Sakoo\Framework\Core\Str\Stringable;
+
+class Regex implements \Stringable
 {
 	public const ALPHABET_UPPER = 'A-Z';
 	public const ALPHABET_LOWER = 'a-z';
@@ -19,167 +23,190 @@ class Regex
 		return new static();
 	}
 
-	public function append(string $value): static
+	public function safeAdd(string $value): static
 	{
 		$this->add($this->escapeChars($value));
+
 		return $this;
 	}
 
 	public function add(string $value): static
 	{
 		$this->pattern .= $value;
+
 		return $this;
 	}
 
 	public function startOfLine(): static
 	{
 		$this->add('^');
+
 		return $this;
 	}
 
 	public function endOfLine(): static
 	{
 		$this->add('$');
+
 		return $this;
 	}
 
 	public function startsWith(string|callable $value): static
 	{
 		$this->startOfLine();
-		$this->callOrAppend($value);
+		$this->callOrAdd($value);
+
 		return $this;
 	}
 
 	public function endsWith(string|callable $value): static
 	{
-		$this->callOrAppend($value);
+		$this->callOrAdd($value);
 		$this->endOfLine();
+
 		return $this;
 	}
 
 	public function digit(int $length = 0): static
 	{
 		$this->add('\d' . ($length > 0 ? '{' . $length . '}' : ''));
+
 		return $this;
 	}
 
 	public function oneOf(array $value): static
 	{
 		$this->wrap(fn ($exp) => $this->add(implode('|', $value)), true);
+
 		return $this;
 	}
 
-	public function wrap(callable $fn, bool $nonCapturing = false): static
+	public function wrap(string|callable $value, bool $nonCapturing = false): static
 	{
 		$this->add('(' . ($nonCapturing ? '?:' : ''));
-		$fn($this);
+		$this->callOrAdd($value);
 		$this->add(')');
+
 		return $this;
 	}
 
-	public function bracket(callable $fn): static
+	public function bracket(string|callable $value): static
 	{
 		$this->add('[');
-		$fn($this);
+		$this->callOrAdd($value);
 		$this->add(']');
+
 		return $this;
 	}
 
 	public function maybe(string $value): static
 	{
-		$this->append($value);
+		$this->safeAdd($value);
 		$this->add('?');
+
 		return $this;
 	}
 
 	public function anything(): static
 	{
 		$this->add('.*');
+
 		return $this;
 	}
 
 	public function something(): static
 	{
 		$this->add('.+');
+
 		return $this;
 	}
 
 	public function unixLineBreak(): static
 	{
-		$this->append('\n');
+		$this->add('\n');
+
 		return $this;
 	}
 
 	public function windowsLineBreak(): static
 	{
-		$this->append('\r\n');
+		$this->add('\r\n');
+
 		return $this;
 	}
 
 	public function tab(): static
 	{
-		$this->append('\t');
+		$this->add('\t');
+
 		return $this;
 	}
 
 	public function space(): static
 	{
-		$this->append('\s');
+		$this->add('\s');
+
 		return $this;
 	}
 
 	public function word(): static
 	{
-		$this->append('\w');
+		$this->add('\w');
+
 		return $this;
 	}
 
 	public function chars(...$values): static
 	{
 		$this->add(implode('', $values));
+
 		return $this;
 	}
 
 	public function anythingWithout(string|callable $value): static
 	{
 		$this->add('[^');
-		$this->callOrAppend($value);
+		$this->callOrAdd($value);
 		$this->add(']*');
+
 		return $this;
 	}
 
 	public function somethingWithout(string|callable $value): static
 	{
 		$this->add('[^');
-		$this->callOrAppend($value);
+		$this->callOrAdd($value);
 		$this->add(']+');
+
 		return $this;
 	}
 
 	public function anythingWith(string|callable $value): static
 	{
 		$this->add('[');
-		$this->callOrAppend($value);
+		$this->callOrAdd($value);
 		$this->add(']*');
+
 		return $this;
 	}
 
 	public function somethingWith(string|callable $value): static
 	{
 		$this->add('[');
-		$this->callOrAppend($value);
+		$this->callOrAdd($value);
 		$this->add(']+');
+
 		return $this;
 	}
 
-	private function callOrAppend(string|callable $value): void
+	private function callOrAdd(string|callable $value): void
 	{
 		if (is_callable($value)) {
 			$value($this);
 		}
 
 		if (is_string($value)) {
-			$this->append($value);
+			$this->safeAdd($value);
 		}
 	}
 
@@ -192,10 +219,39 @@ class Regex
 		return preg_quote($value, '/');
 	}
 
+	public function lookahead(string|callable $value): static
+	{
+		$this->wrap(fn ($exp) => $exp->add('?=') && $this->callOrAdd($value));
+
+		return $this;
+	}
+
+	public function lookbehind(string|callable $value): static
+	{
+		$this->wrap(fn ($exp) => $exp->add('?<=') && $this->callOrAdd($value));
+
+		return $this;
+	}
+
+	public function negativeLookahead(string|callable $value): static
+	{
+		$this->wrap(fn ($exp) => $exp->add('?!') && $this->callOrAdd($value));
+
+		return $this;
+	}
+
+	public function negativeLookbehind(string|callable $value): static
+	{
+		$this->wrap(fn ($exp) => $exp->add('?<!') && $this->callOrAdd($value));
+
+		return $this;
+	}
+
 	public function match(string $value): array
 	{
 		$matches = null;
 		preg_match("/$this->pattern/", $value, $matches);
+
 		return $matches;
 	}
 
@@ -203,6 +259,7 @@ class Regex
 	{
 		$matches = null;
 		preg_match_all("/$this->pattern/", $value, $matches);
+
 		return $matches;
 	}
 
@@ -211,9 +268,14 @@ class Regex
 		return !empty($this->match($value));
 	}
 
-	public function replace(string $string, string $replace): mixed
+	public function replace(Stringable|string $string, string $replace): array|null|string
 	{
-		return preg_replace("/$this->pattern/", $replace, $string);
+		return preg_replace("/$this->pattern/", $replace, "$string");
+	}
+
+	public function split(Stringable|string $subject): array|false
+	{
+		return preg_split("/$this->pattern/", "$subject");
 	}
 
 	public function get(): string

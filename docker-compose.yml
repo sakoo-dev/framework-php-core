@@ -4,7 +4,7 @@ services:
     image: mysql:8.0.32
     restart: unless-stopped
     ports:
-      - '${MYSQL_PORT}:3306'
+      - '${MYSQL_PORT:-3306}:3306'
     volumes:
       - mysqldata:/var/lib/mysql
     environment:

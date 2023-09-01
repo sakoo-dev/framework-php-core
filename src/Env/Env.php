@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Env;
 
 use Sakoo\Framework\Core\FileSystem\Disk;
@@ -18,6 +20,7 @@ class Env
 
 		foreach ($lines as $line) {
 			$line = trim($line);
+
 			if (static::matchesPattern($line)) {
 				static::storeValue(...static::getKeyValue($line));
 			}
@@ -27,12 +30,13 @@ class Env
 	private static function readDotEnv(string $path): array
 	{
 		$file = File::open(Disk::Local, $path);
+
 		return $file->exists() ? $file->readLines() : [];
 	}
 
 	private static function matchesPattern(string $line): bool
 	{
-		return preg_match('/^([a-zA-Z_]+[a-zA-Z0-9_]*)=(.*)$/', $line);
+		return (bool) preg_match('/^([a-zA-Z_]+[a-zA-Z0-9_]*)=(.*)$/', $line);
 	}
 
 	private static function getKeyValue(string $line): array

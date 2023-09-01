@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Set;
 
 class Set implements Iteratable
@@ -16,6 +18,7 @@ class Set implements Iteratable
 	{
 		$object = new static();
 		$object->items = $array;
+
 		return $object;
 	}
 
@@ -66,10 +69,12 @@ class Set implements Iteratable
 	{
 		if (is_null($value)) {
 			$this->items[] = $key;
+
 			return $this;
 		}
 
 		$this->items[$key] = $value;
+
 		return $this;
 	}
 
@@ -77,12 +82,14 @@ class Set implements Iteratable
 	{
 		if (is_int($key)) {
 			unset($this->items[array_keys($this->items)[$key]]);
+
 			return $this;
 		}
 
 		if ($this->exists($key)) {
 			unset($this->items[$key]);
 		}
+
 		return $this;
 	}
 
@@ -94,6 +101,7 @@ class Set implements Iteratable
 
 		if (is_int($key)) {
 			$indexValue = current(array_slice($this->items, $key, 1));
+
 			return $indexValue ?: null;
 		}
 

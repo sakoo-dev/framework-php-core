@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Console\WatcherActions;
 
 use Sakoo\Framework\Core\Path\Path;

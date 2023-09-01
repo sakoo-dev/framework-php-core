@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Logger;
 
 use Sakoo\Framework\Core\Clock\Clock;
@@ -16,7 +18,8 @@ class LogFormatter
 
 	public function __toString()
 	{
-		$clock = new Clock();
-		return $clock->now()->format('Y-m-d H:i:s') . " - $this->mode $this->env - " . strtoupper($this->level) . " - $this->message";
+		$dateTime = (new Clock())->now()->format('Y-m-d H:i:s');
+
+		return "$dateTime - $this->mode $this->env - " . strtoupper($this->level) . " - $this->message";
 	}
 }

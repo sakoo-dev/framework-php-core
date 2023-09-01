@@ -29,3 +29,6 @@ fresh:
 
 watch:
 	@./sakoo assist watch
+
+doc:
+	@./sakoo assist doc:gen

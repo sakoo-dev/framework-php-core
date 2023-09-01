@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Console\Commands;
 
 use Sakoo\Framework\Core\Console\Command;

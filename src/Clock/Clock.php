@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Clock;
 
 use Psr\Clock\ClockInterface;
@@ -15,6 +17,7 @@ class Clock implements ClockInterface
 
 		if (is_null($datetime)) {
 			static::$testNow = null;
+
 			return;
 		}
 
