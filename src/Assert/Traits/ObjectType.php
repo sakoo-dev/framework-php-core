@@ -20,7 +20,7 @@ trait ObjectType
 		static::throwIf(is_object($value), $message);
 	}
 
-	public static function instanceOf(string $class, mixed $value, string $message = ''): void
+	public static function instanceOf(mixed $value, string $class, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not instance of %s',
@@ -31,7 +31,7 @@ trait ObjectType
 		static::throwUnless(is_subclass_of($value, $class), $message);
 	}
 
-	public static function notInstanceOf(string $class, mixed $value, string $message = ''): void
+	public static function notInstanceOf(mixed $value, string $class, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is instance of %s',

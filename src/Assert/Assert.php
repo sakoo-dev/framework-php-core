@@ -31,6 +31,16 @@ class Assert
 	use StringType;
 	use TraversableType;
 
+	public static function that(mixed $value): AssertionChain
+	{
+		return new AssertionChain($value);
+	}
+
+	public static function lazy(): LazyAssertion
+	{
+		return new LazyAssertion();
+	}
+
 	private static function throwIf(bool $condition, string $message = ''): void
 	{
 		static::throwUnless(!$condition, $message);

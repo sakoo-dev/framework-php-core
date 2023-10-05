@@ -8,5 +8,5 @@ use Sakoo\Framework\Core\Testing\TestCase as SakooTestCase;
 
 abstract class TestCase extends SakooTestCase
 {
-	use RunKernel;
+	use Bootstrap;
 }

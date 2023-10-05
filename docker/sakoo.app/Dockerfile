@@ -14,16 +14,8 @@ RUN echo "xdebug.mode=develop,coverage,debug,gcstats,profile,trace" >> /usr/loca
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN sed -i 's/^pm\.max_children.*/pm.max_children = 10/g' /usr/local/etc/php-fpm.d/www.conf \
-&& sed -i 's/^pm\.start_servers.*/pm.start_servers = 3/g' /usr/local/etc/php-fpm.d/www.conf \
-&& sed -i 's/^pm\.min_spare_servers.*/pm.min_spare_servers = 2/g' /usr/local/etc/php-fpm.d/www.conf \
-&& sed -i 's/^pm\.max_spare_servers.*/pm.max_spare_servers = 4/g' /usr/local/etc/php-fpm.d/www.conf \
-&& sed -i 's/^listen\.allowed_clients.*/listen.allowed_clients = 127.0.0.1/g' /usr/local/etc/php-fpm.d/www.conf
-
 RUN chown -R www-data:www-data /var/www/html/
-
 WORKDIR /var/www/html/
-
 USER www-data:www-data
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pgrep php-fpm || exit 1

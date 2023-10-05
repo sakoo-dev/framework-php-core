@@ -12,7 +12,7 @@ use Sakoo\Framework\Core\Kernel\Kernel;
 use Sakoo\Framework\Core\Kernel\Mode;
 use Sakoo\Framework\Core\Path\Path;
 
-trait RunKernel
+trait Bootstrap
 {
 	public static function runKernel(): void
 	{

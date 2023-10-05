@@ -17,9 +17,7 @@ RUN sed -i 's/^pm\.max_children.*/pm.max_children = 10/g' /usr/local/etc/php-fpm
 COPY . /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html/
-
 WORKDIR /var/www/html/
-
 USER www-data:www-data
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pgrep php-fpm || exit 1

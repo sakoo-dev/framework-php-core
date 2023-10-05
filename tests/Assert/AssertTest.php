@@ -42,16 +42,16 @@ final class AssertTest extends TestCase
 				->withType(InvalidArgumentException::class)
 				->withMessage(sprintf(
 					$message,
-					Variable::stringify($item[1]),
 					Variable::stringify($item[0]),
+					Variable::stringify($item[1]),
 				))->validate();
 		}
 	}
 
 	public function test_it_length_assertion_works_properly()
 	{
-		$valid = [[6, 'ABCDEF']];
-		$invalid = [[7, 'ABCDEF']];
+		$valid = [['ABCDEF', 6]];
+		$invalid = [['ABCDEF', 7]];
 
 		foreach ($valid as $item) {
 			Assert::length(...$item);
@@ -62,17 +62,17 @@ final class AssertTest extends TestCase
 				->withType(InvalidArgumentException::class)
 				->withMessage(sprintf(
 					'The length of %s is %s, Expected %s',
-					Variable::stringify($item[1]),
-					Variable::stringify(strlen($item[1])),
 					Variable::stringify($item[0]),
+					Variable::stringify(strlen($item[0])),
+					Variable::stringify($item[1]),
 				))->validate();
 		}
 	}
 
 	public function test_it_count_assertion_works_properly()
 	{
-		$valid = [[3, ['A', 'B', 'C']]];
-		$invalid = [[2, ['A', 'B', 'C']]];
+		$valid = [[['A', 'B', 'C'], 3]];
+		$invalid = [[['A', 'B', 'C'], 2]];
 
 		foreach ($valid as $item) {
 			Assert::count(...$item);
@@ -83,9 +83,9 @@ final class AssertTest extends TestCase
 				->withType(InvalidArgumentException::class)
 				->withMessage(sprintf(
 					'The count of %s is %s, Expected %s',
-					Variable::stringify($item[1]),
-					Variable::stringify(count($item[1])),
 					Variable::stringify($item[0]),
+					Variable::stringify(count($item[0])),
+					Variable::stringify($item[1]),
 				))->validate();
 		}
 	}
@@ -381,62 +381,62 @@ final class AssertTest extends TestCase
 	{
 		yield 'instanceOf' => [
 			'function' => 'instanceOf',
-			'valid' => [[TestCase::class, static::class]],
-			'invalid' => [[Exception::class, static::class]],
+			'valid' => [[static::class, TestCase::class]],
+			'invalid' => [[static::class, Exception::class]],
 			'message' => 'Given value %s is not instance of %s',
 		];
 		yield 'notInstanceOf' => [
 			'function' => 'notInstanceOf',
-			'valid' => [[Exception::class, static::class]],
-			'invalid' => [[TestCase::class, static::class]],
+			'valid' => [[static::class, Exception::class]],
+			'invalid' => [[static::class, TestCase::class]],
 			'message' => 'Given value %s is instance of %s',
 		];
 		yield 'equals' => [
 			'function' => 'equals',
-			'valid' => [['3', 3]],
-			'invalid' => [['3', 4]],
+			'valid' => [[3, '3']],
+			'invalid' => [[4, '3']],
 			'message' => 'Given value %s is not equals to %s',
 		];
 		yield 'notEquals' => [
 			'function' => 'notEquals',
-			'valid' => [['3', 4]],
-			'invalid' => [['3', 3]],
+			'valid' => [[4, '3']],
+			'invalid' => [[3, '3']],
 			'message' => 'Given value %s is equals to %s',
 		];
 		yield 'same' => [
 			'function' => 'same',
 			'valid' => [[3, 3]],
-			'invalid' => [['3', 3]],
+			'invalid' => [[3, '3']],
 			'message' => 'Given value %s is not same to %s',
 		];
 		yield 'notSame' => [
 			'function' => 'notSame',
-			'valid' => [['3', 3]],
+			'valid' => [[3, '3']],
 			'invalid' => [[3, 3]],
 			'message' => 'Given value %s is same to %s',
 		];
 		yield 'greater' => [
 			'function' => 'greater',
-			'valid' => [[1, 2], [3, 5]],
-			'invalid' => [[2, 1], [5, 3]],
+			'valid' => [[2, 1], [5, 3]],
+			'invalid' => [[1, 2], [3, 5]],
 			'message' => 'Given value %s is not greater than %s',
 		];
 		yield 'greaterOrEquals' => [
 			'function' => 'greaterOrEquals',
-			'valid' => [[1, 2], [3, 5], [2, 2]],
-			'invalid' => [[2, 1]],
+			'valid' => [[2, 1], [5, 3], [2, 2]],
+			'invalid' => [[1, 2]],
 			'message' => 'Given value %s is not greater or equals to %s',
 		];
 		yield 'lower' => [
 			'function' => 'lower',
-			'valid' => [[2, 1], [1, 0]],
-			'invalid' => [[1, 2], [0, 1]],
+			'valid' => [[1, 2], [0, 1]],
+			'invalid' => [[2, 1], [1, 0]],
 			'message' => 'Given value %s is not lower than %s',
 		];
 		yield 'lowerOrEquals' => [
 			'function' => 'lowerOrEquals',
-			'valid' => [[2, 1], [5, 3], [2, 2]],
-			'invalid' => [[1, 2]],
+			'valid' => [[1, 2], [3, 5], [2, 2]],
+			'invalid' => [[2, 1], [5, 3]],
 			'message' => 'Given value %s is not lower or equals to %s',
 		];
 	}

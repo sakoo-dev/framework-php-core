@@ -8,7 +8,7 @@ use Sakoo\Framework\Core\Variable\Variable;
 
 trait GeneralType
 {
-	public static function length(int $length, string $value, string $message = ''): void
+	public static function length(string $value, int $length, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'The length of %s is %s, Expected %s',
@@ -20,7 +20,7 @@ trait GeneralType
 		static::same($length, strlen($value), $message);
 	}
 
-	public static function count(int $count, array|\Countable $value, string $message = ''): void
+	public static function count(array|\Countable $value, int $count, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'The count of %s is %s, Expected %s',
@@ -32,7 +32,7 @@ trait GeneralType
 		static::same($count, count($value), $message);
 	}
 
-	public static function equals(mixed $expected, mixed $value, string $message = ''): void
+	public static function equals(mixed $value, mixed $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not equals to %s',
@@ -43,7 +43,7 @@ trait GeneralType
 		static::throwUnless($value == $expected, $message);
 	}
 
-	public static function notEquals(mixed $expected, mixed $value, string $message = ''): void
+	public static function notEquals(mixed $value, mixed $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is equals to %s',
@@ -54,7 +54,7 @@ trait GeneralType
 		static::throwIf($value == $expected, $message);
 	}
 
-	public static function same(mixed $expected, mixed $value, string $message = ''): void
+	public static function same(mixed $value, mixed $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not same to %s',
@@ -65,7 +65,7 @@ trait GeneralType
 		static::throwUnless($value === $expected, $message);
 	}
 
-	public static function notSame(mixed $expected, mixed $value, string $message = ''): void
+	public static function notSame(mixed $value, mixed $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is same to %s',

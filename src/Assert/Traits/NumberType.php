@@ -56,7 +56,7 @@ trait NumberType
 		static::throwIf(is_int($value), $message);
 	}
 
-	public static function greater(int $expected, int $value, string $message = ''): void
+	public static function greater(int $value, int $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not greater than %s',
@@ -67,7 +67,7 @@ trait NumberType
 		static::throwUnless($value > $expected, $message);
 	}
 
-	public static function greaterOrEquals(int $expected, int $value, string $message = ''): void
+	public static function greaterOrEquals(int $value, int $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not greater or equals to %s',
@@ -78,7 +78,7 @@ trait NumberType
 		static::throwUnless($value >= $expected, $message);
 	}
 
-	public static function lower(int $expected, int $value, string $message = ''): void
+	public static function lower(int $value, int $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not lower than %s',
@@ -89,7 +89,7 @@ trait NumberType
 		static::throwUnless($value < $expected, $message);
 	}
 
-	public static function lowerOrEquals(int $expected, int $value, string $message = ''): void
+	public static function lowerOrEquals(int $value, int $expected, string $message = ''): void
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not lower or equals to %s',
