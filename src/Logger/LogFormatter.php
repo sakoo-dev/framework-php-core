@@ -6,7 +6,7 @@ namespace Sakoo\Framework\Core\Logger;
 
 use Sakoo\Framework\Core\Clock\Clock;
 
-class LogFormatter
+readonly class LogFormatter
 {
 	public function __construct(
 		private string $level,
@@ -18,8 +18,8 @@ class LogFormatter
 
 	public function __toString()
 	{
-		$dateTime = (new Clock())->now()->format('Y-m-d H:i:s');
+		$dateTime = (new Clock())->now()->format(\DateTimeInterface::ATOM);
 
-		return "$dateTime - $this->mode $this->env - " . strtoupper($this->level) . " - $this->message";
+		return "[$dateTime] [" . strtoupper($this->level) . "] [$this->mode $this->env] - $this->message";
 	}
 }

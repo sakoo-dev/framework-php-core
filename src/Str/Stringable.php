@@ -12,6 +12,8 @@ interface Stringable extends \Stringable
 
 	public function lowercase(): static;
 
+	public function uppercaseWords(): static;
+
 	public function upperFirst(): static;
 
 	public function lowerFirst(): static;

@@ -54,7 +54,7 @@ final class FileLoggerTest extends TestCase
 	{
 		$clock = new Clock();
 
-		return $clock->now()->format('Y-m-d H:i:s') . ' - Test Debug - ' . strtoupper($level) . ' - ' . $message . PHP_EOL;
+		return '[' . $clock->now()->format(\DateTime::ATOM) . '] [' . strtoupper($level) . "] [Test Debug] - $message" . PHP_EOL;
 	}
 
 	private function resetFileSystemTestEnv(): void

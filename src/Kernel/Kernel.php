@@ -14,9 +14,6 @@ class Kernel
 {
 	private static ?Kernel $instance = null;
 
-	private Mode $mode;
-	private Environment $environment;
-
 	private ProfilerInterface $profiler;
 	private ContainerInterface $container;
 
@@ -26,10 +23,10 @@ class Kernel
 
 	private array $serviceLoaders;
 
-	private function __construct(Mode $mode, Environment $environment)
-	{
-		$this->mode = $mode;
-		$this->environment = $environment;
+	private function __construct(
+		private readonly Mode $mode,
+		private readonly Environment $environment,
+	) {
 	}
 
 	public static function prepare(Mode $mode, Environment $environment): static
@@ -72,6 +69,7 @@ class Kernel
 			fn ($serviceLoader) => (new $serviceLoader())->load($this->container)
 		);
 
+		// What?
 		resolve(ProfilerInterface::class);
 	}
 

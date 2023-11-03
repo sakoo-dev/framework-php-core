@@ -18,22 +18,10 @@ class Doc
 	use ReflectionMethod;
 	use ReflectionType;
 
-	private Formatter $formatter;
-
-	private function __construct(private Finder $finder)
-	{
-	}
-
-	public static function init(Finder $finder): static
-	{
-		return new static($finder);
-	}
-
-	public function setFormatter(Formatter $formatter): static
-	{
-		$this->formatter = $formatter;
-
-		return $this;
+	public function __construct(
+		private readonly Finder $finder,
+		private readonly Formatter $formatter,
+	) {
 	}
 
 	public function generate(): void

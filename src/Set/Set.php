@@ -8,18 +8,8 @@ class Set implements Iteratable
 {
 	use SetAccess;
 
-	protected array $items = [];
-
-	private function __construct()
+	public function __construct(private array $items = [])
 	{
-	}
-
-	public static function make(array $array = []): static
-	{
-		$object = new static();
-		$object->items = $array;
-
-		return $object;
 	}
 
 	public function __get(string $name): mixed
@@ -49,7 +39,7 @@ class Set implements Iteratable
 
 	public function map($callback): static
 	{
-		return static::make(array_map($callback, $this->items));
+		return new static(array_map($callback, $this->items));
 	}
 
 	public function pluck($key): static

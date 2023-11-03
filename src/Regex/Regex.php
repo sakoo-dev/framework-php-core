@@ -8,11 +8,11 @@ use Sakoo\Framework\Core\Str\Stringable;
 
 class Regex implements \Stringable
 {
-	public const ALPHABET_UPPER = 'A-Z';
-	public const ALPHABET_LOWER = 'a-z';
-	public const DIGITS = '0-9';
-	public const UNDERLINE = '_';
-	public const DOT = '.';
+	final public const ALPHABET_UPPER = 'A-Z';
+	final public const ALPHABET_LOWER = 'a-z';
+	final public const DIGITS = '0-9';
+	final public const UNDERLINE = '_';
+	final public const DOT = '.';
 
 	private function __construct(private string $pattern = '')
 	{

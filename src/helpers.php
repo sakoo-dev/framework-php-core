@@ -14,7 +14,7 @@ use Sakoo\Framework\Core\Str\Stringable;
 if (!function_exists('set')) {
 	function set(array $value = []): Iteratable
 	{
-		return Set::make($value);
+		return new Set($value);
 	}
 }
 

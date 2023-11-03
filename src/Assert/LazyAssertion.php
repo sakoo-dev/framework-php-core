@@ -8,7 +8,66 @@ use Sakoo\Framework\Core\Assert\Exception\InvalidArgumentException;
 use Sakoo\Framework\Core\Assert\Exception\LazyAssertionException;
 
 /**
- * @method AssertionChain bool(mixed $value)
+ * @method LazyAssertion true(mixed $value, string $message = '')
+ * @method LazyAssertion false(mixed $value, string $message = '')
+ * @method LazyAssertion bool(mixed $value, string $message = '')
+ * @method LazyAssertion notBool(mixed $value, string $message = '')
+ * @method LazyAssertion callable(mixed $value, string $message = '')
+ * @method LazyAssertion notCallable(mixed $value, string $message = '')
+ * @method LazyAssertion dir(string $value, string $message = '')
+ * @method LazyAssertion notDir(string $value, string $message = '')
+ * @method LazyAssertion file(string $value, string $message = '')
+ * @method LazyAssertion notFile(string $value, string $message = '')
+ * @method LazyAssertion link(string $value, string $message = '')
+ * @method LazyAssertion notLink(string $value, string $message = '')
+ * @method LazyAssertion uploadedFile(string $value, string $message = '')
+ * @method LazyAssertion notUploadedFile(string $value, string $message = '')
+ * @method LazyAssertion executableFile(string $value, string $message = '')
+ * @method LazyAssertion notExecutableFile(string $value, string $message = '')
+ * @method LazyAssertion writableFile(string $value, string $message = '')
+ * @method LazyAssertion notWritableFile(string $value, string $message = '')
+ * @method LazyAssertion readableFile(string $value, string $message = '')
+ * @method LazyAssertion notReadableFile(string $value, string $message = '')
+ * @method LazyAssertion exists(string $value, string $message = '')
+ * @method LazyAssertion notExists(string $value, string $message = '')
+ * @method LazyAssertion length(string $value, int $length, string $message = '')
+ * @method LazyAssertion count(array|\Countable $value, int $count, string $message = '')
+ * @method LazyAssertion equals(mixed $value, mixed $expected, string $message = '')
+ * @method LazyAssertion notEquals(mixed $value, mixed $expected, string $message = '')
+ * @method LazyAssertion same(mixed $value, mixed $expected, string $message = '')
+ * @method LazyAssertion notSame(mixed $value, mixed $expected, string $message = '')
+ * @method LazyAssertion empty(mixed $value, string $message = '')
+ * @method LazyAssertion notEmpty(mixed $value, string $message = '')
+ * @method LazyAssertion null(mixed $value, string $message = '')
+ * @method LazyAssertion notNull(mixed $value, string $message = '')
+ * @method LazyAssertion numeric(mixed $value, string $message = '')
+ * @method LazyAssertion notNumeric(mixed $value, string $message = '')
+ * @method LazyAssertion finite(float $value, string $message = '')
+ * @method LazyAssertion infinite(float $value, string $message = '')
+ * @method LazyAssertion float(mixed $value, string $message = '')
+ * @method LazyAssertion notFloat(mixed $value, string $message = '')
+ * @method LazyAssertion int(mixed $value, string $message = '')
+ * @method LazyAssertion notInt(mixed $value, string $message = '')
+ * @method LazyAssertion greater(int $value, int $expected, string $message = '')
+ * @method LazyAssertion greaterOrEquals(int $value, int $expected, string $message = '')
+ * @method LazyAssertion lower(int $value, int $expected, string $message = '')
+ * @method LazyAssertion lowerOrEquals(int $value, int $expected, string $message = '')
+ * @method LazyAssertion object(mixed $value, string $message = '')
+ * @method LazyAssertion notObject(mixed $value, string $message = '')
+ * @method LazyAssertion instanceOf(mixed $value, string $class, string $message = '')
+ * @method LazyAssertion notInstanceOf(mixed $value, string $class, string $message = '')
+ * @method LazyAssertion resource(mixed $value, string $message = '')
+ * @method LazyAssertion notResource(mixed $value, string $message = '')
+ * @method LazyAssertion scalar(mixed $value, string $message = '')
+ * @method LazyAssertion notScalar(mixed $value, string $message = '')
+ * @method LazyAssertion string(mixed $value, string $message = '')
+ * @method LazyAssertion notString(mixed $value, string $message = '')
+ * @method LazyAssertion array(mixed $value, string $message = '')
+ * @method LazyAssertion notArray(mixed $value, string $message = '')
+ * @method LazyAssertion countable(mixed $value, string $message = '')
+ * @method LazyAssertion notCountable(mixed $value, string $message = '')
+ * @method LazyAssertion iterable(mixed $value, string $message = '')
+ * @method LazyAssertion notIterable(mixed $value, string $message = '')
  */
 class LazyAssertion
 {
@@ -31,7 +90,10 @@ class LazyAssertion
 		return $this;
 	}
 
-	public function that(mixed $value, string $chainName)
+	/**
+	 * @return AssertionChain
+	 */
+	public function that(mixed $value, string $chainName): static
 	{
 		$this->chainName = $chainName;
 		$this->currentChain = Assert::that($value);
@@ -42,26 +104,7 @@ class LazyAssertion
 	public function validate(): void
 	{
 		if (!empty($this->exceptions)) {
-			$message = $this->getLazyMessage($this->exceptions);
-			$exception = new LazyAssertionException($message);
-			$exception->setExceptions($this->exceptions);
-
-			throw $exception;
+			throw LazyAssertionException::init($this->exceptions);
 		}
-	}
-
-	private function getLazyMessage(array $value): string
-	{
-		$result = 'The following assertions failed:' . PHP_EOL;
-		$i = 1;
-
-		foreach ($value as $chainName => $chain) {
-			foreach ($chain as $message) {
-				$result .= "$i) $chainName: {$message->getMessage()}" . PHP_EOL;
-				++$i;
-			}
-		}
-
-		return $result;
 	}
 }

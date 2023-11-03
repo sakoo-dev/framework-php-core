@@ -14,19 +14,26 @@ class Str implements Stringable
 
 	public function length(): int
 	{
-		return strlen($this->value);
+		return mb_strlen($this->value);
+	}
+
+	public function uppercaseWords(): static
+	{
+		$this->value = ucwords($this->value);
+
+		return $this;
 	}
 
 	public function uppercase(): static
 	{
-		$this->value = strtoupper($this->value);
+		$this->value = mb_strtoupper($this->value);
 
 		return $this;
 	}
 
 	public function lowercase(): static
 	{
-		$this->value = strtolower($this->value);
+		$this->value = mb_strtolower($this->value);
 
 		return $this;
 	}
@@ -76,7 +83,6 @@ class Str implements Stringable
 		$this->value = implode(' ', RegexHelper::findCamelCase()->split($this));
 		$this->value = RegexHelper::getSpecialChars()->replace($this, ' ');
 		$this->value = RegexHelper::getSpaceBetweenWords()->replace($this, '-');
-
 		$this->trim();
 
 		return $this->lowercase();
@@ -84,8 +90,12 @@ class Str implements Stringable
 
 	public function camelCase(): static
 	{
-		$words = RegexHelper::getSpecialChars()->split($this);
-		$this->value = implode(array_map('ucfirst', $words));
+		$this->value = implode(' ', RegexHelper::findCamelCase()->split($this));
+		$this->value = RegexHelper::getSpecialChars()->replace($this, ' ');
+		$this->lowercase();
+		$this->uppercaseWords();
+		$this->value = RegexHelper::getSpaceBetweenWords()->replace($this, '');
+		$this->trim();
 
 		return $this->lowerFirst();
 	}

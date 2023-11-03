@@ -16,6 +16,13 @@ Sakoo PHP Web Framework (Core)
 >
 >It's not a Stable and Reliable Version. Please do not use it in Production Environment.
 
+## Development Plan
+- [x] Core utility components (Oct 2023)
+- [ ] Routing, Request and Response, Middlewares, Controllers (Nov 2023)
+- [ ] Template Engine, Google Chrome Plugin (Dec 2023)
+- [ ] Database Connection, ORM (Jan 2024)
+- [ ] Release LTS Version 1.0.0 (March 2024)
+
 ## Requirements
 Sakoo Just needed _Docker_ Platform to Run.
 Make sure [___Docker___ and ___Docker Compose___](https://docker.com) are installed on your system.

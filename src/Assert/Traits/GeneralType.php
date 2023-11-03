@@ -17,7 +17,7 @@ trait GeneralType
 			Variable::stringify($length),
 		);
 
-		static::same($length, strlen($value), $message);
+		static::same($length, mb_strlen($value), $message);
 	}
 
 	public static function count(array|\Countable $value, int $count, string $message = ''): void

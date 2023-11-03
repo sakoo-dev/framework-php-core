@@ -27,9 +27,9 @@ class DocGenCommand extends Command
 			'Bootstrap.php',
 		];
 
-		Doc::init(Path::getCorePHPFiles($excluded))
-			->setFormatter(new NamespaceBasedFormatter())
-			->generate();
+		$finder = Path::getCorePHPFiles($excluded);
+		$formatter = new NamespaceBasedFormatter();
+		(new Doc($finder, $formatter))->generate();
 
 		$style->block('Document has been Generated Successfully!', style: 'fg=green');
 

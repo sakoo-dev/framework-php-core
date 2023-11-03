@@ -4,6 +4,7 @@ namespace Sakoo\Framework\Core\Variable;
 
 class Variable
 {
+	// Dependency + Static
 	public static function stringify(mixed $value): string
 	{
 		if (is_bool($value)) {
@@ -11,7 +12,7 @@ class Variable
 		}
 
 		if (is_callable($value)) {
-			return 'Closure ' . spl_object_hash($value);
+			return 'Closure ' . spl_object_hash((object) $value);
 		}
 
 		if (is_object($value)) {

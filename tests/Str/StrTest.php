@@ -18,6 +18,12 @@ final class StrTest extends TestCase
 		$this->assertEquals(13, $string->length());
 	}
 
+	public function test_uppercase_words_function_works_properly()
+	{
+		$string = new Str('hello, world!');
+		$this->assertEquals('Hello, World!', $string->uppercaseWords());
+	}
+
 	public function test_uppercase_function_works_properly()
 	{
 		$string = new Str('Hello, World!');
@@ -67,42 +73,45 @@ final class StrTest extends TestCase
 		$this->assertEquals('Hello, World!', $string->trim());
 	}
 
-	public function test_slug_function_works_properly()
+	/** @dataProvider slugTexts */
+	public function test_slug_function_works_properly($str, $slug)
 	{
-		$string = new Str('Hello World');
-		$this->assertEquals('hello-world', $string->slug());
-
-		$string = new Str('HelloWorld');
-		$this->assertEquals('hello-world', $string->slug());
-
-		$string = new Str('hello_world');
-		$this->assertEquals('hello-world', $string->slug());
-
-		$string = new Str('Something');
-		$this->assertEquals('something', $string->slug());
-
-		$string = new Str('hello-world');
-		$this->assertEquals('hello-world', $string->slug());
-
-		$string = new Str('!@#$%^&*()');
-		$this->assertEquals('', $string->slug());
-
-		$string = new Str('I ♥️ Emoji');
-		$this->assertEquals('i-emoji', $string->slug());
-
-		$string = new Str('?eHE_llo-worlD!?');
-		$this->assertEquals('e-he-llo-worl-d', $string->slug());
+		$string = new Str($str);
+		$this->assertEquals($slug, $string->slug());
 	}
 
-	public function test_camel_case_function_works_properly()
+	/** @dataProvider camelCaseTexts */
+	public function test_camel_case_function_works_properly($str, $camelCase)
 	{
-		$string = new Str('Hello World');
-		$this->assertEquals('helloWorld', $string->camelCase());
+		$string = new Str($str);
+		$this->assertEquals($camelCase, $string->camelCase());
+	}
 
-		$string = new Str('HelloWorld');
-		$this->assertEquals('helloWorld', $string->camelCase());
+	public function slugTexts(): \Generator
+	{
+		yield ['HELLO WORLD', 'hello-world'];
+		yield ['hello world', 'hello-world'];
+		yield ['Hello World', 'hello-world'];
+		yield ['HelloWorld', 'hello-world'];
+		yield ['hello_world', 'hello-world'];
+		yield ['Something', 'something'];
+		yield ['hello-world', 'hello-world'];
+		yield ['!@#$%^&*()', ''];
+		yield ['I ♥️ Emoji', 'i-emoji'];
+		yield ['?eHE_llo-worlD!?', 'e-he-llo-worl-d'];
+	}
 
-		$string = new Str('Something');
-		$this->assertEquals('something', $string->camelCase());
+	public function camelCaseTexts(): \Generator
+	{
+		yield ['HELLO WORLD', 'helloWorld'];
+		yield ['hello world', 'helloWorld'];
+		yield ['Hello World', 'helloWorld'];
+		yield ['HelloWorld', 'helloWorld'];
+		yield ['hello_world', 'helloWorld'];
+		yield ['Something', 'something'];
+		yield ['hello-world', 'helloWorld'];
+		yield ['!@#$%^&*()', ''];
+		yield ['I ♥️ Emoji', 'iEmoji'];
+		yield ['?eHE_llo-worlD!?', 'eHeLloWorlD'];
 	}
 }

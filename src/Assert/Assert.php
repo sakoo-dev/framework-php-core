@@ -33,19 +33,27 @@ class Assert
 
 	public static function that(mixed $value): AssertionChain
 	{
+		// Direct Dependency ??
 		return new AssertionChain($value);
 	}
 
 	public static function lazy(): LazyAssertion
 	{
+		// Direct Dependency ??
 		return new LazyAssertion();
 	}
 
+	/**
+	 * @throws InvalidArgumentException
+	 */
 	private static function throwIf(bool $condition, string $message = ''): void
 	{
 		static::throwUnless(!$condition, $message);
 	}
 
+	/**
+	 * @throws InvalidArgumentException
+	 */
 	private static function throwUnless(bool $condition, string $message = ''): void
 	{
 		$condition ?: throw new InvalidArgumentException($message);

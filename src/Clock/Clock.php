@@ -9,25 +9,19 @@ use Sakoo\Framework\Core\Clock\Exceptions\ClockTestModeException;
 
 class Clock implements ClockInterface
 {
-	private static ?\DateTimeImmutable $testNow = null;
+	private static string $testNow = 'now';
 
-	public static function setTestNow(\DateTimeInterface|string|null $datetime = null): void
+	public static function setTestNow(string $datetime = 'now'): void
 	{
 		throwUnless(kernel()->isInTestMode(), new ClockTestModeException());
-
-		if (is_null($datetime)) {
-			static::$testNow = null;
-
-			return;
-		}
-
-		static::$testNow = \DateTimeImmutable::createFromMutable(
-			is_string($datetime) ? new \DateTime($datetime) : $datetime
-		);
+		static::$testNow = $datetime;
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	public function now(): \DateTimeImmutable
 	{
-		return empty(static::$testNow) ? new \DateTimeImmutable() : static::$testNow;
+		return new \DateTimeImmutable(static::$testNow);
 	}
 }

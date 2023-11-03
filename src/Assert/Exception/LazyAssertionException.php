@@ -8,19 +8,30 @@ use Sakoo\Framework\Core\Exception\Exception;
 
 class LazyAssertionException extends Exception
 {
-	private array $exceptions = [];
-
-	public function getExceptions(): array
+	private function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
 	{
-		return $this->exceptions;
+		parent::__construct($message, $code, $previous);
 	}
 
-	public function setExceptions(array $value): void
+	public static function init(array $exceptions): static
 	{
-		foreach ($value as $chain) {
+		$message = static::getLazyMessage($exceptions);
+
+		return new static($message);
+	}
+
+	private static function getLazyMessage(array $value): string
+	{
+		$result = 'The following assertions failed:' . PHP_EOL;
+		$i = 1;
+
+		foreach ($value as $chainName => $chain) {
 			foreach ($chain as $message) {
-				$this->exceptions[] = $message;
+				$result .= "$i) $chainName: {$message->getMessage()}" . PHP_EOL;
+				++$i;
 			}
 		}
+
+		return $result;
 	}
 }

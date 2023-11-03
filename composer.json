@@ -23,7 +23,7 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "symfony/console": "^6.0",
         "symfony/finder": "^6.0",
         "psr/container": "^2.0",

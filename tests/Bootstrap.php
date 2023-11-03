@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Sakoo\Framework\Core\Tests;
 
 use Sakoo\Framework\Core\Env\Env;
+use Sakoo\Framework\Core\FileSystem\Disk;
+use Sakoo\Framework\Core\FileSystem\File;
 use Sakoo\Framework\Core\Handler\ErrorHandler;
 use Sakoo\Framework\Core\Handler\ExceptionHandler;
 use Sakoo\Framework\Core\Kernel\Environment;
@@ -16,7 +18,8 @@ trait Bootstrap
 {
 	public static function runKernel(): void
 	{
-		Env::load(Path::getRootDir() . '/.env');
+		$envFile = File::open(Disk::Local, Path::getRootDir() . '/.env');
+		Env::load($envFile);
 
 		$loaders = require_once Path::getCoreDir() . '/ServiceLoader/Loaders.php';
 		$timeZone = Env::get('SERVER_TIME_ZONE', 'UTC');

@@ -25,7 +25,7 @@ class RegexHelper
 	{
 		return Regex::make()
 			->somethingWithout(
-				fn (Regex $exp) => $exp->add($exp::ALPHABET_LOWER . $exp::ALPHABET_UPPER . $exp::DIGITS)
+				fn (Regex $exp) => $exp->add(Regex::ALPHABET_LOWER . Regex::ALPHABET_UPPER . Regex::DIGITS)
 			);
 	}
 }
