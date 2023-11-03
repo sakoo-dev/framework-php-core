@@ -6,6 +6,4 @@ namespace Sakoo\Framework\Core\Tests\Variable;
 
 use Sakoo\Framework\Core\Tests\TestCase;
 
-final class VariableTest extends TestCase
-{
-}
+final class VariableTest extends TestCase {}

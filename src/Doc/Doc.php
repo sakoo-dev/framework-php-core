@@ -21,8 +21,7 @@ class Doc
 	public function __construct(
 		private readonly Finder $finder,
 		private readonly Formatter $formatter,
-	) {
-	}
+	) {}
 
 	public function generate(): void
 	{

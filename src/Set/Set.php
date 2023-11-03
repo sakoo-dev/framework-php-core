@@ -8,9 +8,7 @@ class Set implements Iteratable
 {
 	use SetAccess;
 
-	public function __construct(private array $items = [])
-	{
-	}
+	public function __construct(private array $items = []) {}
 
 	public function __get(string $name): mixed
 	{

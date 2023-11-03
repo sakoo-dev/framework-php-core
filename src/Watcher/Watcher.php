@@ -11,9 +11,7 @@ use Symfony\Component\Finder\Finder;
 
 class Watcher
 {
-	public function __construct(private WatcherDriver $driver)
-	{
-	}
+	public function __construct(private WatcherDriver $driver) {}
 
 	public function watch(Finder $finder, FileSystemAction $callback): self
 	{

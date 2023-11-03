@@ -8,9 +8,7 @@ use Sakoo\Framework\Core\Regex\RegexHelper;
 
 class Str implements Stringable
 {
-	public function __construct(private string $value = '')
-	{
-	}
+	public function __construct(private string $value = '') {}
 
 	public function length(): int
 	{

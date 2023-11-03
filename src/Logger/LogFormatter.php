@@ -13,8 +13,7 @@ readonly class LogFormatter
 		private string $message,
 		private string $mode,
 		private string $env,
-	) {
-	}
+	) {}
 
 	public function __toString()
 	{

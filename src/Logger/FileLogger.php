@@ -12,13 +12,13 @@ use Sakoo\Framework\Core\Path\Path;
 
 class FileLogger extends AbstractLogger
 {
-	public function log($level, \Stringable|string $message, array $context = []): void
+	public function log($level, string|\Stringable $message, array $context = []): void
 	{
 		$log = $this->getFormattedLog($level, $message);
 		$this->writeToFile($log);
 	}
 
-	private function getFormattedLog($level, \Stringable|string $message): string
+	private function getFormattedLog($level, string|\Stringable $message): string
 	{
 		$env = kernel()->getEnvironment()->value;
 		$mode = kernel()->getMode()->value;

@@ -8,9 +8,7 @@ use Sakoo\Framework\Core\Container\Container;
 
 class ParameterSet
 {
-	public function __construct(private Container $container)
-	{
-	}
+	public function __construct(private Container $container) {}
 
 	public function resolve(array $parameters): array
 	{

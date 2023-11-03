@@ -6,6 +6,4 @@ namespace Sakoo\Framework\Core\Assert\Exception;
 
 use Sakoo\Framework\Core\Exception\Exception;
 
-class InvalidArgumentException extends Exception
-{
-}
+class InvalidArgumentException extends Exception {}

@@ -33,10 +33,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-
-    - name: Code style check
-      run: composer stylecheck
+      run: composer install --prefer-dist --no-progress --ignore-platform-reqs
 
     - name: Build docker image dev
       run: |
@@ -46,10 +43,13 @@ jobs:
       run: |
         docker build . -f ./docker/sakoo.app/Dockerfile.prod -t sakoo-prod.app -q
 
+    - name: Code style check
+      run: docker run -v $PWD:/var/www/html/ sakoo.app composer stylecheck
+
     - name: Run automated tests dev
       run: |
-        docker run -v $PWD:/var/www/html/ sakoo.app composer test-nolog
+        docker run -v $PWD:/var/www/html/ sakoo.app composer test
 
     - name: Run automated tests prod
       run: |
-        docker run sakoo-prod.app composer test-nolog
+        docker run sakoo-prod.app composer test

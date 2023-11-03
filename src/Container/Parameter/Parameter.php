@@ -8,9 +8,7 @@ use Sakoo\Framework\Core\Container\Container;
 
 class Parameter
 {
-	public function __construct(private Container $container)
-	{
-	}
+	public function __construct(private Container $container) {}
 
 	public function resolve(\ReflectionParameter $parameter): mixed
 	{

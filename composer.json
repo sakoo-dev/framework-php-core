@@ -41,9 +41,8 @@
         "phpstan/phpstan": "^1.10"
     },
     "scripts": {
-        "stylecheck": "./vendor/bin/php-cs-fixer fix --dry-run",
-        "test": "./vendor/bin/phpunit",
-        "test-nolog": "./vendor/bin/phpunit --do-not-cache-result"
+        "stylecheck": "./vendor/bin/php-cs-fixer fix --dry-run --using-cache=no",
+        "test": "./vendor/bin/phpunit --do-not-cache-result"
     },
     "provide": {
         "psr/container-implementation": "^2.0",

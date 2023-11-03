@@ -8,9 +8,7 @@ class Markdown implements \Stringable
 {
 	private string $markdown = '';
 
-	public function __construct()
-	{
-	}
+	public function __construct() {}
 
 	public function write(string $value): void
 	{

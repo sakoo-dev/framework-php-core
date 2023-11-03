@@ -13,6 +13,5 @@ final class AutoWireTestClass
 		public ?string $fourth,
 		public int $fifth,
 		public $sixth = 'Default Value'
-	) {
-	}
+	) {}
 }

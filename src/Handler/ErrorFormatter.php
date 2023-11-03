@@ -11,8 +11,7 @@ class ErrorFormatter
 		private $errorString,
 		private $errorFile,
 		private $errorLine,
-	) {
-	}
+	) {}
 
 	public function __toString()
 	{

@@ -14,9 +14,7 @@ class Regex implements \Stringable
 	final public const UNDERLINE = '_';
 	final public const DOT = '.';
 
-	private function __construct(private string $pattern = '')
-	{
-	}
+	private function __construct(private string $pattern = '') {}
 
 	public static function make(): static
 	{
@@ -51,7 +49,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function startsWith(string|callable $value): static
+	public function startsWith(callable|string $value): static
 	{
 		$this->startOfLine();
 		$this->callOrAdd($value);
@@ -59,7 +57,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function endsWith(string|callable $value): static
+	public function endsWith(callable|string $value): static
 	{
 		$this->callOrAdd($value);
 		$this->endOfLine();
@@ -81,7 +79,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function wrap(string|callable $value, bool $nonCapturing = false): static
+	public function wrap(callable|string $value, bool $nonCapturing = false): static
 	{
 		$this->add('(' . ($nonCapturing ? '?:' : ''));
 		$this->callOrAdd($value);
@@ -90,7 +88,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function bracket(string|callable $value): static
+	public function bracket(callable|string $value): static
 	{
 		$this->add('[');
 		$this->callOrAdd($value);
@@ -163,7 +161,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function anythingWithout(string|callable $value): static
+	public function anythingWithout(callable|string $value): static
 	{
 		$this->add('[^');
 		$this->callOrAdd($value);
@@ -172,7 +170,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function somethingWithout(string|callable $value): static
+	public function somethingWithout(callable|string $value): static
 	{
 		$this->add('[^');
 		$this->callOrAdd($value);
@@ -181,7 +179,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function anythingWith(string|callable $value): static
+	public function anythingWith(callable|string $value): static
 	{
 		$this->add('[');
 		$this->callOrAdd($value);
@@ -190,7 +188,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	public function somethingWith(string|callable $value): static
+	public function somethingWith(callable|string $value): static
 	{
 		$this->add('[');
 		$this->callOrAdd($value);
@@ -199,7 +197,7 @@ class Regex implements \Stringable
 		return $this;
 	}
 
-	private function callOrAdd(string|callable $value): void
+	private function callOrAdd(callable|string $value): void
 	{
 		if (is_callable($value)) {
 			$value($this);
@@ -219,28 +217,28 @@ class Regex implements \Stringable
 		return preg_quote($value, '/');
 	}
 
-	public function lookahead(string|callable $value): static
+	public function lookahead(callable|string $value): static
 	{
 		$this->wrap(fn ($exp) => $exp->add('?=') && $this->callOrAdd($value));
 
 		return $this;
 	}
 
-	public function lookbehind(string|callable $value): static
+	public function lookbehind(callable|string $value): static
 	{
 		$this->wrap(fn ($exp) => $exp->add('?<=') && $this->callOrAdd($value));
 
 		return $this;
 	}
 
-	public function negativeLookahead(string|callable $value): static
+	public function negativeLookahead(callable|string $value): static
 	{
 		$this->wrap(fn ($exp) => $exp->add('?!') && $this->callOrAdd($value));
 
 		return $this;
 	}
 
-	public function negativeLookbehind(string|callable $value): static
+	public function negativeLookbehind(callable|string $value): static
 	{
 		$this->wrap(fn ($exp) => $exp->add('?<!') && $this->callOrAdd($value));
 
@@ -268,12 +266,12 @@ class Regex implements \Stringable
 		return !empty($this->match($value));
 	}
 
-	public function replace(Stringable|string $string, string $replace): array|null|string
+	public function replace(string|Stringable $string, string $replace): null|array|string
 	{
 		return preg_replace("/$this->pattern/", $replace, "$string");
 	}
 
-	public function split(Stringable|string $subject): array|false
+	public function split(string|Stringable $subject): array|false
 	{
 		return preg_split("/$this->pattern/", "$subject");
 	}

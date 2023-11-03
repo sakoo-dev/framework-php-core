@@ -381,14 +381,14 @@ final class AssertTest extends TestCase
 	{
 		yield 'instanceOf' => [
 			'function' => 'instanceOf',
-			'valid' => [[static::class, TestCase::class]],
-			'invalid' => [[static::class, Exception::class]],
+			'valid' => [[self::class, TestCase::class]],
+			'invalid' => [[self::class, Exception::class]],
 			'message' => 'Given value %s is not instance of %s',
 		];
 		yield 'notInstanceOf' => [
 			'function' => 'notInstanceOf',
-			'valid' => [[static::class, Exception::class]],
-			'invalid' => [[static::class, TestCase::class]],
+			'valid' => [[self::class, Exception::class]],
+			'invalid' => [[self::class, TestCase::class]],
 			'message' => 'Given value %s is instance of %s',
 		];
 		yield 'equals' => [

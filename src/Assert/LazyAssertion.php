@@ -73,11 +73,9 @@ class LazyAssertion
 {
 	private array $exceptions = [];
 	private string $chainName = '';
-	private string|object $currentChain = Assert::class;
+	private object|string $currentChain = Assert::class;
 
-	public function __construct()
-	{
-	}
+	public function __construct() {}
 
 	public function __call(string $name, array $arguments)
 	{

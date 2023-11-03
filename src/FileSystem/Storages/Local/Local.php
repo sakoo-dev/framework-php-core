@@ -13,9 +13,7 @@ class Local implements Storage
 	use CanBeDirectory;
 	use CanBeWritable;
 
-	public function __construct(private string $path)
-	{
-	}
+	public function __construct(private string $path) {}
 
 	public function create(bool $asDirectory = false): bool
 	{

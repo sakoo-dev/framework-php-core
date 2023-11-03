@@ -68,9 +68,7 @@ namespace Sakoo\Framework\Core\Assert;
  */
 class AssertionChain
 {
-	public function __construct(private mixed $value = null)
-	{
-	}
+	public function __construct(private mixed $value = null) {}
 
 	public function __call(string $name, array $arguments)
 	{

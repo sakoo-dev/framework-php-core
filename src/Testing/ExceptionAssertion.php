@@ -10,9 +10,7 @@ class ExceptionAssertion
 	private ?string $type = null;
 	private ?string $message = null;
 
-	public function __construct(private $phpunit, private $fn)
-	{
-	}
+	public function __construct(private $phpunit, private $fn) {}
 
 	public function withCode(int $code): static
 	{

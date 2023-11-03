@@ -26,8 +26,7 @@ class Kernel
 	private function __construct(
 		private readonly Mode $mode,
 		private readonly Environment $environment,
-	) {
-	}
+	) {}
 
 	public static function prepare(Mode $mode, Environment $environment): static
 	{
