@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Container;
 
-class AutoWireTestClass
+final class AutoWireTestClass
 {
 	public function __construct(
 		public TestInterface $first,
@@ -11,6 +13,5 @@ class AutoWireTestClass
 		public ?string $fourth,
 		public int $fifth,
 		public $sixth = 'Default Value'
-	) {
-	}
+	) {}
 }

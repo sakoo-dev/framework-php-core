@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Container;
 
-use Psr\Container\ContainerInterface;
-use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotFoundException;
-use Sakoo\Framework\Core\Container\Exceptions\ContainerClassNotInstantiableException;
+use Sakoo\Framework\Core\Container\Exceptions\ClassNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\ClassNotInstantiableException;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\TypeMismatchException;
 use Sakoo\Framework\Core\Container\Parameter\ParameterSet;
 use Sakoo\Framework\Core\Set\Set;
 
@@ -22,9 +24,10 @@ class Container implements ContainerInterface
 		$this->bindings = set();
 	}
 
-	public function get(string $id)
+	public function get(string $id): object
 	{
 		throwUnless($this->has($id), new ContainerNotFoundException());
+
 		return $this->resolve($id);
 	}
 
@@ -35,11 +38,13 @@ class Container implements ContainerInterface
 
 	public function bind(string $interface, $factory): void
 	{
+		$this->checkMismatchType($interface, $factory);
 		$this->bindings->{$interface} = $factory;
 	}
 
 	public function singleton(string $interface, $factory): void
 	{
+		$this->checkMismatchType($interface, $factory);
 		$this->singletons->{$interface} = $factory;
 	}
 
@@ -58,11 +63,11 @@ class Container implements ContainerInterface
 
 	public function new(string $class): object
 	{
-		throwUnless(class_exists($class), new ContainerClassNotFoundException());
+		throwUnless(class_exists($class), new ClassNotFoundException());
 
 		$reflector = new \ReflectionClass($class);
 
-		throwUnless($reflector->isInstantiable(), new ContainerClassNotInstantiableException());
+		throwUnless($reflector->isInstantiable(), new ClassNotInstantiableException());
 
 		$constructor = $reflector->getConstructor();
 		$params = [];
@@ -85,6 +90,7 @@ class Container implements ContainerInterface
 		if (!$this->instances->exists($interface)) {
 			$this->instances->{$interface} = $this->handleResolution($this->singletons->{$interface});
 		}
+
 		return $this->instances->{$interface};
 	}
 
@@ -95,5 +101,10 @@ class Container implements ContainerInterface
 		}
 
 		return $this->new($factory);
+	}
+
+	private function checkMismatchType(string $interface, $factory): void
+	{
+		throwIf(interface_exists($interface) && !is_subclass_of($factory, $interface), new TypeMismatchException());
 	}
 }
