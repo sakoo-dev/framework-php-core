@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\FileSystem\Storages\Local;
 
 trait CanBeWritable
@@ -10,6 +12,10 @@ trait CanBeWritable
 		$file = fopen($this->path, $mode);
 		$result = false;
 
+		if (!$file) {
+			return $result;
+		}
+
 		if (flock($file, LOCK_EX)) {
 			$result = fwrite($file, $data);
 			fflush($file);
@@ -17,6 +23,7 @@ trait CanBeWritable
 		}
 
 		fclose($file);
+
 		return (bool) $result;
 	}
 }

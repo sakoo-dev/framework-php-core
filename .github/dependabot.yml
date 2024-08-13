@@ -1,0 +1,29 @@
+version: 2
+updates:
+
+  - package-ecosystem: "composer"
+    directory: "/"
+    commit-message:
+      prefix: "dep"
+    schedule:
+      interval: "monthly"
+    pull-request-branch-name:
+      separator: "-"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    commit-message:
+      prefix: "dep"
+    schedule:
+      interval: "monthly"
+    pull-request-branch-name:
+      separator: "-"
+
+  - package-ecosystem: "docker"
+    directory: "/docker/sakoo.app"
+    commit-message:
+      prefix: "dep"
+    schedule:
+      interval: "monthly"
+    pull-request-branch-name:
+      separator: "-"

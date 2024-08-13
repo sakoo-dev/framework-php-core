@@ -1,0 +1,12 @@
+#!/bin/bash
+
+commit_msg_file=$1
+commit_msg=$(cat $commit_msg_file)
+
+prefix="[YourPrefix]"
+if [[ ! $commit_msg =~ ^$prefix ]]; then
+    echo "Commit message must start with $prefix. Commit rejected."
+    exit 1
+fi
+
+exit 0

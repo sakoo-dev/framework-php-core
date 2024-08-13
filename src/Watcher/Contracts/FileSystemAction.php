@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Watcher\Contracts;
 
 interface FileSystemAction

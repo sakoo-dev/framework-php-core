@@ -1,0 +1,163 @@
+name: Sakoo CI Pipeline
+
+on:
+  push:
+    branches: [ '**' ]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache composer packages
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
+
+      - name: Build docker image
+        run: |
+          docker build . -f ./docker/sakoo.app/Dockerfile -t sakoo.app -q
+          docker save sakoo.app | gzip > /tmp/sakoo-app.tar.gz
+
+      - name: Upload docker artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sakoo.app
+          path: /tmp/sakoo-app.tar.gz
+          compression-level: 9
+          retention-days: 90
+          if-no-files-found: error
+
+
+  quality:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download docker artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sakoo.app
+          path: /tmp
+
+      - name: Load docker image
+        run: docker load --input /tmp/sakoo-app.tar.gz
+
+      - name: Retrieve composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Code style check
+        run: docker run -v $PWD:/var/www/html/ sakoo.app composer stylecheck
+
+      - name: Code static analyze
+        continue-on-error: true # ------------------------------------------------ REMOVE IT -----------------------------------------------------------
+        run: docker run -v $PWD:/var/www/html/ sakoo.app composer analyze
+
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download docker artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sakoo.app
+          path: /tmp
+
+      - name: Load docker images
+        run: docker load --input /tmp/sakoo-app.tar.gz
+
+      - name: Retrieve composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Run automated tests
+        id: test
+        run: |
+          output=$(docker run -v $PWD:/var/www/html/ sakoo.app composer test)
+          echo "$output"
+          coverage=$(echo "$output" | grep -Eo -m 1 'Lines:\s+[0-9.]+%' | awk '{print $2}' | sed 's/%//')
+          
+          echo "##[set-output name=coverage;]$coverage"
+          
+          if (( $(echo "$coverage < 80" | bc -l) )); then
+            echo "Coverage ($coverage%) is below the threshold (80%)"
+            exit 1
+          fi
+
+      - name: Create the coverage badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: ${{ secrets.GIST_ID }}
+          filename: framework-php-core_${{ github.head_ref || github.ref_name }}.json
+          label: Test Code Coverage
+          message: ${{ steps.test.outputs.coverage }}%
+          valColorRange: ${{ steps.test.outputs.coverage }}
+          minColorRange: 0
+          maxColorRange: 100
+          namedLogo: PHP
+
+
+  security:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download docker artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sakoo.app
+          path: /tmp
+
+      - name: Load docker image
+        run: docker load --input /tmp/sakoo-app.tar.gz
+
+      - name: Retrieve composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Dependency review
+        uses: actions/dependency-review-action@v3
+        with:
+          base-ref: main
+          head-ref: main
