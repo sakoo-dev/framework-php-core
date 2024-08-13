@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Console\WatcherActions;
 
 use Sakoo\Framework\Core\Path\Path;
@@ -9,9 +11,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class PhpBundler extends WatcherActions
 {
-	public function __construct(private SymfonyStyle $style)
-	{
-	}
+	public function __construct(private SymfonyStyle $style) {}
 
 	public function fileModified(Event $event)
 	{

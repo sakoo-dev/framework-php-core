@@ -1,0 +1,12 @@
+#!/bin/bash
+
+make check
+
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo "Pre-commit checks failed. Commit aborted."
+    exit 1
+fi
+
+exit 0

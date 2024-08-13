@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Console;
 
 use Sakoo\Framework\Core\Constants;
 use Sakoo\Framework\Core\Tests\TestCase;
 
-class AssistantTest extends TestCase
+final class AssistantTest extends TestCase
 {
 	public function test_it_loads_console_properly()
 	{
