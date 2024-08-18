@@ -6,6 +6,7 @@ start:
 	@cp .env.example .env
 	@./sakoo up -d --build
 	@./sakoo composer install
+# enable githooks
 # mkdir storage/* folders
 
 up:
@@ -23,7 +24,8 @@ rm:
 stylefix:
 	@./sakoo php ./vendor/bin/php-cs-fixer fix .
 
-check:
+check: # prepare
+# CI
 	@make test-coverage
 	$(call get_user_confirmation)
 	@./sakoo composer analyze
