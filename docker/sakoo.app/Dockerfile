@@ -1,4 +1,4 @@
-FROM php:8.3.10-fpm-alpine
+FROM php:8.3.11-fpm-alpine
 LABEL MAINTAINER="Pouya Asgharnejad Tehran | https://sakoo.dev"
 
 RUN apk add --no-cache git curl zip unzip nodejs npm linux-headers $PHPIZE_DEPS
