@@ -29,7 +29,7 @@
   "require": {
     "php": ">=8.3",
     "symfony/console": "^6.0",
-    "symfony/finder": "^6.0",
+    "symfony/finder": "^6.0 || ^7.0",
     "psr/container": "^2.0",
     "psr/log": "^3.0",
     "psr/clock": "^1.0",
