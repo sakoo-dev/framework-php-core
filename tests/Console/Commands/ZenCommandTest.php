@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Console\Commands;
 
 use Sakoo\Framework\Core\Constants;
 use Sakoo\Framework\Core\Tests\TestCase;
 
-class ZenCommandTest extends TestCase
+final class ZenCommandTest extends TestCase
 {
 	public function test_it_loads_zen_command_properly()
 	{

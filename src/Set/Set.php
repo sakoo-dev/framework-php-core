@@ -1,23 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Set;
 
 class Set implements Iteratable
 {
 	use SetAccess;
 
-	protected array $items = [];
-
-	private function __construct()
-	{
-	}
-
-	public static function make(array $array = []): static
-	{
-		$object = new static();
-		$object->items = $array;
-		return $object;
-	}
+	public function __construct(private array $items = []) {}
 
 	public function __get(string $name): mixed
 	{
@@ -46,7 +37,7 @@ class Set implements Iteratable
 
 	public function map($callback): static
 	{
-		return static::make(array_map($callback, $this->items));
+		return new static(array_map($callback, $this->items));
 	}
 
 	public function pluck($key): static
@@ -66,10 +57,12 @@ class Set implements Iteratable
 	{
 		if (is_null($value)) {
 			$this->items[] = $key;
+
 			return $this;
 		}
 
 		$this->items[$key] = $value;
+
 		return $this;
 	}
 
@@ -77,12 +70,14 @@ class Set implements Iteratable
 	{
 		if (is_int($key)) {
 			unset($this->items[array_keys($this->items)[$key]]);
+
 			return $this;
 		}
 
 		if ($this->exists($key)) {
 			unset($this->items[$key]);
 		}
+
 		return $this;
 	}
 
@@ -94,6 +89,7 @@ class Set implements Iteratable
 
 		if (is_int($key)) {
 			$indexValue = current(array_slice($this->items, $key, 1));
+
 			return $indexValue ?: null;
 		}
 
