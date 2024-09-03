@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Env;
 
-use Sakoo\Framework\Core\FileSystem\Disk;
-use Sakoo\Framework\Core\FileSystem\File;
+use Sakoo\Framework\Core\FileSystem\Storage;
 
 class Env
 {
@@ -12,27 +13,22 @@ class Env
 		return getenv($key) ?: $default;
 	}
 
-	public static function load(string $path): void
+	public static function load(Storage $file): void
 	{
-		$lines = static::readDotEnv($path);
+		$lines = $file->exists() ? $file->readLines() : [];
 
 		foreach ($lines as $line) {
 			$line = trim($line);
+
 			if (static::matchesPattern($line)) {
 				static::storeValue(...static::getKeyValue($line));
 			}
 		}
 	}
 
-	private static function readDotEnv(string $path): array
-	{
-		$file = File::open(Disk::Local, $path);
-		return $file->exists() ? $file->readLines() : [];
-	}
-
 	private static function matchesPattern(string $line): bool
 	{
-		return preg_match('/^([a-zA-Z_]+[a-zA-Z0-9_]*)=(.*)$/', $line);
+		return (bool) preg_match('/^([a-zA-Z_]+[a-zA-Z0-9_]*)=(.*)$/', $line);
 	}
 
 	private static function getKeyValue(string $line): array
@@ -44,6 +40,5 @@ class Env
 	{
 		putenv("$key=$value");
 		$_ENV[$key] = $value;
-		$_SERVER[$key] = $value;
 	}
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Sakoo\Framework\Core\Console\Assistant;
 use Sakoo\Framework\Core\Env\Env;
+use Sakoo\Framework\Core\FileSystem\Disk;
+use Sakoo\Framework\Core\FileSystem\File;
 use Sakoo\Framework\Core\Handler\ErrorHandler;
 use Sakoo\Framework\Core\Handler\ExceptionHandler;
 use Sakoo\Framework\Core\Kernel\Environment;
@@ -13,11 +15,12 @@ use Sakoo\Framework\Core\Path\Path;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-Env::load(Path::getRootDir() . '/.env');
+$envFile = File::open(Disk::Local, Path::getRootDir() . '/.env');
+Env::load($envFile);
 
 $environment = Env::get('APP_DEBUG', true) ? Environment::Debug : Environment::Production;
 $loaders = require_once Path::getCoreDir() . '/ServiceLoader/Loaders.php';
-$timeZone = Env::get('SERVER_TIME_ZONE', 'Asia/Tehran');
+$timeZone = Env::get('SERVER_TIME_ZONE', 'UTC');
 
 Kernel::prepare(Mode::Console, $environment)
 	->setErrorHandler(new ErrorHandler())

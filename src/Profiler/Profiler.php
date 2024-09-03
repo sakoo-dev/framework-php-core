@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Profiler;
 
-use Sakoo\Framework\Core\Clock\Clock;
+use Psr\Clock\ClockInterface;
 
-class Profiler
+class Profiler implements ProfilerInterface
 {
 	private int $startTime;
-	private Clock $clock;
 
-	public function __construct()
+	public function __construct(private ClockInterface $clock)
 	{
-		$this->clock = new Clock();
-		$this->startTime = $this->clock->now()->format('Uv');
+		$this->startTime = (int) $this->clock->now()->format('Uv');
 	}
 
 	public function elapsedTime(): int
 	{
-		return $this->clock->now()->format('Uv') - $this->startTime;
+		return (int) $this->clock->now()->format('Uv') - $this->startTime;
 	}
 }

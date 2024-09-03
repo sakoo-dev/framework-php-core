@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Watcher;
 
 use Sakoo\Framework\Core\Watcher\Contracts\Event;
@@ -18,11 +20,7 @@ abstract class WatcherActions implements FileSystemAction
 		$locker->lock();
 	}
 
-	public function fileMoved(Event $event)
-	{
-	}
+	public function fileMoved(Event $event) {}
 
-	public function fileDeleted(Event $event)
-	{
-	}
+	public function fileDeleted(Event $event) {}
 }

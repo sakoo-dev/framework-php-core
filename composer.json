@@ -1,48 +1,60 @@
 {
-    "name": "sakoo/framework-core",
-    "description": "The Core Components of the Sakoo PHP Web Framework",
-    "type": "library",
-    "license": "MIT",
-    "keywords": ["framework", "sakoo"],
-    "authors": [
-        {
-            "name": "Pouya Asgharnejad Tehran",
-            "email": "pouyaaofficial@gmail.com",
-            "role": "Software Engineer"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Sakoo\\Framework\\Core\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Sakoo\\Framework\\Core\\Tests\\": "tests"
-        }
-    },
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=8.1",
-        "symfony/console": "^6.0",
-        "symfony/finder": "^6.0",
-        "psr/container": "^2.0",
-        "psr/log": "^3.0",
-        "psr/clock": "^1.0",
-        "webmozart/assert": "^1.11"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.5",
-        "phpunit/phpunit": "^9.5",
-        "symfony/var-dumper": "^6.1"
-    },
-    "scripts": {
-        "stylecheck": "./vendor/bin/php-cs-fixer fix --dry-run",
-        "test": "./vendor/bin/phpunit"
-    },
-    "provide": {
-        "psr/container-implementation": "2.0",
-        "psr/log-implementation": "3.0",
-        "psr/clock-implementation": "1.0"
+  "name": "sakoo/framework-core",
+  "description": "The Core Components of the Sakoo PHP Web Framework",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "php",
+    "framework",
+    "sakoo"
+  ],
+  "authors": [
+    {
+      "name": "Pouya Asgharnejad Tehran",
+      "email": "pouyaaofficial@gmail.com",
+      "role": "Senior Software Engineer"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sakoo\\Framework\\Core\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Sakoo\\Framework\\Core\\Tests\\": "tests"
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=8.3",
+    "symfony/console": "^6.0",
+    "symfony/finder": "^6.0",
+    "psr/container": "^2.0",
+    "psr/log": "^3.0",
+    "psr/clock": "^1.0",
+    "psr/http-factory": "^1.0",
+    "psr/http-message": "^2.0",
+    "psr/http-server-handler": "^1.0",
+    "psr/http-server-middleware": "^1.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.6",
+    "phpstan/phpstan": "^1.10",
+    "phpunit/phpunit": "^9.5"
+  },
+  "scripts": {
+    "stylecheck": "./vendor/bin/php-cs-fixer fix . --dry-run --using-cache=no",
+    "test": "./vendor/bin/phpunit --do-not-cache-result --coverage-text --colors=never",
+    "analyze": "./vendor/bin/phpstan analyse --level max --memory-limit 1G src tests"
+  },
+  "provide": {
+    "psr/container-implementation": "^2.0",
+    "psr/log-implementation": "^3.0",
+    "psr/clock-implementation": "^1.0",
+    "psr/http-factory-implementation": "^1.0",
+    "psr/http-message-implementation": "^2.0",
+    "psr/http-server-handler-implementation": "^1.0",
+    "psr/http-server-middleware-implementation": "^1.0"
+  }
 }

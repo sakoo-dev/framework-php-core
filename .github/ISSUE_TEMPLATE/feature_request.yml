@@ -1,0 +1,59 @@
+name: Feature Request
+description: Suggest an idea for this project.
+title: "[Feature]: "
+labels: [ "feature" ]
+projects: [ ]
+assignees: [ 'pouyaaofficial' ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request form!
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: input
+    id: fullname
+    attributes:
+      label: Your Name
+      description: What is your Name?
+      placeholder: ex. Bill Gates
+    validations:
+      required: false
+  - type: textarea
+    id: why
+    attributes:
+      label: Specify the Origin of Your Idea (Why?)
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: I'm always frustrated when ...
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: Describe the solution you'd like (What?)
+      description: A clear and concise description of what you want to happen.
+      placeholder: My Idea is ...
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: Do you have any Idea for Implementation of this Feature? (How?)
+      description: Please share your thoughts or suggestions for implementing this feature.
+      placeholder: We can fulfill this idea using ...
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/sakoo-dev/framework-php-core/blob/main/.github/CODE_OF_CONDUCT.md).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
