@@ -41,7 +41,7 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.6",
     "phpstan/phpstan": "^1.10",
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.5 || ^11.0"
   },
   "scripts": {
     "stylecheck": "./vendor/bin/php-cs-fixer fix . --dry-run --using-cache=no",
