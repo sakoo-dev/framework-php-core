@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Path;
 
-use Symfony\Component\Finder\Finder;
+use Sakoo\Framework\Core\Finder\Finder;
 
 class Path
 {
@@ -31,13 +33,28 @@ class Path
 		return static::getStorageDir() . '/logs';
 	}
 
-	public static function getProjectPHPFiles(): Finder
+	public static function getTempTestDir(): string
 	{
-		return Finder::create()
-			->name(['*.php'])
-			->ignoreVCS(true)
-			->ignoreVCSIgnored(true)
-			->ignoreDotFiles(true)
-			->in(static::getRootDir());
+		return '/tmp/sakoo-test';
+	}
+
+	public static function getProjectPHPFiles(): array
+	{
+		return Finder::create(Path::getRootDir())
+			->pattern('*.php')
+			->ignoreVCS()
+			->ignoreVCSIgnored()
+			->ignoreDotFiles()
+			->getFiles();
+	}
+
+	public static function getCorePHPFiles(): array
+	{
+		return Finder::create(Path::getCoreDir())
+			->pattern('*.php')
+			->ignoreVCS()
+			->ignoreVCSIgnored()
+			->ignoreDotFiles()
+			->getFiles();
 	}
 }

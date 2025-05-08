@@ -1,0 +1,11 @@
+parameters:
+	reportUnmatchedIgnoredErrors: false
+	errorFormat: table
+	editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+	level: max
+	paths:
+		- src
+		- tests
+	ignoreErrors:
+		-
+			identifier: missingType.iterableValue

@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 use Psr\Log\LoggerInterface;
-use Sakoo\Framework\Core\Container\Container;
-use Sakoo\Framework\Core\Exception\Exception;
+use Sakoo\Framework\Core\Container\ContainerInterface;
 use Sakoo\Framework\Core\Kernel\Kernel;
+use Sakoo\Framework\Core\Set\Iteratable;
 use Sakoo\Framework\Core\Set\Set;
+use Sakoo\Framework\Core\Str\Str;
+use Sakoo\Framework\Core\Str\Stringable;
+use Sakoo\Framework\Core\VarDump\VarDump;
 
 if (!function_exists('set')) {
-	function set(array $value = []): Set
+	function set(array $value = []): Iteratable
 	{
-		return Set::make($value);
+		return new Set($value);
 	}
 }
 
@@ -21,7 +26,7 @@ if (!function_exists('kernel')) {
 }
 
 if (!function_exists('container')) {
-	function container(): Container
+	function container(): ContainerInterface
 	{
 		return kernel()->getContainer();
 	}
@@ -42,7 +47,10 @@ if (!function_exists('makeInstance')) {
 }
 
 if (!function_exists('throwIf')) {
-	function throwIf(bool $condition, Exception $exception): void
+	/**
+	 * @throws Throwable
+	 */
+	function throwIf(bool $condition, Throwable $exception): void
 	{
 		if ($condition) {
 			throw $exception;
@@ -51,7 +59,10 @@ if (!function_exists('throwIf')) {
 }
 
 if (!function_exists('throwUnless')) {
-	function throwUnless(bool $condition, Exception $exception): void
+	/**
+	 * @throws Throwable
+	 */
+	function throwUnless(bool $condition, Throwable $exception): void
 	{
 		throwIf(!$condition, $exception);
 	}
@@ -61,5 +72,33 @@ if (!function_exists('logger')) {
 	function logger(): LoggerInterface
 	{
 		return resolve(LoggerInterface::class);
+	}
+}
+
+if (!function_exists('str')) {
+	function str(string $value): Stringable
+	{
+		return new Str($value);
+	}
+}
+
+if (!function_exists('__')) {
+	function __(string $value): string
+	{
+		return $value;
+	}
+}
+
+if (!function_exists('dump')) {
+	function dump(mixed $value): void
+	{
+		(new VarDump($value))->dump();
+	}
+}
+
+if (!function_exists('dd')) {
+	function dd(mixed $value): never
+	{
+		(new VarDump($value))->dieDump();
 	}
 }

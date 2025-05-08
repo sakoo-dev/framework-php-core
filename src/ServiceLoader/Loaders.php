@@ -1,9 +1,11 @@
 <?php
 
-use Sakoo\Framework\Core\ServiceLoader\AppServiceLoader;
+declare(strict_types=1);
+
+use Sakoo\Framework\Core\ServiceLoader\MainServiceLoader;
 use Sakoo\Framework\Core\ServiceLoader\WatcherServiceLoader;
 
 return [
-	AppServiceLoader::class,
+	MainServiceLoader::class,
 	WatcherServiceLoader::class,
 ];

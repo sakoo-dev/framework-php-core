@@ -1,21 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Kernel;
 
+use Psr\Container\ContainerInterface;
 use Sakoo\Framework\Core\Container\Container;
 use Sakoo\Framework\Core\Kernel\Exceptions\KernelTwiceCallException;
 use Sakoo\Framework\Core\Path\Path;
-use Sakoo\Framework\Core\Profiler\Profiler;
+use Sakoo\Framework\Core\Profiler\ProfilerInterface;
 
 class Kernel
 {
 	private static ?Kernel $instance = null;
 
-	private Mode $mode;
-	private Environment $environment;
-
-	private Profiler $profiler;
-	private Container $container;
+	private ProfilerInterface $profiler;
+	private ContainerInterface $container;
 
 	private string $serverTimezone;
 	private $errorHandler;
@@ -23,17 +23,17 @@ class Kernel
 
 	private array $serviceLoaders;
 
-	private function __construct(Mode $mode, Environment $environment)
-	{
-		$this->mode = $mode;
-		$this->environment = $environment;
-	}
+	private function __construct(
+		private readonly Mode $mode,
+		private readonly Environment $environment,
+	) {}
 
 	public static function prepare(Mode $mode, Environment $environment): static
 	{
-		require_once Path::getCoreDir() . '/helpers.php';
+		if (!is_null(static::$instance)) {
+			throw new KernelTwiceCallException();
+		}
 
-		throwUnless(is_null(static::$instance), new KernelTwiceCallException());
 		return static::$instance = new static($mode, $environment);
 	}
 
@@ -44,16 +44,32 @@ class Kernel
 
 	public function run(): void
 	{
-		date_default_timezone_set($this->serverTimezone);
-		set_error_handler($this->errorHandler);
-		set_exception_handler($this->exceptionHandler);
+		if (!empty($this->serverTimezone)) {
+			date_default_timezone_set($this->serverTimezone);
+		}
 
-		$this->profiler = new Profiler();
+		if (!empty($this->errorHandler)) {
+			set_error_handler($this->errorHandler);
+		}
+
+		if (!empty($this->exceptionHandler)) {
+			set_exception_handler($this->exceptionHandler);
+		}
+
+		if ($this->isInTestMode() || $this->isInDebugEnv()) {
+			$this->enableDisplayErrors();
+		}
+
+		require_once Path::getCoreDir() . '/helpers.php';
+
 		$this->container = new Container();
 
 		set($this->serviceLoaders)->each(
 			fn ($serviceLoader) => (new $serviceLoader())->load($this->container)
 		);
+
+		// What?
+		resolve(ProfilerInterface::class);
 	}
 
 	public function getMode(): Mode
@@ -66,12 +82,12 @@ class Kernel
 		return $this->environment;
 	}
 
-	public function getProfiler(): Profiler
+	public function getProfiler(): ProfilerInterface
 	{
 		return $this->profiler;
 	}
 
-	public function getContainer(): Container
+	public function getContainer(): ContainerInterface
 	{
 		return $this->container;
 	}
@@ -79,24 +95,28 @@ class Kernel
 	public function setExceptionHandler(callable $handler): static
 	{
 		$this->exceptionHandler = $handler;
+
 		return $this;
 	}
 
 	public function setErrorHandler(callable $handler): static
 	{
 		$this->errorHandler = $handler;
+
 		return $this;
 	}
 
 	public function setServerTimezone(string $timezone): static
 	{
 		$this->serverTimezone = $timezone;
+
 		return $this;
 	}
 
 	public function setServiceLoaders(array $serviceLoaders): static
 	{
 		$this->serviceLoaders = $serviceLoaders;
+
 		return $this;
 	}
 
@@ -113,5 +133,22 @@ class Kernel
 	public function isInConsoleMode(): bool
 	{
 		return Mode::Console === $this->mode;
+	}
+
+	public function isInDebugEnv(): bool
+	{
+		return Environment::Debug === $this->environment;
+	}
+
+	public function isInProductionEnv(): bool
+	{
+		return Environment::Production === $this->environment;
+	}
+
+	private function enableDisplayErrors(): void
+	{
+		ini_set('display_startup_errors', 1);
+		ini_set('display_errors', 1);
+		error_reporting(E_ALL);
 	}
 }
