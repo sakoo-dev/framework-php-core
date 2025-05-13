@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\Path;
 
 use Sakoo\Framework\Core\Path\Path;
 use Sakoo\Framework\Core\Tests\TestCase;
-use Symfony\Component\Finder\Finder;
 
-class PathTest extends TestCase
+final class PathTest extends TestCase
 {
 	private string $root;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->root = realpath(__DIR__ . '/../../');
@@ -41,11 +42,20 @@ class PathTest extends TestCase
 		$this->assertEquals("{$this->root}/storage/logs", Path::getLogsDir());
 	}
 
+	public function test_it_returns_temp_test_path_properly()
+	{
+		$this->assertEquals('/tmp/sakoo-test', Path::getTempTestDir());
+	}
+
 	public function test_it_returns_all_php_files_properly()
 	{
-		$finder = Path::getProjectPHPFiles();
+		$files = Path::getProjectPHPFiles();
+		$this->assertGreaterThan(20, count($files));
+	}
 
-		$this->assertInstanceOf(Finder::class, $finder);
-		$this->assertGreaterThan(20, $finder->count());
+	public function test_it_returns_php_core_files()
+	{
+		$files = Path::getCorePHPFiles();
+		$this->assertGreaterThan(20, count($files));
 	}
 }

@@ -1,0 +1,16 @@
+.DS_Store
+
+.idea/
+.vscode/
+.fleet/
+
+.git/
+.gitignore
+.github
+*.md
+
+.php-cs-fixer.cache
+.phpunit.result.cache
+
+.php-cs-fixer.php
+phpstan.neon

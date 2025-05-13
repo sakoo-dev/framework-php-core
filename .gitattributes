@@ -1,0 +1,8 @@
+*               text=auto
+
+*.php           text    eol=lf     diff=php
+
+*.md            linguist-detectable
+
+phpunit.xml     text    eol=lf
+phpstan.neon    text    eol=lf

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+PATTERN_WITH_ISSUE="^(feat|ref|perf|fix|chore)\(#([0-9]+)\):[a-zA-Z\s]+$"
+PATTERN_NO_ISSUE="^(feat|ref|perf|fix|chore):[a-zA-Z\s]+$"
+
+validate_commit_message() {
+    if [[ "$COMMIT_MSG" =~ $PATTERN_WITH_ISSUE || "$COMMIT_MSG" =~ $PATTERN_NO_ISSUE ]]; then
+        echo "Commit message is valid!"
+    else
+        echo "ERROR: Invalid commit message format."
+        echo "Use one of the following formats:"
+        echo "  - TYPE(#ISSUE_CODE):some description"
+        echo "  - TYPE:some description"
+        echo
+        exit 1
+    fi
+}
+
+if [[ "$COMMIT_SOURCE" != "merge" && "$COMMIT_SOURCE" != "squash" && "$COMMIT_SOURCE" != "fixup" ]]; then
+    validate_commit_message
+fi
