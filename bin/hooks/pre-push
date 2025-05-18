@@ -1,0 +1,52 @@
+#!/bin/bash
+
+REMOTE_BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null)
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse "$REMOTE_BRANCH")
+BASE=$(git merge-base @ "$REMOTE_BRANCH")
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+GITFLOW_PATTERN="^(feat|ref|perf|fix|chore)\/[a-zA-Z\-]+$"
+
+# Remote Branch Checking
+
+if [ $? -ne 0 ]; then
+    echo "No remote branch set. Ensure you're following Gitflow."
+    exit 1
+fi
+
+if [ $LOCAL = $REMOTE ]; then
+    echo "Branch is up-to-date."
+elif [ $LOCAL = $BASE ]; then
+    echo "Error: Your branch is behind. Pull changes before pushing."
+    exit 1
+else
+    echo "Error: Your branch has diverged. Rebase before pushing."
+    exit 1
+fi
+
+# Code Checking
+
+make check
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo "Pre-push checks failed. Push aborted."
+    exit 1
+fi
+
+# Branch Name Convention Checking
+
+if [[ ! "$BRANCH_NAME" =~ $GITFLOW_PATTERN && "$BRANCH_NAME" != "main" && "$BRANCH_NAME" != "develop" ]]; then
+    echo "ERROR: Invalid branch name '$BRANCH_NAME'. GitFlow pattern expected (e.g., feat/ISSUE-1234)."
+    exit 1
+fi
+
+# WIP Commit Checking
+
+if [[ "$BRANCH_NAME" == "main" ]]; then
+    LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+    if [[ "$LAST_COMMIT_MSG" =~ "WIP" ]]; then
+        echo "ERROR: 'WIP' commits are forbidden on the main branch."
+        exit 1
+    fi
+fi

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sakoo.dev
+    url: https://sakoo.dev
+    about: Sakoo Development Group Official Website.
+  - name: Sakoo Official Documentations
+    url: https://sakoo.dev/docs
+    about: Official Documents for Sakoo PHP Framework
