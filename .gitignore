@@ -1,9 +1,13 @@
+.DS_Store
+
 .idea/
 .vscode/
 .fleet/
+
 /vendor/
 storage/
+.env
+sakoo
+
 .php-cs-fixer.cache
 .phpunit.result.cache
-.DS_Store
-.env

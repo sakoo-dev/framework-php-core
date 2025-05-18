@@ -1,0 +1,13 @@
+rules:
+  - Sakoo\Framework\Core\PHPStan\Bug\PureFunctionOutputRule
+  - Sakoo\Framework\Core\PHPStan\CodeSmell\UnusedPrivateMethodRule
+  - Sakoo\Framework\Core\PHPStan\Vulnerability\DangerousFunctionsRule
+  - Sakoo\Framework\Core\PHPStan\Vulnerability\EvalUsageRule
+parameters:
+	reportUnmatchedIgnoredErrors: false
+	errorFormat: table
+	editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+	level: max
+	paths:
+		- src
+		- tests
