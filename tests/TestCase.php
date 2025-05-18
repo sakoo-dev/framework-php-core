@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests;
 
 use Sakoo\Framework\Core\Testing\TestCase as SakooTestCase;
 
-class TestCase extends SakooTestCase
+abstract class TestCase extends SakooTestCase
 {
-	use RunKernel;
+	use Bootstrap;
 }

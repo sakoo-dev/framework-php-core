@@ -47,6 +47,7 @@ class DocGenCommand extends Command
 
 		$wikiFooter = File::open(Disk::Local, Path::getRootDir() . '/.github/wiki/_Footer.md');
 		$wikiFooter->write('Powered by Sakoo Development Group - ' . date('Y'));
+
 		$output->block('Document has been Generated Successfully!', Output::COLOR_GREEN);
 
 		return Output::SUCCESS;

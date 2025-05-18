@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Handler;
 
 class ErrorFormatter
@@ -9,12 +11,10 @@ class ErrorFormatter
 		private $errorString,
 		private $errorFile,
 		private $errorLine,
-	) {
-	}
+	) {}
 
 	public function __toString()
 	{
-		// debug_backtrace();
-		return "[$this->errorNumber] $this->errorString at $this->errorFile line $this->errorLine" . PHP_EOL;
+		return "[$this->errorNumber] $this->errorString at $this->errorFile line $this->errorLine";
 	}
 }
