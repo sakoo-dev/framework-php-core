@@ -1,0 +1,38 @@
+name: Sakoo Publish Wiki
+
+on:
+  push:
+    branches: [ 'main' ]
+
+jobs:
+
+
+  update-wiki:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+
+      - name: Update wiki
+        run: |
+          REPOSITORY="framework-php-core.wiki"
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/sakoo-dev/${REPOSITORY}.git
+          cd $REPOSITORY
+          cp -r ../.github/wiki/. .
+          
+          if git diff --exit-code; then
+            echo "No changes detected in the Wiki repository, aborting ..."
+            exit 0
+          else
+            echo "Changes detected, proceeding to commit ..."
+          fi
+          
+          git add .
+          git commit -m "Update wiki content via CI on $(date)"
+          git push

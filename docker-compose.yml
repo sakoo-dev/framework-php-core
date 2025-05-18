@@ -1,41 +1,42 @@
 services:
 
-  mysql:
-    image: mysql:8.0.32
-    restart: unless-stopped
-    ports:
-      - '${MYSQL_PORT}:3306'
-    volumes:
-      - mysqldata:/var/lib/mysql
-    environment:
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-    networks:
-      - sakoo
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping"]
-
   sakoo.app:
     build:
       context: .
       dockerfile: docker/sakoo.app/Dockerfile
-    image: sakoo.app:1.0.0
+    image: ${DOCKER_IMAGE}
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./:/var/www/html/
     depends_on:
-      - mysql
+      - sakoo.mysql
     networks:
-      - sakoo
+      - sakoo.network
+
+  sakoo.mysql:
+    image: mysql/mysql-server:8.0
+    restart: unless-stopped
+    ports:
+      - '${MYSQL_PORT:-3306}:3306'
+    volumes:
+      - sakoo.volume:/var/lib/mysql
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: false
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    networks:
+      - sakoo.network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
 
 volumes:
-  mysqldata:
+  sakoo.volume:
     driver: local
 
 networks:
-  sakoo:
+  sakoo.network:
     driver: bridge

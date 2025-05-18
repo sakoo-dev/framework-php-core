@@ -1,0 +1,155 @@
+name: Sakoo CI Pipeline
+
+on:
+  push:
+    branches: [ '**' ]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: 'sakoo.app:1.0.0'
+
+jobs:
+
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate composer.json and composer.lock
+        run: |
+          composer validate --strict
+          composer audit
+
+      - name: Cache composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
+
+      - name: Cache docker image
+        id: docker-cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/sakoo-app.tar.gz
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/docker/sakoo.app/Dockerfile') }}
+
+      - name: Check docker image
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        run: |
+          docker build --check -f ./docker/sakoo.app/Dockerfile .
+
+      - name: Build docker image
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        run: |
+          docker build . -f ./docker/sakoo.app/Dockerfile -q -t $IMAGE_NAME
+          docker save $IMAGE_NAME | gzip > /tmp/sakoo-app.tar.gz
+
+      - name: Upload docker artifact
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sakoo.app
+          path: /tmp/sakoo-app.tar.gz
+          compression-level: 9
+          retention-days: 90
+          if-no-files-found: error
+
+
+  quality:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Retrieve docker image
+        uses: actions/cache@v4
+        with:
+          path: /tmp/sakoo-app.tar.gz
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/docker/sakoo.app/Dockerfile') }}
+
+      - name: Load docker image
+        run: docker load --input /tmp/sakoo-app.tar.gz
+
+      - name: Retrieve composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Code style check
+        run: docker run -v $PWD:/var/www/html/ $IMAGE_NAME composer lint
+
+      - name: Code static analyse
+        run: docker run -v $PWD:/var/www/html/ $IMAGE_NAME composer analyse
+
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Retrieve docker image
+        uses: actions/cache@v4
+        with:
+          path: /tmp/sakoo-app.tar.gz
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/docker/sakoo.app/Dockerfile') }}
+
+      - name: Load docker images
+        run: docker load --input /tmp/sakoo-app.tar.gz
+
+      - name: Retrieve composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Run automated tests
+        id: test
+        run: $PWD/bin/test-coverage
+
+      - name: Create the coverage badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: ${{ secrets.GIST_ID }}
+          filename: framework-php-core_${{ github.head_ref || github.ref_name }}.json
+          label: Test Code Coverage
+          message: ${{ steps.test.outputs.coverage }}%
+          valColorRange: ${{ steps.test.outputs.coverage }}
+          minColorRange: 0
+          maxColorRange: 100
+          namedLogo: PHP
+
+
+  security:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Dependency review
+        uses: actions/dependency-review-action@v4
+        with:
+          base-ref: main
+          head-ref: main
