@@ -1,15 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Container\Parameter;
 
 use Sakoo\Framework\Core\Container\Container;
+use Sakoo\Framework\Core\Container\Exceptions\ClassNotFoundException;
+use Sakoo\Framework\Core\Container\Exceptions\ClassNotInstantiableException;
 
-class Parameter
+readonly class Parameter
 {
-	public function __construct(private Container $container)
-	{
-	}
+	public function __construct(private Container $container) {}
 
+	/**
+	 * @throws \Throwable
+	 * @throws \ReflectionException
+	 * @throws ClassNotInstantiableException
+	 * @throws ClassNotFoundException
+	 */
 	public function resolve(\ReflectionParameter $parameter): mixed
 	{
 		$dependency = $parameter->getType();
@@ -27,23 +35,48 @@ class Parameter
 
 	private function generateDefaultValue(?\ReflectionType $type): mixed
 	{
-		$default = null;
-
 		if (is_null($type)) {
-			return $default;
+			return null;
 		}
 
-		if ($type->allowsNull()) {
-			$type = substr("$type", 1, strlen("$type") - 1);
+		if ($type instanceof \ReflectionNamedType) {
+			return match ($type->getName()) {
+				'string' => '',
+				'int', 'integer' => 0,
+				'float', 'double' => 0.0,
+				'bool', 'boolean' => false,
+				'array' => [],
+				'object', 'stdClass' => new \stdClass(),
+				'callable', 'closure' => function () {},
+				default => null,
+			};
 		}
 
-		settype($default, $type);
+		if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
+			$types = $type->getTypes();
 
-		return $default;
+			foreach ($types as $subType) {
+				$value = $this->generateDefaultValue($subType);
+
+				if (null !== $value) {
+					return $value;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	private function canResolveType(?\ReflectionType $type): bool
 	{
-		return !is_null($type) && !$type->isBuiltin();
+		if (is_null($type)) {
+			return false;
+		}
+
+		if ($type instanceof \ReflectionNamedType && $type->isBuiltin()) {
+			return false;
+		}
+
+		return true;
 	}
 }
