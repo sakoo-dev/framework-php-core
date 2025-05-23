@@ -1,59 +1,83 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Kernel;
 
 use Sakoo\Framework\Core\Container\Container;
+use Sakoo\Framework\Core\Container\ContainerInterface;
 use Sakoo\Framework\Core\Kernel\Exceptions\KernelTwiceCallException;
 use Sakoo\Framework\Core\Path\Path;
-use Sakoo\Framework\Core\Profiler\Profiler;
+use Sakoo\Framework\Core\Profiler\ProfilerInterface;
+use Sakoo\Framework\Core\ServiceLoader\ServiceLoader;
 
 class Kernel
 {
 	private static ?Kernel $instance = null;
 
-	private Mode $mode;
-	private Environment $environment;
-
-	private Profiler $profiler;
-	private Container $container;
+	private ProfilerInterface $profiler;
+	private ContainerInterface $container;
+	private string $replicaId = '';
 
 	private string $serverTimezone;
+	/** @var null|callable */
 	private $errorHandler;
+	/** @var null|callable */
 	private $exceptionHandler;
 
-	private array $serviceLoaders;
+	/** @var array<ServiceLoader> */
+	private array $serviceLoaders = [];
 
-	private function __construct(Mode $mode, Environment $environment)
+	private function __construct(
+		private readonly Mode $mode,
+		private readonly Environment $environment,
+	) {}
+
+	/**
+	 * @throws KernelTwiceCallException
+	 */
+	public static function prepare(Mode $mode, Environment $environment): self
 	{
-		$this->mode = $mode;
-		$this->environment = $environment;
+		if (!is_null(self::$instance)) {
+			throw new KernelTwiceCallException();
+		}
+
+		return self::$instance = new self($mode, $environment);
 	}
 
-	public static function prepare(Mode $mode, Environment $environment): static
+	public static function getInstance(): ?self
 	{
-		require_once Path::getCoreDir() . '/helpers.php';
-
-		throwUnless(is_null(static::$instance), new KernelTwiceCallException());
-		return static::$instance = new static($mode, $environment);
-	}
-
-	public static function getInstance(): ?static
-	{
-		return static::$instance;
+		return self::$instance;
 	}
 
 	public function run(): void
 	{
-		date_default_timezone_set($this->serverTimezone);
-		set_error_handler($this->errorHandler);
-		set_exception_handler($this->exceptionHandler);
+		if (!empty($this->serverTimezone)) {
+			date_default_timezone_set($this->serverTimezone);
+		}
 
-		$this->profiler = new Profiler();
+		if (!$this->errorHandler) {
+			set_error_handler($this->errorHandler);
+		}
+
+		if (!$this->exceptionHandler) {
+			set_exception_handler($this->exceptionHandler);
+		}
+
+		if ($this->isInTestMode() || $this->isInDebugEnv()) {
+			$this->enableDisplayErrors();
+		}
+
+		require_once Path::getCoreDir() . '/helpers.php';
+
 		$this->container = new Container();
 
-		set($this->serviceLoaders)->each(
-			fn ($serviceLoader) => (new $serviceLoader())->load($this->container)
-		);
+		foreach ($this->serviceLoaders as $serviceLoader) {
+			(new $serviceLoader())->load($this->container);
+		}
+
+		// @phpstan-ignore assign.propertyType
+		$this->profiler = resolve(ProfilerInterface::class);
 	}
 
 	public function getMode(): Mode
@@ -66,37 +90,56 @@ class Kernel
 		return $this->environment;
 	}
 
-	public function getProfiler(): Profiler
+	public function getProfiler(): ProfilerInterface
 	{
 		return $this->profiler;
 	}
 
-	public function getContainer(): Container
+	public function getContainer(): ContainerInterface
 	{
 		return $this->container;
+	}
+
+	public function getReplicaId(): string
+	{
+		return $this->replicaId;
 	}
 
 	public function setExceptionHandler(callable $handler): static
 	{
 		$this->exceptionHandler = $handler;
+
 		return $this;
 	}
 
 	public function setErrorHandler(callable $handler): static
 	{
 		$this->errorHandler = $handler;
+
 		return $this;
 	}
 
 	public function setServerTimezone(string $timezone): static
 	{
 		$this->serverTimezone = $timezone;
+
 		return $this;
 	}
 
+	/**
+	 * @param array<ServiceLoader> $serviceLoaders
+	 */
 	public function setServiceLoaders(array $serviceLoaders): static
 	{
 		$this->serviceLoaders = $serviceLoaders;
+
+		return $this;
+	}
+
+	public function setReplicaId(string $replicaId): static
+	{
+		$this->replicaId = $replicaId;
+
 		return $this;
 	}
 
@@ -113,5 +156,22 @@ class Kernel
 	public function isInConsoleMode(): bool
 	{
 		return Mode::Console === $this->mode;
+	}
+
+	public function isInDebugEnv(): bool
+	{
+		return Environment::Debug === $this->environment;
+	}
+
+	public function isInProductionEnv(): bool
+	{
+		return Environment::Production === $this->environment;
+	}
+
+	private function enableDisplayErrors(): void
+	{
+		ini_set('display_startup_errors', 1);
+		ini_set('display_errors', 1);
+		error_reporting(E_ALL);
 	}
 }
