@@ -1,26 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Logger;
 
 use Psr\Log\AbstractLogger;
+use Sakoo\Framework\Core\Clock\Clock;
 use Sakoo\Framework\Core\FileSystem\Disk;
 use Sakoo\Framework\Core\FileSystem\File;
 use Sakoo\Framework\Core\Path\Path;
 
 class FileLogger extends AbstractLogger
 {
-	public function log($level, \Stringable|string $message, array $context = []): void
+	/**
+	 * @param string $level
+	 *
+	 * @throws \Exception|\Throwable
+	 */
+	public function log($level, string|\Stringable $message, array $context = []): void
 	{
 		$log = $this->getFormattedLog($level, $message);
-		$this->writeToFile($log);
+		$isWritten = $this->writeToFile($log);
+		throwUnless($isWritten, new \Exception('Failed to write log file.'));
 	}
 
-	private function getFormattedLog($level, \Stringable|string $message): string
+	private function getFormattedLog(string $level, string|\Stringable $message): string
 	{
 		$env = kernel()->getEnvironment()->value;
 		$mode = kernel()->getMode()->value;
 
-		return new LogFormatter($level, $message, $mode, $env);
+		return (string) new LogFormatter($level, $message, $mode, $env);
 	}
 
 	private function writeToFile(string $log): bool
@@ -31,8 +40,12 @@ class FileLogger extends AbstractLogger
 
 	private function getLogFileName(): string
 	{
-		return kernel()->isInTestMode() ?
-			Path::getStorageDir() . '/tests/log/' . date('Y/m/d') . '.log' :
-			Path::getLogsDir() . '/' . date('Y/m/d') . '.log';
+		$path = Path::getLogsDir();
+
+		if (kernel()->isInTestMode()) {
+			$path = Path::getTempTestDir() . '/log';
+		}
+
+		return "$path/" . (new Clock())->now()->format('Y/m/d') . '.log';
 	}
 }
