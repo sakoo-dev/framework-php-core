@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Set;
 
-interface Iteratable extends \IteratorAggregate
+interface Iteratable extends \IteratorAggregate, \Countable
 {
 	public function exists($name): bool;
 
