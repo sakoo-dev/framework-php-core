@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\FileSystem;
 
 interface Storage
@@ -29,4 +31,10 @@ interface Storage
 	public function append(string $data): bool;
 
 	public function readLines(): array|false;
+
+	public function setPermission(int|string $permission): bool;
+
+	public function getPermission(): mixed;
+
+	public function getPath(): string;
 }
