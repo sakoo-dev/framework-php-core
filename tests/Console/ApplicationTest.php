@@ -22,7 +22,7 @@ final class ApplicationTest extends TestCase
 	{
 		$input = new Input([$arg]);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$status = $console->run();
@@ -38,7 +38,7 @@ final class ApplicationTest extends TestCase
 	{
 		$input = new Input([$arg]);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$status = $console->run();
@@ -53,7 +53,7 @@ final class ApplicationTest extends TestCase
 	{
 		$input = new Input([]);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$console->addCommand(resolve(ZenCommand::class));
@@ -71,7 +71,7 @@ final class ApplicationTest extends TestCase
 	{
 		$input = new Input(['Something']);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$status = $console->run();
@@ -89,7 +89,7 @@ final class ApplicationTest extends TestCase
 
 		$input = new Input([]);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$console->setDefaultCommand(ZenCommand::class);

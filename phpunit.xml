@@ -7,6 +7,9 @@
     <include>
       <directory suffix=".php">src</directory>
     </include>
+    <exclude>
+      <directory>src/Testing</directory>
+    </exclude>
   </coverage>
   <testsuites>
     <testsuite name="Core">

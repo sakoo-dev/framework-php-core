@@ -61,14 +61,19 @@ class Output
 		$this->text(PHP_EOL . PHP_EOL);
 	}
 
+	public function write(string $message): void
+	{
+		$this->buffer[] = $message;
+		echo !$this->isSilentMode ? $message : '';
+	}
+
 	/**
 	 * @param list<string>|string $message
 	 */
 	public function text(array|string $message, ?int $foreground = null, ?int $background = null, ?int $style = null): void
 	{
 		$text = $this->formatText($message, $foreground, $background, $style);
-
-		echo !$this->isSilentMode ? $text : '';
+		$this->write($text);
 	}
 
 	/**
@@ -77,8 +82,7 @@ class Output
 	public function block(array|string $message, ?int $foreground = null, ?int $background = null, ?int $style = null): void
 	{
 		$text = $this->formatText($message, $foreground, $background, $style);
-
-		echo !$this->isSilentMode ? ($text . PHP_EOL) : '';
+		$this->write($text . PHP_EOL);
 	}
 
 	/**
@@ -113,7 +117,7 @@ class Output
 		$this->block($message, self::COLOR_RED, null, self::STYLE_BOLD);
 	}
 
-	public function setSilentMode(bool $isSilentMode): void
+	public function setSilentMode(bool $isSilentMode = true): void
 	{
 		$this->isSilentMode = $isSilentMode;
 	}
@@ -137,15 +141,13 @@ class Output
 	/**
 	 * @param list<string>|string $message
 	 */
-	private function formatText(array|string $message, ?int $foreground = null, ?int $background = null, ?int $style = null): string
+	public function formatText(array|string $message, ?int $foreground = null, ?int $background = null, ?int $style = null): string
 	{
 		if (is_array($message)) {
 			$message = implode(PHP_EOL, $message);
 		}
 
 		if (!$this->supportsColors()) {
-			$this->buffer[] = $message;
-
 			return $message;
 		}
 
@@ -164,14 +166,9 @@ class Output
 		}
 
 		if (empty($format)) {
-			$this->buffer[] = $message;
-
 			return $message;
 		}
 
-		$message = sprintf("\033[%sm%s\033[0m", implode(';', $format), $message);
-		$this->buffer[] = $message;
-
-		return $message;
+		return sprintf("\033[%sm%s\033[0m", implode(';', $format), $message);
 	}
 }

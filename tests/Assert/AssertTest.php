@@ -10,8 +10,8 @@ use Sakoo\Framework\Core\Assert\Assert;
 use Sakoo\Framework\Core\Assert\Exception\InvalidArgumentException;
 use Sakoo\Framework\Core\FileSystem\Permission;
 use Sakoo\Framework\Core\Path\Path;
+use Sakoo\Framework\Core\Str\Str;
 use Sakoo\Framework\Core\Tests\TestCase;
-use Sakoo\Framework\Core\VarDump\VarDump;
 
 final class AssertTest extends TestCase
 {
@@ -28,7 +28,7 @@ final class AssertTest extends TestCase
 		foreach ($invalid as $item) {
 			$this->throwsException(fn () => Assert::$function($item))
 				->withType(InvalidArgumentException::class)
-				->withMessage(sprintf($message, new VarDump($item)))
+				->withMessage(sprintf($message, Str::fromType($item)))
 				->validate();
 		}
 	}
@@ -46,8 +46,8 @@ final class AssertTest extends TestCase
 				->withType(InvalidArgumentException::class)
 				->withMessage(sprintf(
 					$message,
-					new VarDump($item[0]),
-					new VarDump($item[1]),
+					Str::fromType($item[0]),
+					Str::fromType($item[1]),
 				))->validate();
 		}
 	}
@@ -67,9 +67,9 @@ final class AssertTest extends TestCase
 				->withType(InvalidArgumentException::class)
 				->withMessage(sprintf(
 					'The length of %s is %s, Expected %s',
-					new VarDump($item[0]),
-					new VarDump(strlen($item[0])),
-					new VarDump($item[1]),
+					Str::fromType($item[0]),
+					Str::fromType(strlen($item[0])),
+					Str::fromType($item[1]),
 				))->validate();
 		}
 	}
@@ -89,9 +89,9 @@ final class AssertTest extends TestCase
 				->withType(InvalidArgumentException::class)
 				->withMessage(sprintf(
 					'The count of %s is %s, Expected %s',
-					new VarDump($item[0]),
-					new VarDump(count($item[0])),
-					new VarDump($item[1]),
+					Str::fromType($item[0]),
+					Str::fromType(count($item[0])),
+					Str::fromType($item[1]),
 				))->validate();
 		}
 	}
@@ -110,7 +110,7 @@ final class AssertTest extends TestCase
 		foreach ($invalid as $item) {
 			$this->throwsException(fn () => $file->setPermission($item) && Assert::$function($file->getPath()))
 				->withType(InvalidArgumentException::class)
-				->withMessage(sprintf($message, new VarDump($file->getPath())))
+				->withMessage(sprintf($message, Str::fromType($file->getPath())))
 				->validate();
 		}
 

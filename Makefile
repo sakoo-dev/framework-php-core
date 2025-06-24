@@ -58,7 +58,7 @@ test-coverage:
 
 .PHONY: analyse
 analyse:
-	@./sakoo php ./vendor/bin/phpstan analyse
+	@./sakoo php ./vendor/bin/phpstan analyse ./src --memory-limit 1G
 
 .PHONY: fresh
 fresh:

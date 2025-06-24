@@ -6,6 +6,7 @@ namespace Sakoo\Framework\Core\Kernel;
 
 use Sakoo\Framework\Core\Container\Container;
 use Sakoo\Framework\Core\Container\ContainerInterface;
+use Sakoo\Framework\Core\Kernel\Exceptions\KernelIsNotStartedException;
 use Sakoo\Framework\Core\Kernel\Exceptions\KernelTwiceCallException;
 use Sakoo\Framework\Core\Path\Path;
 use Sakoo\Framework\Core\Profiler\ProfilerInterface;
@@ -45,8 +46,15 @@ class Kernel
 		return self::$instance = new self($mode, $environment);
 	}
 
-	public static function getInstance(): ?self
+	/**
+	 * @throws KernelIsNotStartedException
+	 */
+	public static function getInstance(): self
 	{
+		if (!self::$instance) {
+			throw new KernelIsNotStartedException();
+		}
+
 		return self::$instance;
 	}
 

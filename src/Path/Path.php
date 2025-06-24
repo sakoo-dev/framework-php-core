@@ -75,4 +75,14 @@ class Path
 			->ignoreDotFiles()
 			->getFiles();
 	}
+
+	public static function namespaceToPath(string $namespace): string
+	{
+		return '';
+	}
+
+	public static function pathToNamespace(string $path): string
+	{
+		return '';
+	}
 }
