@@ -17,7 +17,7 @@ use Sakoo\Framework\Core\Profiler\ProfilerInterface;
 use Sakoo\Framework\Core\Str\Str;
 use Sakoo\Framework\Core\Str\Stringable;
 
-class MainServiceLoader extends ServiceLoader
+class MainLoader extends ServiceLoader
 {
 	public function load(Container $container): void
 	{

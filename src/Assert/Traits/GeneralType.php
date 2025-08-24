@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Assert\Traits;
 
-use Sakoo\Framework\Core\VarDump\VarDump;
+use Sakoo\Framework\Core\Str\Str;
 
 trait GeneralType
 {
@@ -12,7 +12,7 @@ trait GeneralType
 	{
 		$message = $message ?: sprintf(
 			'The length of %s is %s, Expected %s',
-			new VarDump($value),
+			Str::fromType($value),
 			strlen($value),
 			$length,
 		);
@@ -25,7 +25,7 @@ trait GeneralType
 	{
 		$message = $message ?: sprintf(
 			'The count of %s is %s, Expected %s',
-			new VarDump($value),
+			Str::fromType($value),
 			count($value),
 			$count,
 		);
@@ -37,8 +37,8 @@ trait GeneralType
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not equals to %s',
-			new VarDump($value),
-			new VarDump($expected),
+			Str::fromType($value),
+			Str::fromType($expected),
 		);
 
 		static::throwUnless($value == $expected, $message);
@@ -48,8 +48,8 @@ trait GeneralType
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is equals to %s',
-			new VarDump($value),
-			new VarDump($expected),
+			Str::fromType($value),
+			Str::fromType($expected),
 		);
 
 		static::throwIf($value == $expected, $message);
@@ -59,8 +59,8 @@ trait GeneralType
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is not same to %s',
-			new VarDump($value),
-			new VarDump($expected),
+			Str::fromType($value),
+			Str::fromType($expected),
 		);
 
 		static::throwUnless($value === $expected, $message);
@@ -70,8 +70,8 @@ trait GeneralType
 	{
 		$message = $message ?: sprintf(
 			'Given value %s is same to %s',
-			new VarDump($value),
-			new VarDump($expected),
+			Str::fromType($value),
+			Str::fromType($expected),
 		);
 
 		static::throwIf($value === $expected, $message);
@@ -79,13 +79,13 @@ trait GeneralType
 
 	public static function empty(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is not empty', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is not empty', Str::fromType($value));
 		static::throwUnless(empty($value), $message);
 	}
 
 	public static function notEmpty(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is empty', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is empty', Str::fromType($value));
 		static::throwIf(empty($value), $message);
 	}
 }

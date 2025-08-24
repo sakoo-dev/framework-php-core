@@ -25,12 +25,6 @@ final class ContainerTest extends TestCase
 		$this->container = new Container();
 	}
 
-	public function objects(): \Generator
-	{
-		yield 'closure' => [fn () => new TestClass()];
-		yield 'class' => [TestClass::class];
-	}
-
 	#[DataProvider('objects')]
 	#[Test]
 	public function container_can_resolve_interface_binding($object): void
@@ -51,6 +45,12 @@ final class ContainerTest extends TestCase
 
 		$this->assertInstanceOf(TestClass::class, $resolved);
 		$this->assertSame($resolved, $this->container->resolve('class'));
+	}
+
+	public function objects(): \Generator
+	{
+		yield 'closure' => [fn () => new TestClass()];
+		yield 'class' => [TestClass::class];
 	}
 
 	#[Test]
@@ -158,4 +158,16 @@ final class ContainerTest extends TestCase
 		$this->expectException(TypeMismatchException::class);
 		$this->container->bind(TestInterface::class, new \stdClass());
 	}
+
+	#[Test]
+	public function it_can_load_cache(): void {}
+
+	#[Test]
+	public function it_can_flush_cache(): void {}
+
+	#[Test]
+	public function it_can_check_cache_exists(): void {}
+
+	#[Test]
+	public function it_can_dump_cache(): void {}
 }

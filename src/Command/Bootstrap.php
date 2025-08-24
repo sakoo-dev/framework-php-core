@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Sakoo\Framework\Core\Command\ContainerCacheCommand;
 use Sakoo\Framework\Core\Command\DevCommand;
 use Sakoo\Framework\Core\Command\DocGenCommand;
+use Sakoo\Framework\Core\Command\McpCommand;
 use Sakoo\Framework\Core\Command\Watcher\WatchCommand;
 use Sakoo\Framework\Core\Command\ZenCommand;
 use Sakoo\Framework\Core\Console\Application;
@@ -15,6 +17,8 @@ $commands = [
 	resolve(WatchCommand::class),
 	resolve(DocGenCommand::class),
 	resolve(DevCommand::class),
+	resolve(ContainerCacheCommand::class),
+	resolve(McpCommand::class),
 ];
 
 /** @var Application $application */

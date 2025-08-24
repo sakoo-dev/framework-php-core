@@ -22,7 +22,7 @@ final class FileLoggerTest extends TestCase
 		parent::setUp();
 		Clock::setTestNow('2022-01-01 00:00:00');
 
-		$this->dir = Path::getTempTestDir() . '/log/';
+		$this->dir = Path::getLogsDir();
 		$this->file = $this->dir . (new Clock())->now()->format('Y/m/d') . '.log';
 
 		$this->resetFileSystemTestEnv();
@@ -32,6 +32,15 @@ final class FileLoggerTest extends TestCase
 	{
 		parent::tearDown();
 		$this->resetFileSystemTestEnv();
+	}
+
+	#[DataProvider('getLogLevels')]
+	#[Test]
+	public function it_can_log_to_file($level): void
+	{
+		$message = rand(0, 9999);
+		logger()->{$level}("$message");
+		$this->assertEquals($this->getFormattedLog($level, "$message"), file_get_contents($this->file));
 	}
 
 	public function getLogLevels(): \Generator
@@ -44,15 +53,6 @@ final class FileLoggerTest extends TestCase
 		yield ['notice'];
 		yield ['info'];
 		yield ['debug'];
-	}
-
-	#[DataProvider('getLogLevels')]
-	#[Test]
-	public function it_can_log_to_file($level): void
-	{
-		$message = rand(0, 9999);
-		logger()->{$level}("$message");
-		$this->assertEquals($this->getFormattedLog($level, "$message"), file_get_contents($this->file));
 	}
 
 	private function getFormattedLog(string $level, string $message): string

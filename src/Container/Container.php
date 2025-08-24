@@ -10,14 +10,18 @@ use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
 use Sakoo\Framework\Core\Container\Exceptions\TypeMismatchException;
 use Sakoo\Framework\Core\Container\Parameter\ParameterSet;
 
-class Container implements ContainerInterface
+class Container implements ContainerInterface, ShouldCache
 {
+	use Cacheable;
+
 	/** @var array<object> */
 	private array $instances = [];
 	/** @var array<callable|object|string> */
 	private array $singletons = [];
 	/** @var array<callable|object|string> */
 	private array $bindings = [];
+
+	public function __construct(private readonly ?string $cachePath = null) {}
 
 	/**
 	 * @throws \Throwable
@@ -107,6 +111,7 @@ class Container implements ContainerInterface
 		$this->instances = [];
 		$this->singletons = [];
 		$this->bindings = [];
+		$this->flushCache();
 	}
 
 	/**

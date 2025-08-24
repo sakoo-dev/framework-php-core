@@ -22,7 +22,13 @@ class Application
 
 	public function run(): int
 	{
-		return $this->getShouldExecCommand()->run($this->input, $this->output);
+		$command = $this->getShouldExecCommand();
+
+		if ($this->input->hasOption('help') || $this->input->hasOption('h')) {
+			return $command->help($this->input, $this->output);
+		}
+
+		return $command->run($this->input, $this->output);
 	}
 
 	/**

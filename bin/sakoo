@@ -61,7 +61,7 @@ if [ $# -gt 0 ]; then
   elif [ "$1" == "test" ]; then
     check_service_is_up
     shift 1
-    docker-compose exec "$APP_SERVICE" php vendor/bin/phpunit "$@"
+    docker-compose exec "$APP_SERVICE" vendor/bin/phpunit "$@"
   elif [ "$1" == "npm" ]; then
     check_service_is_up
     shift 1

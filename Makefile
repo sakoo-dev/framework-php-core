@@ -58,7 +58,7 @@ test-coverage:
 
 .PHONY: analyse
 analyse:
-	@./sakoo php ./vendor/bin/phpstan analyse
+	@./sakoo php ./vendor/bin/phpstan analyse ./src --memory-limit 1G
 
 .PHONY: fresh
 fresh:
@@ -89,3 +89,11 @@ hello:
 	@echo "\t\t========="
 	@echo "  ======================="
 	@echo "\nSakoo Development Group\n"
+
+.PHONY: cache
+cache:
+	@./sakoo assist container:cache
+
+.PHONY: cache-clear
+cache-clear:
+	@./sakoo assist container:cache --clear

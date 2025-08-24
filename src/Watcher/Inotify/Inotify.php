@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Watcher\Inotify;
 
-use Sakoo\Framework\Core\Set\Iteratable;
+use Sakoo\Framework\Core\Set\IterableInterface;
 use Sakoo\Framework\Core\Watcher\Contracts\FileSystemAction;
 use Sakoo\Framework\Core\Watcher\Contracts\WatcherDriver;
 
 class Inotify implements WatcherDriver
 {
 	private $inotify;
-	private Iteratable $handlerSet;
+	private IterableInterface $handlerSet;
 
 	public function __construct()
 	{
@@ -24,7 +26,7 @@ class Inotify implements WatcherDriver
 		$this->handlerSet->add((string) $wd, new File($wd, $file, $callback));
 	}
 
-	public function wait(): Iteratable
+	public function wait(): IterableInterface
 	{
 		$eventSet = set();
 		$events = inotify_read($this->inotify);
