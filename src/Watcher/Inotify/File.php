@@ -8,17 +8,14 @@ use Sakoo\Framework\Core\Locker\Locker;
 use Sakoo\Framework\Core\Watcher\Contracts\File as FileInterface;
 use Sakoo\Framework\Core\Watcher\Contracts\FileSystemAction;
 
-class File implements FileInterface
+readonly class File implements FileInterface
 {
-	private Locker $locker;
-
 	public function __construct(
 		private int $id,
 		private string $path,
 		private FileSystemAction $callback,
-	) {
-		$this->locker = makeInstance(Locker::class);
-	}
+		private Locker $locker,
+	) {}
 
 	public function getId(): int
 	{

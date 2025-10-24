@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sakoo\Framework\Core\Tests\PHPStan\CodeSmell;
 
 use PHPStan\Rules\Rule;
-use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Sakoo\Framework\Core\PHPStan\CodeSmell\UnusedPrivateMethodRule;
 use Sakoo\Framework\Core\Tests\PHPStan\PHPStanTestCase;

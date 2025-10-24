@@ -34,25 +34,17 @@ class VirtualMethodObject implements MethodInterface
 		}
 
 		$parenPos = strpos($this->line, '(');
-
-		throwUnless($parenPos, new VirtualMethodDeclerationException());
-
 		$this->methodName = trim(substr($this->line, 0, $parenPos));
 		$afterParen = substr($this->line, $parenPos + 1);
-
 		$closeParenPos = strpos($afterParen, ')');
 		$paramSection = substr($afterParen, 0, $closeParenPos);
 		$this->description = trim(substr($afterParen, $closeParenPos + 1)) ?: null;
 		$this->params = $this->parseParams($paramSection);
 	}
 
-	/**
-	 * Parse parameters from a "(...)" section manually.
-	 */
 	private function parseParams(string $paramSection): array
 	{
 		$params = [];
-
 		$rawParams = array_filter(array_map('trim', explode(',', $paramSection)));
 
 		foreach ($rawParams as $param) {
@@ -63,21 +55,16 @@ class VirtualMethodObject implements MethodInterface
 			$tokens = preg_split('/\s+/', $param);
 
 			foreach ($tokens as $token) {
-				// نام پارامتر
-				if ('$' === $token[0]) {
+				if (str_starts_with($token, '$')) {
 					$name = ltrim($token, '$');
-				}
-				// مقدار پیش‌فرض
-				elseif (str_contains($token, '=')) {
+				} elseif (str_contains($token, '=')) {
 					[$before, $after] = explode('=', $token, 2);
 					$default = trim($after);
 
 					if ($this->isTypeLike($before)) {
-						$type = $before;
+						$type = trim($before);
 					}
-				}
-				// نوع پارامتر
-				elseif ($this->isTypeLike($token)) {
+				} elseif ($this->isTypeLike($token)) {
 					$type = $token;
 				}
 			}
@@ -94,9 +81,6 @@ class VirtualMethodObject implements MethodInterface
 		return $params;
 	}
 
-	/**
-	 * یک بررسی ساده برای اینکه توکن شبیه نوع (type) هست یا نه.
-	 */
 	private function isTypeLike(string $token): bool
 	{
 		$token = trim($token, '?[]\\');
@@ -104,88 +88,104 @@ class VirtualMethodObject implements MethodInterface
 		return ctype_alpha($token[0] ?? '');
 	}
 
-	public function getClass(): ClassObject
+	public function getClass(): ?ClassObject
 	{
-		// TODO: Implement getClass() method.
+		return null;
 	}
 
 	public function getMethodParameters(): array
 	{
-		// TODO: Implement getMethodParameters() method.
+		return $this->params;
 	}
 
 	public function getName(): string
 	{
-		// TODO: Implement getName() method.
+		return $this->methodName;
 	}
 
 	public function isPrivate(): bool
 	{
-		// TODO: Implement isPrivate() method.
+		return false;
 	}
 
 	public function isProtected(): bool
 	{
-		// TODO: Implement isProtected() method.
+		return false;
 	}
 
 	public function isPublic(): bool
 	{
-		// TODO: Implement isPublic() method.
+		return true;
 	}
 
 	public function isStatic(): bool
 	{
-		// TODO: Implement isStatic() method.
+		return $this->isStatic;
 	}
 
 	public function isConstructor(): bool
 	{
-		// TODO: Implement isConstructor() method.
+		return '__construct' === $this->methodName;
 	}
 
 	public function isMagicMethod(): bool
 	{
-		// TODO: Implement isMagicMethod() method.
+		return str_starts_with($this->methodName, '__');
 	}
 
-	public function getMethodReturnTypes(): string
+	public function getMethodReturnTypes(): ?string
 	{
-		// TODO: Implement getMethodReturnTypes() method.
+		return $this->returnType;
 	}
 
 	public function getPhpDocs(): array
 	{
-		// TODO: Implement getPhpDocs() method.
+		return [
+			'description' => $this->description,
+			'params' => $this->params,
+			'return' => $this->returnType,
+		];
 	}
 
 	public function getModifiers(): array
 	{
-		// TODO: Implement getModifiers() method.
+		$modifiers = ['public'];
+
+		if ($this->isStatic) {
+			$modifiers[] = 'static';
+		}
+
+		return $modifiers;
 	}
 
 	public function isFrameworkFunction(): bool
 	{
-		// TODO: Implement isFrameworkFunction() method.
+		return false;
 	}
 
 	public function getDefaultValues(): string
 	{
-		// TODO: Implement getDefaultValues() method.
+		$defaults = array_filter(array_column($this->params, 'default'));
+
+		return implode(', ', $defaults);
 	}
 
 	public function getDefaultValueTypes(): string
 	{
-		// TODO: Implement getDefaultValueTypes() method.
+		$types = array_filter(array_column($this->params, 'type'));
+
+		return implode('|', $types);
 	}
 
 	public function shouldNotDocument(): bool
 	{
-		// TODO: Implement shouldNotDocument() method.
+		return str_contains($this->description ?? '', '@internal');
 	}
 
 	public function isStaticInstantiator(): bool
 	{
-		// TODO: Implement isStaticInstantiator() method.
+		return $this->isStatic()
+			&& $this->isPublic()
+			&& in_array($this->getMethodReturnTypes(), ['self', 'static', $this->getName()], true);
 	}
 }

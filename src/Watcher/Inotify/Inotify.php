@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Watcher\Inotify;
 
+use Sakoo\Framework\Core\Locker\Locker;
 use Sakoo\Framework\Core\Set\IterableInterface;
 use Sakoo\Framework\Core\Watcher\Contracts\FileSystemAction;
 use Sakoo\Framework\Core\Watcher\Contracts\WatcherDriver;
@@ -23,7 +24,9 @@ class Inotify implements WatcherDriver
 	{
 		$masks = IN_MODIFY | IN_MOVE_SELF | IN_DELETE_SELF;
 		$wd = inotify_add_watch($this->inotify, $file, $masks);
-		$this->handlerSet->add((string) $wd, new File($wd, $file, $callback));
+		/** @var Locker $locker */
+		$locker = makeInstance(Locker::class);
+		$this->handlerSet->add((string) $wd, new File($wd, $file, $callback, $locker));
 	}
 
 	public function wait(): IterableInterface

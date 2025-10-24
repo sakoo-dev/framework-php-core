@@ -12,13 +12,11 @@ use Sakoo\Framework\Core\Doc\Object\NamespaceObject;
 class DocFormatter extends Formatter
 {
 	/*
-	 * PHPDOC Parser:
-		- [ ]  Throws Label
-		- [ ]  PHP Doc Formatting / Attributes
-		- [ ]  Support Fake method Creation with @method
-		- -------------------------------------------------------
-		- [ ]  helper functions
-	*/
+	 * TODO: required functionalities for Documentation Generator:
+	 * Throws Label for methods
+	 * Supporting Attributes
+	 * Supporting Helper functions
+	 */
 
 	/**
 	 * @param NamespaceObject[] $namespaces

@@ -8,9 +8,9 @@ use Sakoo\Framework\Core\Watcher\Contracts\Event;
 use Sakoo\Framework\Core\Watcher\Contracts\FileSystemAction;
 use Sakoo\Framework\Core\Watcher\Contracts\WatcherDriver;
 
-class Watcher
+readonly class Watcher
 {
-	public function __construct(private readonly WatcherDriver $driver) {}
+	public function __construct(private WatcherDriver $driver) {}
 
 	public function watch(array $files, FileSystemAction $callback): self
 	{

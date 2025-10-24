@@ -6,7 +6,7 @@ namespace Sakoo\Framework\Core\Doc\Object;
 
 readonly class TypeObject
 {
-	public function __construct(private null|\ReflectionIntersectionType|\ReflectionNamedType|\ReflectionUnionType $type) {}
+	public function __construct(private \ReflectionIntersectionType|\ReflectionNamedType|\ReflectionUnionType|null $type) {}
 
 	public function getName(): ?string
 	{

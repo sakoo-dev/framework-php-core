@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sakoo\Framework\Core\Tests\PHPStan\Bug;
 
 use PHPStan\Rules\Rule;
-use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Sakoo\Framework\Core\PHPStan\Bug\PureFunctionOutputRule;
 use Sakoo\Framework\Core\Tests\PHPStan\PHPStanTestCase;

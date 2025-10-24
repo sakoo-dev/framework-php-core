@@ -6,7 +6,7 @@ namespace Sakoo\Framework\Core\Doc\Object;
 
 interface MethodInterface
 {
-	public function getClass(): ClassObject;
+	public function getClass(): ?ClassObject;
 
 	public function getMethodParameters(): array;
 
