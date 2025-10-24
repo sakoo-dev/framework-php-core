@@ -1,22 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Watcher;
 
 use Sakoo\Framework\Core\Watcher\Contracts\Event;
 use Sakoo\Framework\Core\Watcher\Contracts\FileSystemAction;
 use Sakoo\Framework\Core\Watcher\Contracts\WatcherDriver;
-use Symfony\Component\Finder\Finder;
 
 class Watcher
 {
-	public function __construct(private WatcherDriver $driver)
-	{
-	}
+	public function __construct(private readonly WatcherDriver $driver) {}
 
-	public function watch(Finder $finder, FileSystemAction $callback): self
+	public function watch(array $files, FileSystemAction $callback): self
 	{
-		$files = $finder->files();
-
 		foreach ($files as $file) {
 			$this->driver->watch($file->getRealPath(), $callback);
 		}

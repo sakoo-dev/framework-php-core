@@ -4,8 +4,8 @@ start:
 	@chmod +x -R ./bin/.
 	@cp -a ./bin/hooks/. ./.git/hooks
 	@ln -s ./bin/sakoo ./sakoo
-	@cp .env.example .env
-	@cp .env.testing.example .env.testing
+	@cp ./stubs/environment/.env.example .env
+	@cp ./stubs/environment/.env.testing.example .env.testing
 	@./sakoo up -d --build
 	@./sakoo composer install
 
@@ -58,7 +58,7 @@ test-coverage:
 
 .PHONY: analyse
 analyse:
-	@./sakoo php ./vendor/bin/phpstan analyse
+	@./sakoo php ./vendor/bin/phpstan analyse ./src --memory-limit 1G
 
 .PHONY: fresh
 fresh:
@@ -89,3 +89,11 @@ hello:
 	@echo "\t\t========="
 	@echo "  ======================="
 	@echo "\nSakoo Development Group\n"
+
+.PHONY: cache
+cache:
+	@./sakoo assist container:cache
+
+.PHONY: cache-clear
+cache-clear:
+	@./sakoo assist container:cache --clear

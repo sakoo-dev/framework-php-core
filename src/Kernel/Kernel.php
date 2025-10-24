@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Sakoo\Framework\Core\Kernel;
 
 use Sakoo\Framework\Core\Container\Container;
-use Sakoo\Framework\Core\Container\ContainerInterface;
+use Sakoo\Framework\Core\Container\Contracts\ContainerInterface;
+use Sakoo\Framework\Core\Kernel\Exceptions\KernelIsNotStartedException;
 use Sakoo\Framework\Core\Kernel\Exceptions\KernelTwiceCallException;
 use Sakoo\Framework\Core\Path\Path;
 use Sakoo\Framework\Core\Profiler\ProfilerInterface;
@@ -45,8 +46,15 @@ class Kernel
 		return self::$instance = new self($mode, $environment);
 	}
 
-	public static function getInstance(): ?self
+	/**
+	 * @throws KernelIsNotStartedException
+	 */
+	public static function getInstance(): self
 	{
+		if (!self::$instance) {
+			throw new KernelIsNotStartedException();
+		}
+
 		return self::$instance;
 	}
 
@@ -70,13 +78,14 @@ class Kernel
 
 		require_once Path::getCoreDir() . '/helpers.php';
 
-		$this->container = new Container();
+		$this->container = new Container(Path::getStorageDir());
 
-		foreach ($this->serviceLoaders as $serviceLoader) {
-			(new $serviceLoader())->load($this->container);
+		if ($this->container->cacheExists()) {
+			$this->container->loadCache();
+		} else {
+			array_walk($this->serviceLoaders, fn ($serviceLoader) => (new $serviceLoader())->load($this->container));
 		}
 
-		// @phpstan-ignore assign.propertyType
 		$this->profiler = resolve(ProfilerInterface::class);
 	}
 

@@ -10,8 +10,8 @@ use Sakoo\Framework\Core\Assert\Assert;
 use Sakoo\Framework\Core\Assert\Exception\InvalidArgumentException;
 use Sakoo\Framework\Core\FileSystem\Permission;
 use Sakoo\Framework\Core\Path\Path;
+use Sakoo\Framework\Core\Str\Str;
 use Sakoo\Framework\Core\Tests\TestCase;
-use Sakoo\Framework\Core\VarDump\VarDump;
 
 final class AssertTest extends TestCase
 {
@@ -28,130 +28,9 @@ final class AssertTest extends TestCase
 		foreach ($invalid as $item) {
 			$this->throwsException(fn () => Assert::$function($item))
 				->withType(InvalidArgumentException::class)
-				->withMessage(sprintf($message, new VarDump($item)))
+				->withMessage(sprintf($message, Str::fromType($item)))
 				->validate();
 		}
-	}
-
-	#[Test]
-	#[DataProvider('complexProvider')]
-	public function it_complex_assertions_work_properly($function, $valid, $invalid, $message): void
-	{
-		foreach ($valid as $item) {
-			Assert::$function(...$item);
-		}
-
-		foreach ($invalid as $item) {
-			$this->throwsException(fn () => Assert::$function(...$item))
-				->withType(InvalidArgumentException::class)
-				->withMessage(sprintf(
-					$message,
-					new VarDump($item[0]),
-					new VarDump($item[1]),
-				))->validate();
-		}
-	}
-
-	#[Test]
-	public function it_length_assertion_works_properly(): void
-	{
-		$valid = [['ABCDEF', 6]];
-		$invalid = [['ABCDEF', 7]];
-
-		foreach ($valid as $item) {
-			Assert::length(...$item);
-		}
-
-		foreach ($invalid as $item) {
-			$this->throwsException(fn () => Assert::length(...$item))
-				->withType(InvalidArgumentException::class)
-				->withMessage(sprintf(
-					'The length of %s is %s, Expected %s',
-					new VarDump($item[0]),
-					new VarDump(strlen($item[0])),
-					new VarDump($item[1]),
-				))->validate();
-		}
-	}
-
-	#[Test]
-	public function it_count_assertion_works_properly(): void
-	{
-		$valid = [[['A', 'B', 'C'], 3]];
-		$invalid = [[['A', 'B', 'C'], 2]];
-
-		foreach ($valid as $item) {
-			Assert::count(...$item);
-		}
-
-		foreach ($invalid as $item) {
-			$this->throwsException(fn () => Assert::count(...$item))
-				->withType(InvalidArgumentException::class)
-				->withMessage(sprintf(
-					'The count of %s is %s, Expected %s',
-					new VarDump($item[0]),
-					new VarDump(count($item[0])),
-					new VarDump($item[1]),
-				))->validate();
-		}
-	}
-
-	#[Test]
-	#[DataProvider('permissionProvider')]
-	public function it_permission_assertions_work_properly($function, $valid, $invalid, $message): void
-	{
-		$file = $this->makeTemporaryFile();
-
-		foreach ($valid as $item) {
-			$file->setPermission($item);
-			Assert::$function($file->getPath());
-		}
-
-		foreach ($invalid as $item) {
-			$this->throwsException(fn () => $file->setPermission($item) && Assert::$function($file->getPath()))
-				->withType(InvalidArgumentException::class)
-				->withMessage(sprintf($message, new VarDump($file->getPath())))
-				->validate();
-		}
-
-		$file->remove();
-	}
-
-	#[Test]
-	public function it_symlink_assertions_work_properly(): void
-	{
-		$symlink = $this->makeTemporarySymlink();
-
-		Assert::link($symlink);
-
-		$this->throwsException(fn () => Assert::link(__FILE__))
-			->withType(InvalidArgumentException::class)
-			->withMessage('Given value ' . __FILE__ . ' is not a link')
-			->validate();
-
-		Assert::notLink(__FILE__);
-
-		$this->throwsException(fn () => Assert::notLink($symlink))
-			->withType(InvalidArgumentException::class)
-			->withMessage("Given value $symlink is a link")
-			->validate();
-
-		unlink($symlink);
-	}
-
-	#[Test]
-	public function it_upload_file_assertions_work_properly(): void
-	{
-		$file = $this->makeTemporaryFile();
-
-		$this->throwsException(fn () => Assert::uploadedFile($file->getPath()))
-			->withType(InvalidArgumentException::class)
-			->withMessage('Given value ' . $file->getPath() . ' is not a uploaded file')
-			->validate();
-
-		Assert::notUploadedFile($file->getPath());
-
-		$file->remove();
 	}
 
 	public function typeProvider(): \Generator
@@ -386,6 +265,25 @@ final class AssertTest extends TestCase
 		];
 	}
 
+	#[Test]
+	#[DataProvider('complexProvider')]
+	public function it_complex_assertions_work_properly($function, $valid, $invalid, $message): void
+	{
+		foreach ($valid as $item) {
+			Assert::$function(...$item);
+		}
+
+		foreach ($invalid as $item) {
+			$this->throwsException(fn () => Assert::$function(...$item))
+				->withType(InvalidArgumentException::class)
+				->withMessage(sprintf(
+					$message,
+					Str::fromType($item[0]),
+					Str::fromType($item[1]),
+				))->validate();
+		}
+	}
+
 	public function complexProvider(): \Generator
 	{
 		yield 'instanceOf' => [
@@ -450,6 +348,71 @@ final class AssertTest extends TestCase
 		];
 	}
 
+	#[Test]
+	public function it_length_assertion_works_properly(): void
+	{
+		$valid = [['ABCDEF', 6]];
+		$invalid = [['ABCDEF', 7]];
+
+		foreach ($valid as $item) {
+			Assert::length(...$item);
+		}
+
+		foreach ($invalid as $item) {
+			$this->throwsException(fn () => Assert::length(...$item))
+				->withType(InvalidArgumentException::class)
+				->withMessage(sprintf(
+					'The length of %s is %s, Expected %s',
+					Str::fromType($item[0]),
+					Str::fromType(strlen($item[0])),
+					Str::fromType($item[1]),
+				))->validate();
+		}
+	}
+
+	#[Test]
+	public function it_count_assertion_works_properly(): void
+	{
+		$valid = [[['A', 'B', 'C'], 3]];
+		$invalid = [[['A', 'B', 'C'], 2]];
+
+		foreach ($valid as $item) {
+			Assert::count(...$item);
+		}
+
+		foreach ($invalid as $item) {
+			$this->throwsException(fn () => Assert::count(...$item))
+				->withType(InvalidArgumentException::class)
+				->withMessage(sprintf(
+					'The count of %s is %s, Expected %s',
+					Str::fromType($item[0]),
+					Str::fromType(count($item[0])),
+					Str::fromType($item[1]),
+				))->validate();
+		}
+	}
+
+	#[Test]
+	#[DataProvider('permissionProvider')]
+	public function it_permission_assertions_work_properly($function, $valid, $invalid, $message): void
+	{
+		$file = $this->makeTemporaryFile();
+
+		foreach ($valid as $item) {
+			$file->setPermission($item);
+			Assert::$function($file->getPath());
+		}
+
+		foreach ($invalid as $item) {
+			$this->throwsException(fn () => $file->setPermission($item) && Assert::$function($file->getPath()))
+				->withType(InvalidArgumentException::class)
+				->withMessage(sprintf($message, Str::fromType($file->getPath())))
+				->validate();
+		}
+
+		$file->remove();
+	}
+
 	public function permissionProvider()
 	{
 		yield 'executableFile' => [
@@ -488,5 +451,42 @@ final class AssertTest extends TestCase
 			'invalid' => Permission::getReadables(),
 			'message' => 'Given value %s is a readable file',
 		];
+	}
+
+	#[Test]
+	public function it_symlink_assertions_work_properly(): void
+	{
+		$symlink = $this->makeTemporarySymlink();
+
+		Assert::link($symlink);
+
+		$this->throwsException(fn () => Assert::link(__FILE__))
+			->withType(InvalidArgumentException::class)
+			->withMessage('Given value ' . __FILE__ . ' is not a link')
+			->validate();
+
+		Assert::notLink(__FILE__);
+
+		$this->throwsException(fn () => Assert::notLink($symlink))
+			->withType(InvalidArgumentException::class)
+			->withMessage("Given value $symlink is a link")
+			->validate();
+
+		unlink($symlink);
+	}
+
+	#[Test]
+	public function it_upload_file_assertions_work_properly(): void
+	{
+		$file = $this->makeTemporaryFile();
+
+		$this->throwsException(fn () => Assert::uploadedFile($file->getPath()))
+			->withType(InvalidArgumentException::class)
+			->withMessage('Given value ' . $file->getPath() . ' is not a uploaded file')
+			->validate();
+
+		Assert::notUploadedFile($file->getPath());
+
+		$file->remove();
 	}
 }

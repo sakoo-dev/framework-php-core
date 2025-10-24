@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sakoo\Framework\Core\Tests\Kernel;
 
 use PHPUnit\Framework\Attributes\Test;
-use Sakoo\Framework\Core\Container\ContainerInterface;
+use Sakoo\Framework\Core\Container\Contracts\ContainerInterface;
 use Sakoo\Framework\Core\Kernel\Environment;
 use Sakoo\Framework\Core\Kernel\Exceptions\KernelTwiceCallException;
 use Sakoo\Framework\Core\Kernel\Kernel;

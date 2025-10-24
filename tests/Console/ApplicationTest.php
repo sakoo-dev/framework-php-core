@@ -22,7 +22,7 @@ final class ApplicationTest extends TestCase
 	{
 		$input = new Input([$arg]);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$status = $console->run();
@@ -32,13 +32,21 @@ final class ApplicationTest extends TestCase
 		$this->assertStringContainsString(Constants::FRAMEWORK_NAME . ' - Version: ' . Constants::FRAMEWORK_VERSION, $result);
 	}
 
-	#[DataProvider('helpArgsProvider')]
-	#[Test]
-	public function it_loads_help_command_properly($arg)
+	public function versionArgsProvider(): \Generator
 	{
-		$input = new Input([$arg]);
+		yield ['version'];
+		yield ['-version'];
+		yield ['--version'];
+		yield ['-v'];
+		yield ['--v'];
+	}
+
+	#[Test]
+	public function it_loads_help_command_properly()
+	{
+		$input = new Input(['help']);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$status = $console->run();
@@ -48,12 +56,36 @@ final class ApplicationTest extends TestCase
 		$this->assertStringContainsString('Available commands:', $result);
 	}
 
+	#[DataProvider('helpArgsProvider')]
+	#[Test]
+	public function it_loads_help_switch_properly($arg)
+	{
+		$input = new Input([$arg]);
+		$output = new Output();
+		$output->setSilentMode();
+
+		$console = new Application($input, $output);
+		$status = $console->run();
+		$result = $output->getDisplay();
+
+		$this->assertEquals(Output::SUCCESS, $status);
+		$this->assertEquals("this command helps the user to interact with the current application\n", $result);
+	}
+
+	public function helpArgsProvider(): \Generator
+	{
+		yield ['-help'];
+		yield ['--help'];
+		yield ['-h'];
+		yield ['--h'];
+	}
+
 	#[Test]
 	public function it_loads_default_command_properly()
 	{
 		$input = new Input([]);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$console->addCommand(resolve(ZenCommand::class));
@@ -71,7 +103,7 @@ final class ApplicationTest extends TestCase
 	{
 		$input = new Input(['Something']);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$status = $console->run();
@@ -89,27 +121,9 @@ final class ApplicationTest extends TestCase
 
 		$input = new Input([]);
 		$output = new Output();
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$console = new Application($input, $output);
 		$console->setDefaultCommand(ZenCommand::class);
-	}
-
-	public function versionArgsProvider(): \Generator
-	{
-		yield ['version'];
-		yield ['-version'];
-		yield ['--version'];
-		yield ['-v'];
-		yield ['--v'];
-	}
-
-	public function helpArgsProvider(): \Generator
-	{
-		yield ['help'];
-		yield ['-help'];
-		yield ['--help'];
-		yield ['-h'];
-		yield ['--h'];
 	}
 }

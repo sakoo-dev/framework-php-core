@@ -45,7 +45,7 @@ final class PathTest extends TestCase
 	#[Test]
 	public function it_returns_core_logs_path_properly(): void
 	{
-		$this->assertEquals("{$this->root}/storage/logs", Path::getLogsDir());
+		$this->assertEquals('/tmp/sakoo-test/logs', Path::getLogsDir());
 	}
 
 	#[Test]
