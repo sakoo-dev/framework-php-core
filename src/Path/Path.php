@@ -31,6 +31,10 @@ class Path
 
 	public static function getLogsDir(): string
 	{
+		if (kernel()->isInTestMode()) {
+			return Path::getTempTestDir() . '/logs';
+		}
+
 		return static::getStorageDir() . '/logs';
 	}
 
@@ -74,5 +78,15 @@ class Path
 			->ignoreVCSIgnored()
 			->ignoreDotFiles()
 			->getFiles();
+	}
+
+	public static function namespaceToPath(string $namespace): string
+	{
+		return '';
+	}
+
+	public static function pathToNamespace(string $path): string
+	{
+		return '';
 	}
 }

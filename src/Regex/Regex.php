@@ -285,7 +285,7 @@ class Regex implements \Stringable
 	/**
 	 * @return null|string|string[]
 	 */
-	public function replace(string|Stringable $string, string $replace): null|array|string
+	public function replace(string|Stringable $string, string $replace): array|string|null
 	{
 		return preg_replace("/$this->pattern/", $replace, "$string");
 	}

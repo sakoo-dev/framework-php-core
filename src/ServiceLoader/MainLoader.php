@@ -8,7 +8,7 @@ use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Sakoo\Framework\Core\Clock\Clock;
 use Sakoo\Framework\Core\Container\Container;
-use Sakoo\Framework\Core\Container\ContainerInterface;
+use Sakoo\Framework\Core\Container\Contracts\ContainerInterface;
 use Sakoo\Framework\Core\Logger\FileLogger;
 use Sakoo\Framework\Core\Markup\Markdown;
 use Sakoo\Framework\Core\Markup\Markup;
@@ -17,7 +17,7 @@ use Sakoo\Framework\Core\Profiler\ProfilerInterface;
 use Sakoo\Framework\Core\Str\Str;
 use Sakoo\Framework\Core\Str\Stringable;
 
-class MainServiceLoader extends ServiceLoader
+class MainLoader extends ServiceLoader
 {
 	public function load(Container $container): void
 	{

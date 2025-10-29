@@ -22,7 +22,7 @@ class Set implements IterableInterface
 	/**
 	 * @param array<int|string,T> $items
 	 *
-	 * @implements \IteratorAggregate<string|int, T>
+	 * @implements \IteratorAggregate<int|string, T>
 	 *
 	 * @throws GenericMismatchException|\Throwable
 	 */

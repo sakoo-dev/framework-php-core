@@ -63,7 +63,7 @@ class OutputTest extends TestCase
 	public function silent_mode(): void
 	{
 		$output = new Output(false);
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$capturedOutput = $this->captureOutput(fn () => $output->text('This should not be output'));
 
@@ -102,7 +102,7 @@ class OutputTest extends TestCase
 	public function get_display(): void
 	{
 		$output = new Output(false);
-		$output->setSilentMode(true);
+		$output->setSilentMode();
 
 		$output->text('Line 1');
 		$output->text('Line 2');

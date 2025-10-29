@@ -24,6 +24,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Mark repo as safe for git
+        run: git config --global --add safe.directory /var/www/html
+
+      - name: create env file
+        run: |
+          if [ ! -f .env ]; then
+          cp ./stubs/environment/.env.ci.example .env
+          fi
+
       - name: Validate composer.json and composer.lock
         run: |
           composer validate --strict
@@ -77,6 +86,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Mark repo as safe for git
+        run: git config --global --add safe.directory /var/www/html
+
       - name: Retrieve docker image
         uses: actions/cache@v4
         with:
@@ -106,6 +118,9 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Mark repo as safe for git
+        run: git config --global --add safe.directory /var/www/html
 
       - name: Retrieve docker image
         uses: actions/cache@v4

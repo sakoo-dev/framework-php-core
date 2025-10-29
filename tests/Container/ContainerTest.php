@@ -10,7 +10,12 @@ use Sakoo\Framework\Core\Container\Container;
 use Sakoo\Framework\Core\Container\Exceptions\ClassNotFoundException;
 use Sakoo\Framework\Core\Container\Exceptions\ContainerNotFoundException;
 use Sakoo\Framework\Core\Container\Exceptions\TypeMismatchException;
+use Sakoo\Framework\Core\FileSystem\Disk;
+use Sakoo\Framework\Core\FileSystem\File;
+use Sakoo\Framework\Core\Path\Path;
 use Sakoo\Framework\Core\Tests\Container\Stubs\AutoWireTestClass;
+use Sakoo\Framework\Core\Tests\Container\Stubs\ComplexTestClass;
+use Sakoo\Framework\Core\Tests\Container\Stubs\ComplexTestInterface;
 use Sakoo\Framework\Core\Tests\Container\Stubs\TestClass;
 use Sakoo\Framework\Core\Tests\Container\Stubs\TestInterface;
 use Sakoo\Framework\Core\Tests\TestCase;
@@ -18,17 +23,14 @@ use Sakoo\Framework\Core\Tests\TestCase;
 final class ContainerTest extends TestCase
 {
 	private Container $container;
+	private string $cachePath;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->container = new Container();
-	}
-
-	public function objects(): \Generator
-	{
-		yield 'closure' => [fn () => new TestClass()];
-		yield 'class' => [TestClass::class];
+		$this->cachePath = Path::getTempTestDir();
+		File::open(Disk::Local, $this->cachePath . '/container.cache.php')->remove();
+		$this->container = new Container($this->cachePath);
 	}
 
 	#[DataProvider('objects')]
@@ -51,6 +53,12 @@ final class ContainerTest extends TestCase
 
 		$this->assertInstanceOf(TestClass::class, $resolved);
 		$this->assertSame($resolved, $this->container->resolve('class'));
+	}
+
+	public function objects(): \Generator
+	{
+		yield 'closure' => [fn () => new TestClass()];
+		yield 'class' => [TestClass::class];
 	}
 
 	#[Test]
@@ -157,5 +165,41 @@ final class ContainerTest extends TestCase
 	{
 		$this->expectException(TypeMismatchException::class);
 		$this->container->bind(TestInterface::class, new \stdClass());
+	}
+
+	#[Test]
+	public function it_can_dump_cache_when_is_empty(): void
+	{
+		$this->container->dumpCache();
+
+		$cacheContent = require $this->cachePath . '/container.cache.php';
+		$this->assertJsonStringEqualsJsonString('{"bindings":[],"singletons":[]}', json_encode($cacheContent));
+	}
+
+	#[Test]
+	public function it_can_dump_and_load_cache(): void
+	{
+		$this->container->bind(ComplexTestInterface::class, ComplexTestClass::class);
+		$this->container->bind(TestInterface::class, TestClass::class);
+		$this->container->dumpCache();
+
+		$cacheContent = require $this->cachePath . '/container.cache.php';
+		$this->assertInstanceOf(ComplexTestClass::class, $cacheContent['bindings'][ComplexTestInterface::class]);
+
+		$newContainer = new Container($this->cachePath);
+		$newContainer->loadCache();
+		$this->assertInstanceOf(ComplexTestClass::class, $newContainer->get(ComplexTestInterface::class));
+	}
+
+	#[Test]
+	public function it_can_check_and_flush_cache(): void
+	{
+		$this->container->dumpCache();
+		$this->assertTrue($this->container->cacheExists());
+		$this->assertFileExists($this->cachePath . '/container.cache.php');
+
+		$this->container->flushCache();
+		$this->assertFalse($this->container->cacheExists());
+		$this->assertFileDoesNotExist($this->cachePath . '/container.cache.php');
 	}
 }
