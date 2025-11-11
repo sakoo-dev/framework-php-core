@@ -8,13 +8,13 @@ use Sakoo\Framework\Core\Locker\Locker;
 use Sakoo\Framework\Core\Watcher\Contracts\File as FileInterface;
 use Sakoo\Framework\Core\Watcher\Contracts\FileSystemAction;
 
-readonly class File implements FileInterface
+class File implements FileInterface
 {
 	public function __construct(
-		private int $id,
-		private string $path,
-		private FileSystemAction $callback,
-		private Locker $locker,
+		protected int $id,
+		protected string $path,
+		protected FileSystemAction $callback,
+		protected Locker $locker,
 	) {}
 
 	public function getId(): int

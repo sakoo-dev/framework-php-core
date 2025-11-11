@@ -41,7 +41,7 @@ readonly class Watcher
 		match ($event->getType()) {
 			EventTypes::MODIFY => $callback->fileModified($event),
 			EventTypes::MOVE => $callback->fileMoved($event),
-			EventTypes::DELETE => $this->driver->blind($event->getHandlerId()) && $callback->fileDeleted($event),
+			EventTypes::DELETE => $callback->fileDeleted($event) && $this->driver->blind($event->getHandlerId()),
 		};
 	}
 }
