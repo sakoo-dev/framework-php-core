@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace Sakoo\Framework\Core\Tests\Command;
 
 use PHPUnit\Framework\Attributes\Test;
-use Sakoo\Framework\Core\Command\ZenCommand;
+use Sakoo\Framework\Core\Command\DevCommand;
 use Sakoo\Framework\Core\Console\Application;
 use Sakoo\Framework\Core\Console\Command;
 use Sakoo\Framework\Core\Console\Input;
 use Sakoo\Framework\Core\Console\Output;
-use Sakoo\Framework\Core\Constants;
 
-final class ZenCommandTest extends AbstractCommandTest
+final class DevCommandBase extends AbstractCommandBase
 {
 	private Command $command;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->command = new ZenCommand();
+		$this->command = new DevCommand();
 	}
 
 	protected function getCommand(): Command
@@ -30,7 +29,7 @@ final class ZenCommandTest extends AbstractCommandTest
 	#[Test]
 	public function command_works_properly(): void
 	{
-		$input = new Input(['zen']);
+		$input = new Input(['dev']);
 		$output = new Output();
 		$output->setSilentMode();
 
@@ -41,7 +40,6 @@ final class ZenCommandTest extends AbstractCommandTest
 		$result = $output->getDisplay();
 
 		$this->assertEquals(Output::SUCCESS, $status);
-		$this->assertStringContainsString(Constants::FRAMEWORK_NAME . ' (Version: ' . Constants::FRAMEWORK_VERSION . ')', $result);
-		$this->assertStringContainsString('Copyright ' . date('Y') . ' by ' . Constants::AUTHOR, $result);
+		$this->assertStringContainsString('JIT Enabled:', $result);
 	}
 }

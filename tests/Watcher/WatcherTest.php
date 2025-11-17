@@ -18,7 +18,7 @@ final class WatcherTest extends TestCase
 {
 	#[DataProvider('masks')]
 	#[Test]
-	public function watcher_works_properly($mask, $callbackFn): void
+	public function watcher_works_properly(int $mask, string $callbackFn): void
 	{
 		$inotify = $this->createMock(Inotify::class);
 		$fileSystemAction = $this->createMock(FileSystemAction::class);
@@ -36,7 +36,7 @@ final class WatcherTest extends TestCase
 		(new Watcher($inotify))->check();
 	}
 
-	public function masks(): \Generator
+	public static function masks(): \Generator
 	{
 		yield [IN_MODIFY, 'fileModified'];
 		yield [IN_MOVE_SELF, 'fileMoved'];

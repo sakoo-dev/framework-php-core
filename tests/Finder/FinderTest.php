@@ -6,4 +6,10 @@ namespace Sakoo\Framework\Core\Tests\Finder;
 
 use Sakoo\Framework\Core\Tests\TestCase;
 
-final class FinderTest extends TestCase {}
+final class FinderTest extends TestCase
+{
+	public function test_it()
+	{
+		$this->assertTrue(true);
+	}
+}

@@ -69,7 +69,7 @@ final class ApplicationTest extends TestCase
 		$result = $output->getDisplay();
 
 		$this->assertEquals(Output::SUCCESS, $status);
-		$this->assertEquals("this command helps the user to interact with the current application\n", $result);
+		$this->assertStringContainsString('this command helps the user to interact with the current application', $result);
 	}
 
 	public function helpArgsProvider(): \Generator

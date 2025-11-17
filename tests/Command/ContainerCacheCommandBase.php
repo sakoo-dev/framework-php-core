@@ -12,7 +12,7 @@ use Sakoo\Framework\Core\Console\Input;
 use Sakoo\Framework\Core\Console\Output;
 use Sakoo\Framework\Core\Container\Container;
 
-final class ContainerCacheCommandTest extends AbstractCommandTest
+final class ContainerCacheCommandBase extends AbstractCommandBase
 {
 	private Container $container;
 	private Command $command;

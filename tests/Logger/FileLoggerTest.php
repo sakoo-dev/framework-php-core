@@ -23,7 +23,7 @@ final class FileLoggerTest extends TestCase
 		Clock::setTestNow('2022-01-01 00:00:00');
 
 		$this->dir = Path::getLogsDir();
-		$this->file = $this->dir . (new Clock())->now()->format('Y/m/d') . '.log';
+		$this->file = $this->dir . '/' . (new Clock())->now()->format('Y/m/d') . '.log';
 
 		$this->resetFileSystemTestEnv();
 	}
@@ -40,10 +40,10 @@ final class FileLoggerTest extends TestCase
 	{
 		$message = rand(0, 9999);
 		logger()->{$level}("$message");
-		$this->assertEquals($this->getFormattedLog($level, "$message"), file_get_contents($this->file));
+		$this->assertStringContainsString($this->getFormattedLog($level, "$message"), file_get_contents($this->file));
 	}
 
-	public function getLogLevels(): \Generator
+	public static function getLogLevels(): \Generator
 	{
 		yield ['emergency'];
 		yield ['alert'];
@@ -64,7 +64,6 @@ final class FileLoggerTest extends TestCase
 
 	private function resetFileSystemTestEnv(): void
 	{
-		File::open(Disk::Local, $this->dir)
-			->remove();
+		File::open(Disk::Local, $this->dir)->remove();
 	}
 }

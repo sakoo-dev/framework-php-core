@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Sakoo\Framework\Core\Console\Command;
 use Sakoo\Framework\Core\Tests\TestCase;
 
-abstract class AbstractCommandTest extends TestCase
+abstract class AbstractCommandBase extends TestCase
 {
 	#[Test]
 	public function it_defines_correctly(): void

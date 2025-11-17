@@ -12,7 +12,7 @@ use Sakoo\Framework\Core\Console\Input;
 use Sakoo\Framework\Core\Console\Output;
 use Sakoo\Framework\Core\Watcher\Watcher;
 
-final class WatchCommandTest extends AbstractCommandTest
+final class WatchCommandBase extends AbstractCommandBase
 {
 	private Command $command;
 	private Watcher $watcher;

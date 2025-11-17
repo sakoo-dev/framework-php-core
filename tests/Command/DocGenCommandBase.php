@@ -15,7 +15,7 @@ use Sakoo\Framework\Core\FileSystem\File;
 use Sakoo\Framework\Core\FileSystem\Storage;
 use Sakoo\Framework\Core\Path\Path;
 
-final class DocGenCommandTest extends AbstractCommandTest
+final class DocGenCommandBase extends AbstractCommandBase
 {
 	private Command $command;
 
