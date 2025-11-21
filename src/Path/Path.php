@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Path;
 
-use Sakoo\Framework\Core\Finder\Finder;
+use Sakoo\Framework\Core\Finder\FileFinder;
 use Sakoo\Framework\Core\Finder\SplFileObject;
 
 class Path
@@ -72,7 +72,7 @@ class Path
 	 */
 	public static function getPHPFilesOf(string $path): array
 	{
-		return Finder::create($path)
+		return (new FileFinder($path))
 			->pattern('*.php')
 			->ignoreVCS()
 			->ignoreVCSIgnored()

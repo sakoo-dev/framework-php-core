@@ -15,6 +15,7 @@ class Event implements EventInterface
 	private int $cookie;
 	private string $name;
 
+	/** @param int[] $event */
 	public function __construct(private readonly File $file, array $event)
 	{
 		$this->wd = $event['wd'];

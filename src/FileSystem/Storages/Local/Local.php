@@ -6,7 +6,7 @@ namespace Sakoo\Framework\Core\FileSystem\Storages\Local;
 
 use Sakoo\Framework\Core\Assert\Assert;
 use Sakoo\Framework\Core\FileSystem\Storage;
-use Sakoo\Framework\Core\Finder\Finder;
+use Sakoo\Framework\Core\Finder\FileFinder;
 use Sakoo\Framework\Core\Finder\SplFileObject;
 
 class Local implements Storage
@@ -87,7 +87,7 @@ class Local implements Storage
 	{
 		Assert::dir($this->path, 'File must be a Directory');
 
-		$files = Finder::create($this->path)->getFiles();
+		$files = (new FileFinder($this->path))->getFiles();
 		$files = set($files)->map(fn (SplFileObject $file) => $file->getRealPath());
 
 		return $files->toArray();

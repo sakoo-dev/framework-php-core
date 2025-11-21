@@ -13,6 +13,7 @@ class Application
 {
 	/** @var Command[] */
 	private array $commands = [];
+	/** @var null|class-string<Command> */
 	private ?string $defaultCommand = null;
 
 	public function __construct(
@@ -48,6 +49,8 @@ class Application
 	}
 
 	/**
+	 * @param class-string<Command> $command
+	 *
 	 * @throws \Throwable
 	 */
 	public function setDefaultCommand(string $command): void
