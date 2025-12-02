@@ -18,9 +18,6 @@ class DocFormatter extends Formatter
 	 * Supporting Helper functions
 	 */
 
-	/**
-	 * @param NamespaceObject[] $namespaces
-	 */
 	public function format(array $namespaces): string
 	{
 		$this->markup->h1('📚 Documentation');
@@ -40,9 +37,8 @@ class DocFormatter extends Formatter
 		$parameters = $method->getDefaultValueTypes();
 		$parametersVars = $method->getDefaultValues();
 
-		if ($modifiers = $method->getModifiers()) {
-			$modifiers = implode(' ', $method->getModifiers()) . ' ';
-		}
+		$modifiers = $method->getModifiers();
+		$modifiers = implode(' ', $modifiers) . ($modifiers ? ' ' : '');
 
 		if ($returnTypes = $method->getMethodReturnTypes()) {
 			$returnTypes = ': ' . $returnTypes;

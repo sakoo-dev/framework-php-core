@@ -12,7 +12,7 @@ class VirtualMethodObject implements MethodInterface
 	private ?string $description = null;
 	private array $params = [];
 
-	public function __construct(private string $line)
+	public function __construct(private ClassObject $classObject, private string $line)
 	{
 		$this->parse();
 	}
@@ -88,9 +88,9 @@ class VirtualMethodObject implements MethodInterface
 		return ctype_alpha($token[0] ?? '');
 	}
 
-	public function getClass(): ?ClassObject
+	public function getClass(): ClassObject
 	{
-		return null;
+		return $this->classObject;
 	}
 
 	public function getMethodParameters(): array

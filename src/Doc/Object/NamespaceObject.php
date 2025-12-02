@@ -8,6 +8,7 @@ readonly class NamespaceObject
 {
 	public function __construct(
 		private string $namespace,
+		// @var ClassObject[] $classes
 		private array $classes,
 	) {}
 

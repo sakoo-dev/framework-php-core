@@ -33,6 +33,11 @@ readonly class Doc
 		$docFile->write($data);
 	}
 
+	/**
+	 * @param SplFileObject[] $files
+	 *
+	 * @return NamespaceObject[]
+	 */
 	private function getNamespaceBags(array $files): array
 	{
 		$data = [];

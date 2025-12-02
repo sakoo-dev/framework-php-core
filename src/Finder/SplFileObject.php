@@ -11,6 +11,7 @@ class SplFileObject extends \SplFileObject
 		return class_exists($this->getNamespace());
 	}
 
+	/** @return class-string */
 	public function getNamespace(): string
 	{
 		return str_replace(

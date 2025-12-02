@@ -9,11 +9,11 @@ use Sakoo\Framework\Core\Regex\Regex;
 
 readonly class MethodObject implements MethodInterface
 {
-	public function __construct(private \ReflectionMethod $method) {}
+	public function __construct(private ClassObject $classObject, private \ReflectionMethod $method) {}
 
 	public function getClass(): ClassObject
 	{
-		return new ClassObject($this->method->getDeclaringClass());
+		return $this->classObject;
 	}
 
 	public function getMethodParameters(): array

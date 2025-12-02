@@ -6,8 +6,9 @@ namespace Sakoo\Framework\Core\Doc\Object;
 
 interface MethodInterface
 {
-	public function getClass(): ?ClassObject;
+	public function getClass(): ClassObject;
 
+	/** @return ParameterObject[] */
 	public function getMethodParameters(): array;
 
 	public function getName(): string;
@@ -26,8 +27,10 @@ interface MethodInterface
 
 	public function getMethodReturnTypes(): ?string;
 
+	/** @return string[] */
 	public function getPhpDocs(): array;
 
+	/** @return string[] */
 	public function getModifiers(): array;
 
 	public function isFrameworkFunction(): bool;

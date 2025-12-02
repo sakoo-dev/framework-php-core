@@ -10,6 +10,9 @@ use Sakoo\Framework\Core\Regex\Regex;
 
 readonly class ClassObject
 {
+	/**
+	 * @phpstan-ignore missingType.generics
+	 */
 	public function __construct(private \ReflectionClass $class) {}
 
 	/**
@@ -21,7 +24,7 @@ readonly class ClassObject
 		$methods = $this->class->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED);
 
 		foreach ($methods as $method) {
-			$method = new MethodObject($method);
+			$method = new MethodObject($this, $method);
 
 			if ($method->isFrameworkFunction()) {
 				$data[] = $method;
@@ -58,6 +61,9 @@ readonly class ClassObject
 		return $this->class->getShortName();
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public function getPhpDocs(): array
 	{
 		$phpDoc = $this->class->getDocComment();
@@ -98,7 +104,7 @@ readonly class ClassObject
 
 		foreach ($phpDocs as $line) {
 			if (str_starts_with($line, '@method ')) {
-				$result[] = new VirtualMethodObject($line);
+				$result[] = new VirtualMethodObject($this, $line);
 			}
 		}
 

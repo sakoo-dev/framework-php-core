@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Doc\Formatters;
 
-use Sakoo\Framework\Core\Doc\Object\NamespaceObject;
-
 class TocFormatter extends Formatter
 {
-	/**
-	 * @param NamespaceObject[] $namespaces
-	 */
 	public function format(array $namespaces): string
 	{
 		foreach ($namespaces as $namespace) {
