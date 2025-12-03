@@ -104,7 +104,11 @@ readonly class ClassObject
 
 		foreach ($phpDocs as $line) {
 			if (str_starts_with($line, '@method ')) {
-				$result[] = new VirtualMethodObject($this, $line);
+				try {
+					$result[] = new VirtualMethodObject($this, $line);
+				} catch (InvalidVirtualMethodDefinitionException $e) {
+					continue;
+				}
 			}
 		}
 

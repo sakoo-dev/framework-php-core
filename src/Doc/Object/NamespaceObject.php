@@ -6,9 +6,11 @@ namespace Sakoo\Framework\Core\Doc\Object;
 
 readonly class NamespaceObject
 {
+	/**
+	 * @param ClassObject[] $classes
+	 */
 	public function __construct(
 		private string $namespace,
-		// @var ClassObject[] $classes
 		private array $classes,
 	) {}
 

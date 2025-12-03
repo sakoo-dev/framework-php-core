@@ -8,9 +8,6 @@ interface MethodInterface
 {
 	public function getClass(): ClassObject;
 
-	/** @return ParameterObject[] */
-	public function getMethodParameters(): array;
-
 	public function getName(): string;
 
 	public function isPrivate(): bool;

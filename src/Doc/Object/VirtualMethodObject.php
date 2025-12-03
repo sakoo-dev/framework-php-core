@@ -10,13 +10,20 @@ class VirtualMethodObject implements MethodInterface
 	private ?string $returnType = null;
 	private string $methodName = '';
 	private ?string $description = null;
+	/** @var array<array<string, null|string>> */
 	private array $params = [];
 
+	/**
+	 * @throws InvalidVirtualMethodDefinitionException
+	 */
 	public function __construct(private ClassObject $classObject, private string $line)
 	{
 		$this->parse();
 	}
 
+	/**
+	 * @throws InvalidVirtualMethodDefinitionException
+	 */
 	private function parse(): void
 	{
 		$this->line = trim(substr($this->line, strlen('@method')));
@@ -34,14 +41,25 @@ class VirtualMethodObject implements MethodInterface
 		}
 
 		$parenPos = strpos($this->line, '(');
-		$this->methodName = trim(substr($this->line, 0, $parenPos));
+
+		throwIf(false === $parenPos, new InvalidVirtualMethodDefinitionException());
+
 		$afterParen = substr($this->line, $parenPos + 1);
 		$closeParenPos = strpos($afterParen, ')');
+
+		throwIf(false === $closeParenPos, new InvalidVirtualMethodDefinitionException());
+
+		// @phpstan-ignore argument.type
 		$paramSection = substr($afterParen, 0, $closeParenPos);
+		// @phpstan-ignore argument.type
+		$this->methodName = trim(substr($this->line, 0, $parenPos));
 		$this->description = trim(substr($afterParen, $closeParenPos + 1)) ?: null;
 		$this->params = $this->parseParams($paramSection);
 	}
 
+	/**
+	 * @return array<array<string, null|string>>
+	 */
 	private function parseParams(string $paramSection): array
 	{
 		$params = [];
@@ -54,18 +72,20 @@ class VirtualMethodObject implements MethodInterface
 
 			$tokens = preg_split('/\s+/', $param);
 
-			foreach ($tokens as $token) {
-				if (str_starts_with($token, '$')) {
-					$name = ltrim($token, '$');
-				} elseif (str_contains($token, '=')) {
-					[$before, $after] = explode('=', $token, 2);
-					$default = trim($after);
+			if ($tokens) {
+				foreach ($tokens as $token) {
+					if (str_starts_with($token, '$')) {
+						$name = ltrim($token, '$');
+					} elseif (str_contains($token, '=')) {
+						[$before, $after] = explode('=', $token, 2);
+						$default = trim($after);
 
-					if ($this->isTypeLike($before)) {
-						$type = trim($before);
+						if ($this->isTypeLike($before)) {
+							$type = trim($before);
+						}
+					} elseif ($this->isTypeLike($token)) {
+						$type = $token;
 					}
-				} elseif ($this->isTypeLike($token)) {
-					$type = $token;
 				}
 			}
 
@@ -91,11 +111,6 @@ class VirtualMethodObject implements MethodInterface
 	public function getClass(): ClassObject
 	{
 		return $this->classObject;
-	}
-
-	public function getMethodParameters(): array
-	{
-		return $this->params;
 	}
 
 	public function getName(): string
@@ -138,6 +153,9 @@ class VirtualMethodObject implements MethodInterface
 		return $this->returnType;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getPhpDocs(): array
 	{
 		return [

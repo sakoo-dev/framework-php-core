@@ -15,6 +15,9 @@ readonly class ParameterObject
 
 	public function getType(): TypeObject
 	{
-		return new TypeObject($this->parameter->getType());
+		/** @var null|\ReflectionIntersectionType|\ReflectionNamedType|\ReflectionUnionType $type */
+		$type = $this->parameter->getType();
+
+		return new TypeObject($type);
 	}
 }

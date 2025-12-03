@@ -16,6 +16,7 @@ readonly class MethodObject implements MethodInterface
 		return $this->classObject;
 	}
 
+	/** @return ParameterObject[] */
 	public function getMethodParameters(): array
 	{
 		$parameters = [];
@@ -64,9 +65,10 @@ readonly class MethodObject implements MethodInterface
 
 	public function getMethodReturnTypes(): string
 	{
-		$type = new TypeObject($this->method->getReturnType());
+		/** @var null|\ReflectionIntersectionType|\ReflectionNamedType|\ReflectionUnionType $type */
+		$type = $this->method->getReturnType();
 
-		return $type->getName() ?? '';
+		return (new TypeObject($type))->getName() ?? '';
 	}
 
 	public function getPhpDocs(): array
@@ -111,17 +113,7 @@ readonly class MethodObject implements MethodInterface
 
 	public function getDefaultValueTypes(): string
 	{
-		return implode(', ', array_map(function (ParameterObject $item): string {
-			$result = '';
-
-			if ($type = $item->getType()) {
-				$result .= $type->getName() . ' ';
-			}
-
-			$result .= '$' . $item->getName();
-
-			return $result;
-		}, $this->getMethodParameters()));
+		return implode(', ', array_map(fn (ParameterObject $item) => $item->getType()->getName() . ' $' . $item->getName(), $this->getMethodParameters()));
 	}
 
 	public function shouldNotDocument(): bool
