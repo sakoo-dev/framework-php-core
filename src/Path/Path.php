@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Path;
 
-use Sakoo\Framework\Core\Finder\Finder;
+use Sakoo\Framework\Core\Finder\FileFinder;
 use Sakoo\Framework\Core\Finder\SplFileObject;
 
 class Path
@@ -31,6 +31,10 @@ class Path
 
 	public static function getLogsDir(): string
 	{
+		if (kernel()->isInTestMode()) {
+			return Path::getTempTestDir() . '/logs';
+		}
+
 		return static::getStorageDir() . '/logs';
 	}
 
@@ -68,11 +72,29 @@ class Path
 	 */
 	public static function getPHPFilesOf(string $path): array
 	{
-		return Finder::create($path)
+		return (new FileFinder($path))
 			->pattern('*.php')
 			->ignoreVCS()
 			->ignoreVCSIgnored()
 			->ignoreDotFiles()
 			->getFiles();
+	}
+
+	public static function namespaceToPath(string $namespace): string
+	{
+		return str_replace(
+			['Sakoo\Framework\Core', '\\'],
+			['src', '/'],
+			$namespace,
+		) . '.php';
+	}
+
+	public static function pathToNamespace(string $path): string
+	{
+		return str_replace(
+			['.php', 'src', '/'],
+			['', 'Sakoo\Framework\Core', '\\'],
+			$path,
+		);
 	}
 }

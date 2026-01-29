@@ -1,23 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\FileSystem\Storages\Local;
 
 trait CanBeDirectory
 {
-	private function removeRecursive($path): bool
+	private function removeRecursive(string $path): bool
 	{
 		if (!file_exists($path)) {
 			return false;
 		}
 
-		if (!is_dir($path)) {
+		chmod($path, 0777);
+
+		if (is_file($path)) {
 			return unlink($path);
 		}
 
 		$content = scandir($path);
+
+		if (!$content) {
+			return false;
+		}
+
 		unset($content[0], $content[1]);
 
-		set($content)->each(fn ($item) => $this->removeRecursive("$path/$item"));
+		set($content)->each(fn (string $item) => $this->removeRecursive("$path/$item"));
 
 		return rmdir($path);
 	}
@@ -33,9 +42,14 @@ trait CanBeDirectory
 		mkdir(directory: $dst);
 
 		$content = scandir($src);
+
+		if (!$content) {
+			return false;
+		}
+
 		unset($content[0], $content[1]);
 
-		set($content)->each(fn ($item) => $this->copyRecursive("$src/$item", "$dst/$item"));
+		set($content)->each(fn (string $item) => $this->copyRecursive("$src/$item", "$dst/$item"));
 
 		return true;
 	}

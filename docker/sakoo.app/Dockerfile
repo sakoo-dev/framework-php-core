@@ -5,7 +5,7 @@ RUN apk add --no-cache git curl zip unzip nodejs npm linux-headers $PHPIZE_DEPS
 
 RUN pecl install inotify-3.0.0 && docker-php-ext-enable inotify \
 && pecl install xdebug && docker-php-ext-enable xdebug \
-&& docker-php-ext-install pdo_mysql mysqli
+&& docker-php-ext-install pdo_mysql mysqli pcntl
 
 COPY ./docker/sakoo.app/conf /tmp/conf
 RUN cat /tmp/conf/xdebug.ini >> /usr/local/etc/php/conf.d/xdebug.ini && cat /tmp/conf/php.ini >> /usr/local/etc/php/php.ini && rm -rf /tmp/conf

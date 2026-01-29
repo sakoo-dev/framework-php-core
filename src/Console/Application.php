@@ -13,6 +13,7 @@ class Application
 {
 	/** @var Command[] */
 	private array $commands = [];
+	/** @var null|class-string<Command> */
 	private ?string $defaultCommand = null;
 
 	public function __construct(
@@ -22,7 +23,13 @@ class Application
 
 	public function run(): int
 	{
-		return $this->getShouldExecCommand()->run($this->input, $this->output);
+		$command = $this->getShouldExecCommand();
+
+		if ($this->input->hasOption('help') || $this->input->hasOption('h')) {
+			return $command->help($this->input, $this->output);
+		}
+
+		return $command->run($this->input, $this->output);
 	}
 
 	/**
@@ -42,6 +49,8 @@ class Application
 	}
 
 	/**
+	 * @param class-string<Command> $command
+	 *
 	 * @throws \Throwable
 	 */
 	public function setDefaultCommand(string $command): void
@@ -107,6 +116,6 @@ class Application
 
 	private function shouldRunHelpCommand(?string $arg): bool
 	{
-		return $this->input->hasOption('help') || HelpCommand::getName() === $arg || (is_null($arg) && is_null($this->defaultCommand)) || $this->input->hasOption('h');
+		return $this->input->hasOption('help') || HelpCommand::getName() === $arg || $this->input->hasOption('h') || (is_null($arg) && is_null($this->defaultCommand));
 	}
 }

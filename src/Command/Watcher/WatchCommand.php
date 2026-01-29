@@ -12,6 +12,8 @@ use Sakoo\Framework\Core\Watcher\Watcher;
 
 class WatchCommand extends Command
 {
+	public function __construct(private readonly Watcher $watcher) {}
+
 	public static function getName(): string
 	{
 		return 'watch';
@@ -24,12 +26,9 @@ class WatchCommand extends Command
 
 	public function run(Input $input, Output $output): int
 	{
-		/** @var Watcher $watcher */
-		$watcher = resolve(Watcher::class);
-
-		$watcher = $watcher->watch(Path::getProjectPHPFiles(), new PhpBundler($input, $output));
+		$this->watcher->watch(Path::getProjectPHPFiles(), new PhpBundler($input, $output));
 		$output->block('Watching ...', Output::COLOR_CYAN);
-		$watcher->run();
+		$this->watcher->run();
 
 		return Output::SUCCESS;
 	}

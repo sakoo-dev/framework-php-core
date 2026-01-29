@@ -67,4 +67,9 @@ interface IterableInterface extends \IteratorAggregate, \Countable
 	 * @return IterableInterface<T>
 	 */
 	public function filter(callable $callback): self;
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function toArray(): array;
 }

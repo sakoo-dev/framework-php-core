@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\FileSystem;
 
 class File
@@ -8,4 +10,6 @@ class File
 	{
 		return new $storage->value($path);
 	}
+
+	private function __construct() {}
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\FileSystem;
 
 interface Storage
@@ -18,6 +20,9 @@ interface Storage
 
 	public function copy(string $to): bool;
 
+	/**
+	 * @return string[]
+	 */
 	public function files(): array;
 
 	public function parentDir(): string;
@@ -28,5 +33,14 @@ interface Storage
 
 	public function append(string $data): bool;
 
+	/**
+	 * @return false|string[]
+	 */
 	public function readLines(): array|false;
+
+	public function setPermission(int|string $permission): bool;
+
+	public function getPermission(): mixed;
+
+	public function getPath(): string;
 }

@@ -30,7 +30,7 @@ class ZenCommand extends Command
 		], Output::COLOR_CYAN);
 
 		$output->block(Constants::FRAMEWORK_NAME . ' (Version: ' . Constants::FRAMEWORK_VERSION . ')', Output::COLOR_GREEN);
-		$output->block('Copyright ' . date('Y') . ' by ' . Constants::AUTHOR);
+		$output->block('Copyright ' . date('Y') . ' by ' . Constants::MAINTAINER);
 
 		return Output::SUCCESS;
 	}

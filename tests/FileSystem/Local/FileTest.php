@@ -1,35 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\FileSystem\Local;
 
-use Webmozart\Assert\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
+use Sakoo\Framework\Core\Assert\Exception\InvalidArgumentException;
 
-class FileTest extends FileSystemTestCase
+final class FileTest extends FileSystemTestCase
 {
-	public function test_it_can_create_file()
+	use HasPermissions;
+
+	#[Test]
+	public function it_can_create_file()
 	{
 		$this->file->create();
 		$this->assertFileExists($this->filePath);
 		$this->assertFalse(is_dir($this->filePath));
 	}
 
-	public function test_it_can_make_directories_for_file()
+	#[Test]
+	public function it_can_make_directories_for_file()
 	{
 		$this->file->mkdir();
 		$this->assertFileExists($this->parentDirPath);
 	}
 
-	public function test_it_can_check_existing_file()
+	#[Test]
+	public function it_can_check_existing_file()
 	{
 		$this->assertFalse($this->file->exists());
 
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 		$this->assertTrue($this->file->exists());
 	}
 
-	public function test_it_can_remove_file()
+	#[Test]
+	public function it_can_remove_file()
 	{
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 
 		$this->assertFileExists($this->filePath);
 		$this->assertFalse(is_dir($this->filePath));
@@ -39,9 +48,10 @@ class FileTest extends FileSystemTestCase
 		$this->assertFileDoesNotExist($this->filePath);
 	}
 
-	public function test_it_can_copy_file()
+	#[Test]
+	public function it_can_copy_file()
 	{
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 		$copyDir = $this->parentDirPath . '/another-file';
 
 		$this->file->copy("$copyDir/test.txt");
@@ -50,7 +60,8 @@ class FileTest extends FileSystemTestCase
 		$this->assertFileExists($this->filePath);
 	}
 
-	public function test_it_throws_exception_if_want_to_copy_not_existing_file()
+	#[Test]
+	public function it_throws_exception_if_want_to_copy_not_existing_file()
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('File Does not Exist');
@@ -58,9 +69,10 @@ class FileTest extends FileSystemTestCase
 		$this->file->copy("$this->parentDirPath/another-file/test.txt");
 	}
 
-	public function test_it_can_move_file()
+	#[Test]
+	public function it_can_move_file()
 	{
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 		$moveDir = $this->parentDirPath . '/another-file';
 
 		$this->file->move("$moveDir/test.txt");
@@ -69,9 +81,10 @@ class FileTest extends FileSystemTestCase
 		$this->assertFileDoesNotExist($this->filePath);
 	}
 
-	public function test_files_function_throws_exception_if_file_is_not_directory()
+	#[Test]
+	public function files_function_throws_exception_if_file_is_not_directory()
 	{
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('File must be a Directory');
@@ -79,9 +92,10 @@ class FileTest extends FileSystemTestCase
 		$this->file->files();
 	}
 
-	public function test_it_can_write_to_file()
+	#[Test]
+	public function it_can_write_to_file()
 	{
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 
 		$this->file->write('Foo');
 		$this->assertStringEqualsFile($this->filePath, 'Foo');
@@ -90,9 +104,10 @@ class FileTest extends FileSystemTestCase
 		$this->assertStringEqualsFile($this->filePath, 'Bar');
 	}
 
-	public function test_it_can_append_to_file()
+	#[Test]
+	public function it_can_append_to_file()
 	{
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 		file_put_contents($this->filePath, 'Foo');
 
 		$this->file->append('Bar');
@@ -102,9 +117,10 @@ class FileTest extends FileSystemTestCase
 		$this->assertStringEqualsFile($this->filePath, 'FooBarBaz');
 	}
 
-	public function test_it_returns_lines_of_file()
+	#[Test]
+	public function it_returns_lines_of_file()
 	{
-		$this->manualCreateFile(asDirectory: false);
+		$this->createFile();
 		file_put_contents($this->filePath, "Foo\nBar\nBaz\n");
 
 		$lines = $this->file->readLines();
@@ -112,11 +128,19 @@ class FileTest extends FileSystemTestCase
 		$this->assertEquals(["Foo\n", "Bar\n", "Baz\n"], $lines);
 	}
 
-	public function test_it_throws_exception_if_want_to_read_lines_of_not_existing_file()
+	#[Test]
+	public function it_throws_exception_if_want_to_read_lines_of_not_existing_file()
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('File Does not Exist');
 
 		$this->file->readLines();
+	}
+
+	#[Test]
+	public function it_can_return_file_path()
+	{
+		$this->createFile();
+		$this->assertEquals($this->filePath, $this->file->getPath());
 	}
 }

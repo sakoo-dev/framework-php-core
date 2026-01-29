@@ -4,55 +4,55 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Assert\Traits;
 
-use Sakoo\Framework\Core\VarDump\VarDump;
+use Sakoo\Framework\Core\Str\Str;
 
 trait NumberType
 {
 	public static function numeric(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is not numeric', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is not numeric', Str::fromType($value));
 		static::throwUnless(is_numeric($value), $message);
 	}
 
 	public static function notNumeric(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is numeric', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is numeric', Str::fromType($value));
 		static::throwIf(is_numeric($value), $message);
 	}
 
 	public static function finite(float $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is an infinite number', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is an infinite number', Str::fromType($value));
 		static::throwUnless(is_finite($value), $message);
 	}
 
 	public static function infinite(float $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is a finite number', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is a finite number', Str::fromType($value));
 		static::throwUnless(is_infinite($value), $message);
 	}
 
 	public static function float(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is not a float number', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is not a float number', Str::fromType($value));
 		static::throwUnless(is_float($value), $message);
 	}
 
 	public static function notFloat(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is a float number', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is a float number', Str::fromType($value));
 		static::throwIf(is_float($value), $message);
 	}
 
 	public static function int(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is not an integer number', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is not an integer number', Str::fromType($value));
 		static::throwUnless(is_int($value), $message);
 	}
 
 	public static function notInt(mixed $value, string $message = ''): void
 	{
-		$message = $message ?: sprintf('Given value %s is an integer number', new VarDump($value));
+		$message = $message ?: sprintf('Given value %s is an integer number', Str::fromType($value));
 		static::throwIf(is_int($value), $message);
 	}
 

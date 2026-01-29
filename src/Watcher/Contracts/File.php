@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Watcher\Contracts;
 
-use Sakoo\Framework\Core\Utilities\Locker;
+use Sakoo\Framework\Core\Locker\Locker;
 
 interface File
 {

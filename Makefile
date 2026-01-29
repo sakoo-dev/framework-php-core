@@ -1,11 +1,11 @@
 .PHONY: start
 start:
 	@make hello
-	@chmod +x -R ./bin/.
+	@chmod +x ./bin/.
 	@cp -a ./bin/hooks/. ./.git/hooks
-	@ln -s ./bin/sakoo ./sakoo
-	@cp .env.example .env
-	@cp .env.testing.example .env.testing
+	@ln -snf ./bin/sakoo ./sakoo
+	@cp ./stubs/environment/.env.example .env
+	@cp ./stubs/environment/.env.testing.example .env.testing
 	@./sakoo up -d --build
 	@./sakoo composer install
 
@@ -29,22 +29,16 @@ rm:
 lint:
 	@./sakoo php ./vendor/bin/php-cs-fixer fix .
 
-# Actions
-.PHONY: prepare
-prepare:
-	@make test
-	@make lint
-	@make doc
-
 .PHONY: check
 check:
-	@make test
-	@./bin/test-coverage
+	@./sakoo composer lint
+	@./sakoo composer test
+	@./sakoo composer analyse
 	@./sakoo composer validate --strict
 	@./sakoo composer audit
-	@./sakoo composer lint
-	@./sakoo composer analyse
 	@docker build --check -f ./docker/sakoo.app/Dockerfile .
+	@./bin/test-coverage
+	@make doc
 
 .PHONY: test
 test:
@@ -58,11 +52,7 @@ test-coverage:
 
 .PHONY: analyse
 analyse:
-	@./sakoo php ./vendor/bin/phpstan analyse
-
-.PHONY: fresh
-fresh:
-	@./sakoo composer dump-autoload
+	@./sakoo php ./vendor/bin/phpstan analyse ./src --memory-limit 1G --debug
 
 .PHONY: watch
 watch:
@@ -76,16 +66,18 @@ doc:
 shell:
 	@./sakoo shell
 
-.PHONY: module-check
-module-check:
-	@./sakoo test "./tests/$(src)" --coverage-html=storage/tests/coverage/ || true
-	@open ./storage/tests/coverage/index.html || true
-	@./sakoo php ./vendor/bin/phpstan analyse "./src/$(src)" || true
-	@./sakoo assist doc:gen "./src/$(src)" || true
-
 .PHONY: hello
 hello:
 	@echo "\t\t======================="
 	@echo "\t\t========="
 	@echo "  ======================="
 	@echo "\nSakoo Development Group\n"
+
+.PHONY: cache
+cache:
+	@./sakoo assist container:cache
+
+.PHONY: cache-clear
+cache-clear:
+	@./sakoo assist container:cache --clear
+	@./sakoo composer dump-autoload

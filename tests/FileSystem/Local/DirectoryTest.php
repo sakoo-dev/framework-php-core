@@ -1,29 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sakoo\Framework\Core\Tests\FileSystem\Local;
 
-use Webmozart\Assert\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
+use Sakoo\Framework\Core\Assert\Exception\InvalidArgumentException;
 
-class DirectoryTest extends FileSystemTestCase
+final class DirectoryTest extends FileSystemTestCase
 {
-	public function test_it_can_create_directory()
+	use HasPermissions;
+
+	#[Test]
+	public function it_can_create_directory()
 	{
 		$this->file->create(asDirectory: true);
 		$this->assertFileExists($this->filePath);
 		$this->assertTrue(is_dir($this->filePath));
 	}
 
-	public function test_it_can_check_existing_directory()
+	#[Test]
+	public function it_can_check_existing_directory()
 	{
 		$this->assertFalse($this->file->exists());
 
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 		$this->assertTrue($this->file->exists());
 	}
 
-	public function test_it_can_remove_directory()
+	#[Test]
+	public function it_can_remove_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 
 		$this->assertFileExists($this->filePath);
 		$this->assertTrue(is_dir($this->filePath));
@@ -32,9 +40,10 @@ class DirectoryTest extends FileSystemTestCase
 		$this->assertFileDoesNotExist($this->filePath);
 	}
 
-	public function test_it_can_check_that_file_is_a_directory()
+	#[Test]
+	public function it_can_check_that_file_is_a_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 
 		$this->assertTrue($this->file->isDir());
 
@@ -44,9 +53,10 @@ class DirectoryTest extends FileSystemTestCase
 		$this->assertFalse($this->file->isDir());
 	}
 
-	public function test_it_can_copy_directory()
+	#[Test]
+	public function it_can_copy_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 		$copyDir = $this->parentDirPath . '/another-file';
 
 		$this->file->copy("$copyDir/test-dir");
@@ -55,7 +65,8 @@ class DirectoryTest extends FileSystemTestCase
 		$this->assertDirectoryExists($this->filePath);
 	}
 
-	public function test_it_throws_exception_if_want_to_copy_not_existing_directory()
+	#[Test]
+	public function it_throws_exception_if_want_to_copy_not_existing_directory()
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('File Does not Exist');
@@ -63,9 +74,10 @@ class DirectoryTest extends FileSystemTestCase
 		$this->file->copy("$this->parentDirPath/another-file/test-dir");
 	}
 
-	public function test_it_can_move_directory()
+	#[Test]
+	public function it_can_move_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 		$moveDir = $this->parentDirPath . '/another-file';
 
 		$this->file->move("$moveDir/test-dir");
@@ -74,9 +86,10 @@ class DirectoryTest extends FileSystemTestCase
 		$this->assertDirectoryDoesNotExist($this->filePath);
 	}
 
-	public function test_files_function_returns_content_of_a_directory()
+	#[Test]
+	public function files_function_returns_content_of_a_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 		$names = set([
 			"$this->filePath/foo",
 			"$this->filePath/bar",
@@ -92,9 +105,10 @@ class DirectoryTest extends FileSystemTestCase
 		$this->assertEqualsCanonicalizing($names->toArray(), $files);
 	}
 
-	public function test_it_throws_exception_if_want_to_write_to_directory()
+	#[Test]
+	public function it_throws_exception_if_want_to_write_to_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('File could not be a Directory');
@@ -102,9 +116,10 @@ class DirectoryTest extends FileSystemTestCase
 		$this->file->write('Something');
 	}
 
-	public function test_it_throws_exception_if_want_to_append_to_directory()
+	#[Test]
+	public function it_throws_exception_if_want_to_append_to_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('File could not be a Directory');
@@ -112,13 +127,21 @@ class DirectoryTest extends FileSystemTestCase
 		$this->file->append('Something');
 	}
 
-	public function test_it_throws_exception_if_want_to_read_lines_of_directory()
+	#[Test]
+	public function it_throws_exception_if_want_to_read_lines_of_directory()
 	{
-		$this->manualCreateFile(asDirectory: true);
+		$this->createDirectory();
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('File could not be a Directory');
 
 		$this->file->readLines();
+	}
+
+	#[Test]
+	public function it_can_return_directory_path()
+	{
+		$this->createDirectory();
+		$this->assertEquals($this->filePath, $this->file->getPath());
 	}
 }

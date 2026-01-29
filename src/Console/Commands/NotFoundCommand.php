@@ -23,7 +23,7 @@ class NotFoundCommand extends Command
 	public function run(Input $input, Output $output): int
 	{
 		$output->block('Requested command has not found.', Output::COLOR_RED);
-		$output->block('try "./assist help" to get more information', Output::COLOR_GREEN);
+		$output->block('try "./sakoo assist help" to get more information', Output::COLOR_GREEN);
 
 		return Output::ERROR;
 	}

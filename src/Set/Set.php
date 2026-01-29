@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Set;
 
+use Sakoo\Framework\Core\Assert\Assert;
 use Sakoo\Framework\Core\Set\Exceptions\GenericMismatchException;
 use Sakoo\Framework\Core\Set\Strategy\Searcher;
 use Sakoo\Framework\Core\Set\Strategy\Sorter;
@@ -22,7 +23,7 @@ class Set implements IterableInterface
 	/**
 	 * @param array<int|string,T> $items
 	 *
-	 * @implements \IteratorAggregate<string|int, T>
+	 * @implements \IteratorAggregate<int|string, T>
 	 *
 	 * @throws GenericMismatchException|\Throwable
 	 */
@@ -121,6 +122,9 @@ class Set implements IterableInterface
 
 		$this->detectGeneric($value);
 		$this->typeMismatchChecking($value);
+
+		Assert::true(is_int($key) || is_string($key), 'Provided Key is not integer or string.');
+		// @phpstan-ignore offsetAccess.invalidOffset
 		$this->items[$key] = $value;
 
 		return $this;

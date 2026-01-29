@@ -11,7 +11,6 @@ use Sakoo\Framework\Core\Doc\Doc;
 use Sakoo\Framework\Core\Doc\Formatters\DocFormatter;
 use Sakoo\Framework\Core\Doc\Formatters\Formatter;
 use Sakoo\Framework\Core\Doc\Formatters\TocFormatter;
-use Sakoo\Framework\Core\Doc\Sorter\NamespaceSorter;
 use Sakoo\Framework\Core\FileSystem\Disk;
 use Sakoo\Framework\Core\FileSystem\File;
 use Sakoo\Framework\Core\Finder\SplFileObject;
@@ -19,6 +18,12 @@ use Sakoo\Framework\Core\Path\Path;
 
 class DocGenCommand extends Command
 {
+	public function __construct(
+		private readonly string $docPath,
+		private readonly string $sidebarPath,
+		private readonly string $footerPath,
+	) {}
+
 	public static function getName(): string
 	{
 		return 'doc:gen';
@@ -39,19 +44,18 @@ class DocGenCommand extends Command
 		 * @phpstan-ignore argument.type
 		 */
 		$finder = Path::getPHPFilesOf($input->getArgument(1) ?? Path::getCoreDir());
-		$sorter = new NamespaceSorter();
 
 		/** @var Formatter $formatter */
 		$formatter = resolve(DocFormatter::class);
-		$docFile = File::open(Disk::Local, Path::getRootDir() . '/.github/wiki/Home.md');
-		(new Doc($finder, $formatter, $sorter, $docFile))->generate();
+		$docFile = File::open(Disk::Local, $this->docPath);
+		(new Doc($finder, $formatter, $docFile))->generate();
 
 		/** @var Formatter $tocFormatter */
 		$tocFormatter = resolve(TocFormatter::class);
-		$wikiSideBar = File::open(Disk::Local, Path::getRootDir() . '/.github/wiki/_Sidebar.md');
-		(new Doc($finder, $tocFormatter, $sorter, $wikiSideBar))->generate();
+		$wikiSideBar = File::open(Disk::Local, $this->sidebarPath);
+		(new Doc($finder, $tocFormatter, $wikiSideBar))->generate();
 
-		$wikiFooter = File::open(Disk::Local, Path::getRootDir() . '/.github/wiki/_Footer.md');
+		$wikiFooter = File::open(Disk::Local, $this->footerPath);
 		$wikiFooter->write('Powered by Sakoo Development Group - ' . date('Y'));
 
 		$output->block('Document has been Generated Successfully!', Output::COLOR_GREEN);

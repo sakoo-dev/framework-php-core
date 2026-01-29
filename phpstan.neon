@@ -4,6 +4,7 @@ rules:
   - Sakoo\Framework\Core\PHPStan\Vulnerability\DangerousFunctionsRule
   - Sakoo\Framework\Core\PHPStan\Vulnerability\EvalUsageRule
 parameters:
+	phpVersion: 80300
 	reportUnmatchedIgnoredErrors: false
 	errorFormat: table
 	editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'

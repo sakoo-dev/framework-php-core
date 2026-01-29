@@ -45,7 +45,7 @@ final class PathTest extends TestCase
 	#[Test]
 	public function it_returns_core_logs_path_properly(): void
 	{
-		$this->assertEquals("{$this->root}/storage/logs", Path::getLogsDir());
+		$this->assertEquals('/tmp/sakoo-test/logs', Path::getLogsDir());
 	}
 
 	#[Test]
@@ -73,5 +73,17 @@ final class PathTest extends TestCase
 	{
 		$files = Path::getPHPFilesOf($this->root);
 		$this->assertGreaterThan(20, count($files));
+	}
+
+	#[Test]
+	public function it_converts_path_to_namespace(): void
+	{
+		$this->assertEquals('src/Path/Path.php', Path::namespaceToPath(Path::class));
+	}
+
+	#[Test]
+	public function it_converts_namespace_to_path(): void
+	{
+		$this->assertEquals('Sakoo\Framework\Core\Path\Path', Path::pathToNamespace('src/Path/Path.php'));
 	}
 }
