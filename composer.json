@@ -30,6 +30,7 @@
     "php": ">=8.3",
     "ext-zend-opcache": "*",
     "ext-inotify": "*",
+    "ext-swoole": "*",
     "psr/container": "^2.0",
     "psr/log": "^3.0",
     "psr/clock": "^1.0",
@@ -43,7 +44,8 @@
     "phpstan/phpstan": "^2",
     "phpunit/phpunit": "^10",
     "php-mcp/server": "^2.0",
-    "inspector-apm/neuron-ai": "^2.0"
+    "inspector-apm/neuron-ai": "^2.0",
+    "swoole/ide-helper": "^6.0"
   },
   "scripts": {
     "lint": "./vendor/bin/php-cs-fixer check . --using-cache=no",

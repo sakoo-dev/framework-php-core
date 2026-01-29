@@ -1,10 +1,11 @@
-FROM php:8.3.19-fpm-alpine
+FROM php:8.4.17-cli-alpine
 LABEL MAINTAINER="Pouya Asgharnejad Tehran | https://sakoo.dev"
 
-RUN apk add --no-cache git curl zip unzip nodejs npm linux-headers $PHPIZE_DEPS
+RUN apk add --no-cache git curl zip unzip nodejs npm linux-headers $PHPIZE_DEPS brotli-dev
 
 RUN pecl install inotify-3.0.0 && docker-php-ext-enable inotify \
 && pecl install xdebug && docker-php-ext-enable xdebug \
+&& pecl install swoole && docker-php-ext-enable swoole \
 && docker-php-ext-install pdo_mysql mysqli pcntl
 
 COPY ./docker/sakoo.app/conf /tmp/conf
@@ -18,6 +19,6 @@ USER www-data:www-data
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pgrep php-fpm || exit 1
 
-EXPOSE 9000
+EXPOSE 9501
 
-CMD ["php-fpm"]
+CMD ["php", "index.php"]

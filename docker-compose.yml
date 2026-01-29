@@ -6,6 +6,9 @@ services:
       dockerfile: docker/sakoo.app/Dockerfile
     image: ${DOCKER_IMAGE}
     restart: unless-stopped
+    ports:
+      - "80:9501"
+      - "443:9501"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
