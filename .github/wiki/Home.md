@@ -616,6 +616,8 @@ public static function pathToNamespace(string $path): string
 Path::pathToNamespace($path)
 ```
 
+<sub><sup>@return class-string</sup></sub>
+
 ## 📦 Sakoo\Framework\Core\FileSystem\Storages\Local
 
 ### 🟢 Local
@@ -2658,10 +2660,6 @@ public static function load(Storage $file): void
 Env::load($file)
 ```
 
-## 📦 Sakoo\Framework\Core
-
-### 🟢 Constants
-
 ## 📦 Sakoo\Framework\Core\Testing
 
 ### 🟢 ExceptionAssertion
@@ -3316,9 +3314,135 @@ $markdown->get()
 
 ### 🟢 DataAnalystAgent
 
+---
+
+##### Contract
+
+```php
+protected function provider(): AIProviderInterface
+```
+
+##### Usage
+
+```php
+$dataAnalystAgent->provider()
+```
+
+---
+
+##### Contract
+
+```php
+public function instructions(): string
+```
+
+##### Usage
+
+```php
+$dataAnalystAgent->instructions()
+```
+
+---
+
+##### Contract
+
+```php
+protected function tools(): array
+```
+
+##### Usage
+
+```php
+$dataAnalystAgent->tools()
+```
+
 ### 🟢 DeveloperAgent
 
+---
+
+##### Contract
+
+```php
+protected function provider(): AIProviderInterface
+```
+
+##### Usage
+
+```php
+$developerAgent->provider()
+```
+
+---
+
+##### Contract
+
+```php
+public function instructions(): string
+```
+
+##### Usage
+
+```php
+$developerAgent->instructions()
+```
+
+---
+
+##### Contract
+
+```php
+protected function tools(): array
+```
+
+##### Usage
+
+```php
+$developerAgent->tools()
+```
+
 ### 🟢 ProductManagerAgent
+
+---
+
+##### Contract
+
+```php
+protected function provider(): AIProviderInterface
+```
+
+##### Usage
+
+```php
+$productManagerAgent->provider()
+```
+
+---
+
+##### Contract
+
+```php
+public function instructions(): string
+```
+
+##### Usage
+
+```php
+$productManagerAgent->instructions()
+```
+
+---
+
+##### Contract
+
+```php
+protected function tools(): array
+```
+
+##### Usage
+
+```php
+$productManagerAgent->tools()
+```
 
 ## 📦 Sakoo\Framework\Core\AI\Mcp
 

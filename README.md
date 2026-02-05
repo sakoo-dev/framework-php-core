@@ -4,19 +4,19 @@
   <source media="(prefers-color-scheme: light)" srcset=".github/static/logo-light.png">
   <img width="96" src=".github/static/logo-light.png">
 </picture>
-Sakoo PHP Web Framework (Core)
+Sakoo PHP Web Framework
 </h1>
 
-![GitHub License](https://img.shields.io/github/license/sakoo-dev/framework-php-core)
+![GitHub License](https://img.shields.io/github/license/sakoo-dev/php-framework)
 ![Static Badge](https://img.shields.io/badge/Status-In_Development-green)
-[![Visitor](https://visitor-badge.laobi.icu/badge?page_id=sakoo-dev/framework-php-core)](https://github.com/sakoo-dev/framework-php-core)
-![Packagist Version](https://img.shields.io/packagist/v/sakoo/framework-core)
+[![Visitor](https://visitor-badge.laobi.icu/badge?page_id=sakoo-dev/php-framework)](https://github.com/sakoo-dev/php-framework)
+![Packagist Version](https://img.shields.io/packagist/v/sakoo/framework)
 
-[![Sakoo CI Pipeline](https://github.com/sakoo-dev/framework-php-core/actions/workflows/ci.yml/badge.svg)](https://github.com/sakoo-dev/framework-php-core/actions/workflows/ci.yml)
-![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/pouyaaofficial/ebfe01b7208b0dc6ee0f0302795bd2ee/raw/framework-php-core_main.json)
+[![Sakoo CI Pipeline](https://github.com/sakoo-dev/php-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/sakoo-dev/php-framework/actions/workflows/ci.yml)
+![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/pouyaaofficial/ebfe01b7208b0dc6ee0f0302795bd2ee/raw/php-framework_main.json)
 
-![GitHub Release Date](https://img.shields.io/github/release-date/sakoo-dev/framework-php-core)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/sakoo-dev/framework-php-core/total)
+![GitHub Release Date](https://img.shields.io/github/release-date/sakoo-dev/php-framework)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/sakoo-dev/php-framework/total)
 
 <a href="https://sakoo.dev" target="_blank">
     <img src=".github/static/undraw-sakoo.svg" width="400"/>

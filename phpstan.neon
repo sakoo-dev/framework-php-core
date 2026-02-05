@@ -4,11 +4,11 @@ rules:
   - Sakoo\Framework\Core\PHPStan\Vulnerability\DangerousFunctionsRule
   - Sakoo\Framework\Core\PHPStan\Vulnerability\EvalUsageRule
 parameters:
-	phpVersion: 80300
+	phpVersion: 80400
 	reportUnmatchedIgnoredErrors: false
 	errorFormat: table
 	editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
 	level: max
 	paths:
-		- src
-		- tests
+		- app
+		- core/src

@@ -89,8 +89,10 @@ class Path
 		) . '.php';
 	}
 
+	/** @return class-string */
 	public static function pathToNamespace(string $path): string
 	{
+		// @phpstan-ignore return.type
 		return str_replace(
 			['.php', 'src', '/'],
 			['', 'Sakoo\Framework\Core', '\\'],

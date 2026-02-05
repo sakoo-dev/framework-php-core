@@ -6,13 +6,10 @@ namespace Sakoo\Framework\Core\Tests\Clock;
 
 use PHPUnit\Framework\Attributes\Test;
 use Sakoo\Framework\Core\Clock\Clock;
-use Sakoo\Framework\Core\Tests\Assert\Helpers;
 use Sakoo\Framework\Core\Tests\TestCase;
 
 final class ClockTest extends TestCase
 {
-	use Helpers;
-
 	#[Test]
 	public function now_function_works_on_psr_standards(): void
 	{

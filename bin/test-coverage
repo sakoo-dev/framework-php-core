@@ -12,7 +12,7 @@ if [[ ! $coverage =~ ^-?[0-9.]+$ ]]; then
   exit 1
 fi
 
-echo "{coverage}={$coverage}" >> $GITHUB_OUTPUT
+echo "coverage=$coverage" >> $GITHUB_OUTPUT
 
 #if (( $(echo "$coverage < 90" | bc -l) )); then
 #  echo "Coverage ($coverage%) is below the threshold (90%)"

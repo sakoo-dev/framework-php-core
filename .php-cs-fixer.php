@@ -46,7 +46,7 @@ $rules = [
 $config = new Config();
 
 $config->getFinder()
-	->in([__DIR__ . '/src', __DIR__ . '/tests'])
+	->in([__DIR__ . '/app', __DIR__ . '/core'])
 	->name('*.php')
 	->ignoreVCS(true)
 	->ignoreVCSIgnored(true)

@@ -52,7 +52,7 @@ test-coverage:
 
 .PHONY: analyse
 analyse:
-	@./sakoo php ./vendor/bin/phpstan analyse ./src --memory-limit 1G --debug
+	@./sakoo php ./vendor/bin/phpstan analyse --memory-limit 1G --debug
 
 .PHONY: watch
 watch:

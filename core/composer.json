@@ -1,0 +1,52 @@
+{
+  "name": "sakoo/framework-core",
+  "description": "The Core Components of the Sakoo PHP Web Framework",
+  "version": "1.0.0",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "php",
+    "framework",
+    "sakoo"
+  ],
+  "authors": [
+    {
+      "name": "Pouya Asgharnejad Tehran",
+      "email": "pouyaaofficial@gmail.com",
+      "role": "Senior Software Engineer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sakoo\\Framework\\Core\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Sakoo\\Framework\\Core\\Tests\\": "tests"
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=8.3",
+    "ext-zend-opcache": "*",
+    "ext-inotify": "*",
+    "ext-swoole": "*",
+    "psr/container": "^2.0",
+    "psr/log": "^3.0",
+    "psr/clock": "^1.0",
+    "psr/http-factory": "^1.0",
+    "psr/http-message": "^2.0",
+    "psr/http-server-handler": "^1.0",
+    "psr/http-server-middleware": "^1.0"
+  },
+  "provide": {
+    "psr/container-implementation": "^2.0",
+    "psr/log-implementation": "^3.0",
+    "psr/clock-implementation": "^1.0",
+    "psr/http-factory-implementation": "^1.0",
+    "psr/http-message-implementation": "^2.0",
+    "psr/http-server-handler-implementation": "^1.0",
+    "psr/http-server-middleware-implementation": "^1.0"
+  }
+}

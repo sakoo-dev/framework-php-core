@@ -21,7 +21,7 @@ jobs:
 
       - name: Update wiki
         run: |
-          REPOSITORY="framework-php-core.wiki"
+          REPOSITORY="php-framework.wiki"
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/sakoo-dev/${REPOSITORY}.git
           cd $REPOSITORY
           cp -r ../.github/wiki/. .

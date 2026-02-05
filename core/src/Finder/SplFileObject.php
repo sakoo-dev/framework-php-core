@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sakoo\Framework\Core\Finder;
 
+use Sakoo\Framework\Core\Path\Path;
+
 class SplFileObject extends \SplFileObject
 {
 	public function isClassFile(): bool
@@ -14,11 +16,8 @@ class SplFileObject extends \SplFileObject
 	/** @return class-string */
 	public function getNamespace(): string
 	{
-		// @phpstan-ignore return.type
-		return str_replace(
-			['.php', getcwd() . '/src', '/'],
-			['', 'Sakoo\Framework\Core', '\\'],
-			$this->getRealPath(),
-		);
+		$relativePath = 'src' . str_replace(Path::getCoreDir() ?: '', '', $this->getRealPath());
+
+		return Path::pathToNamespace($relativePath);
 	}
 }

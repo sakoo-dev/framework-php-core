@@ -6,24 +6,26 @@
          cacheResult="false">
 
   <testsuites>
-    <testsuite name="Core Test Suite">
-      <directory>tests</directory>
+    <testsuite name="Test Suite">
+        <directory>./app/*/Tests</directory>
+      <directory>core/tests</directory>
     </testsuite>
   </testsuites>
 
   <source>
     <include>
-      <directory suffix=".php">src</directory>
+      <directory suffix=".php">app</directory>
+      <directory suffix=".php">core/src</directory>
     </include>
     <exclude>
-      <directory suffix=".php">src/Exception</directory>
-      <!-- <directory suffix=".php">src/Command</directory>-->
-      <!-- <directory suffix=".php">src/Doc</directory>-->
-      <!-- <directory suffix=".php">src/Kernel</directory>-->
-      <!-- <directory suffix=".php">src/ServiceLoader</directory>-->
-      <!-- <directory suffix=".php">src/Testing</directory>-->
-      <file>src/Constants.php</file>
-      <file>src/helpers.php</file>
+      <directory suffix=".php">core/src/Exception</directory>
+      <!-- <directory suffix=".php">core/src/Command</directory>-->
+      <!-- <directory suffix=".php">core/src/Doc</directory>-->
+      <!-- <directory suffix=".php">core/src/Kernel</directory>-->
+      <!-- <directory suffix=".php">core/src/ServiceLoader</directory>-->
+      <!-- <directory suffix=".php">core/src/Testing</directory>-->
+      <file>core/src/Constants.php</file>
+      <file>core/src/helpers.php</file>
     </exclude>
   </source>
 

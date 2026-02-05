@@ -23,7 +23,7 @@ valuable.
 1. **Fork the Repository**: Start by forking the Sakoo PHP Web Framework (Core) repository to your GitHub account.
 2. **Clone the Repository**: Clone the forked repository to your local machine.
    ```bash
-   git clone https://github.com/sakoo-dev/framework-php-core.git
+   git clone https://github.com/sakoo-dev/php-framework.git
    ```
 3. **Build Project**: Build project & Install all required dependencies by running:
    ```bash

@@ -11,7 +11,6 @@
 * [Assert\Exception](#-sakooframeworkcoreassertexception)
 * [Regex](#-sakooframeworkcoreregex)
 * [Env](#-sakooframeworkcoreenv)
-* [Sakoo\Framework\Core](#-sakooframeworkcore)
 * [Testing](#-sakooframeworkcoretesting)
 * [Container](#-sakooframeworkcorecontainer)
 * [Container\Exceptions](#-sakooframeworkcorecontainerexceptions)

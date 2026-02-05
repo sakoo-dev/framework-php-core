@@ -146,7 +146,7 @@ jobs:
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: ${{ secrets.GIST_ID }}
-          filename: framework-php-core_${{ github.head_ref || github.ref_name }}.json
+          filename: php-framework_${{ github.head_ref || github.ref_name }}.json
           label: Test Code Coverage
           message: ${{ steps.test.outputs.coverage }}%
           valColorRange: ${{ steps.test.outputs.coverage }}

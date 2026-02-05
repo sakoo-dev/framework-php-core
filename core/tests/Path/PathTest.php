@@ -15,7 +15,7 @@ final class PathTest extends TestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->root = realpath(__DIR__ . '/../../');
+		$this->root = realpath(__DIR__ . '/../../../');
 	}
 
 	#[Test]
@@ -27,7 +27,7 @@ final class PathTest extends TestCase
 	#[Test]
 	public function it_returns_core_dir_path_properly(): void
 	{
-		$this->assertEquals("{$this->root}/src", Path::getCoreDir());
+		$this->assertEquals("{$this->root}/core/src", Path::getCoreDir());
 	}
 
 	#[Test]

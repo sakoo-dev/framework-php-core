@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Console\Command\ExampleCommand;
 use Sakoo\Framework\Core\Command\ContainerCacheCommand;
 use Sakoo\Framework\Core\Command\DevCommand;
 use Sakoo\Framework\Core\Command\DocGenCommand;
@@ -10,12 +11,13 @@ use Sakoo\Framework\Core\Command\Watcher\WatchCommand;
 use Sakoo\Framework\Core\Command\ZenCommand;
 use Sakoo\Framework\Core\Console\Application;
 use Sakoo\Framework\Core\Console\Command;
-use Sakoo\Framework\Core\Path\Path;
+use System\Path\Path;
 
 $docOutputDir = Path::getRootDir() . '/.github/wiki';
 
 /** @var Command[] $commands */
 $commands = [
+	resolve(ExampleCommand::class),
 	resolve(ZenCommand::class),
 	resolve(WatchCommand::class),
 	resolve(DevCommand::class),
